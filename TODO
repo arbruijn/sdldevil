@@ -1,0 +1,63 @@
+SDLDevil ToDos Brainstorm
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+mandatory:
+partially done: all code that depends on sizeof(long) == 4 which breaks on 64bit machines
+
+
+major:
+separate configurable descent binary, data and mission dirs
+graphical configuration tool
+fix: littlebulbs in texture lists are garbage (opt_txt.c)
+partially done: software texture mapper (lighting is missing plotsys.c)
+port: hogmanager still crashing
+
+
+minor:
+nice title picture
+cleanup: format all code in k&r style
+cleanup: rewrite large macro code to inline (mainly for debugging)
+fix: Texture animation arrows are only black, every second should be white
+
+
+new features:
+fullscreen/window option
+free screen res selection
+optional opengl plotsys
+option for redefining keymappings (for NEO2 users like me :-) )
+
+
+DONE:
+fix: framedbox w/ border > 1 draws too far?
+fix: menus behaving wrong (maybe event system?)
+fix: stalled gui when opening new level
+port: font loader for devil font => converted and integrated as header file
+fix: wrong text drawing when updating only text rect 
+fix: colorkey for ws_copybitmap
+port: render texture lists
+port: plotroutines to work properly
+fix: crash when selection circle leaves left border of screen
+fix: crash when closing level 
+fix: fit texture window leaving black area on bottom
+port all allegro (only timer?) stuff to sdl - to drop another dependency => removed completely
+optimize mainloop to sleep() for the rest of the timeslice
+graphic bug drawing the texture alignment lines outside of the texture
+fix: background on transparent textures in texture lists
+fix: initial / na drawing in wall/robot/reactor texture view
+fix: small textures in list show garbage
+fix: untag all segfaults
+fix: wrong robot texture display
+fix: wrong reactor texture display
+fix: wrong cursor positioning when clicking textbox
+port: file load / save dialogs
+fix: fit texture align window not showing texture
+fix: crash when changing d2 texture and leaving editor (trying to free() something strange)
+fix: handling drives in windows
+fix: lookup when trying to access .. in rootdir 
+port: savestate stuff
+fix: info message boxes disappear immediately (wins/w_event.c, int w_okcancel)
+fix: no movement of corridor wizard end possible - only bending it
+fix: doubleclick not working
+Version and Title 
+SDLWindow title

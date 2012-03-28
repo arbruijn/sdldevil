@@ -1,0 +1,9 @@
+V0.2
+ * State saving (remembering last level, dirs etc) now works
+ * arrows for direction of animated textures now are displayed
+ * moving things with mouse is possible and works fine
+ * Worked-around some Corridor Wizard crashes
+ * Reworked event system, fixed bugs, added support for double click
+
+V0.1
+ * initial release

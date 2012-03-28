@@ -1,0 +1,105 @@
+====================
+===== SDLDevil =====
+====================
+
+a Sourceport of the classic Descent Leveleditor
+Copyright (C) 2012 by Florian "v66r" Feucht
+
+
+WARNING
+=======
+This is a pre-alpha version and has not been tested extensively. 
+Save your work often and under different filenames!
+
+
+Requirements
+============
+
+UNIX
+----
+	C Compiler (gcc)
+	libSDL 1.2
+
+Windows
+-------
+	mingw
+	libSDL 1.2
+	libiberty (for fnmatch)
+
+
+Compiling
+=========
+
+UNIX
+----
+	$ cd src
+	$ make
+
+Windows (MinGW Shell)
+---------------------
+	Edit src/Makefile and change
+	  LIBS=-lSDL
+	into
+	  LIBS=-lSDL -liberty
+
+	$ cd src
+	$ make
+
+
+Running SDLDevil
+================
+$ ./src/sdldevil
+notice that currently the config subdirectory must reside in the
+current path from where you are running SDLDevil.
+
+Notice: SDLDevil will ask for configuration settings (Descent
+Directories etc) in textmode, so you currently need to run it from
+console. This will change in further versions.
+
+Notice: For the Devil Path you can choose "."
+
+Notice: Selecting a graphics driver is not neccessary
+
+
+Known bugs
+==========
+See file TODO
+
+
+Troubleshooting / FAQ
+=====================
+Q: Mouse actions in conjunction with the ALT key do not work
+A: Check your window mananger settings. For example XFce traps
+   this to move windows. You have to turn this off.
+
+
+
+
+Authors
+=======
+Florian Feucht
+	Sourceport
+
+Achim Stremplat
+	Initial author of Devil
+
+Lars Christensen
+	Bugfixes / Improvements 
+
+Andreas Schiffler 
+	Portions for primitive drawing taken from SDLgfx
+	http://www.ferzkopp.net/joomla/software-mainmenu-14/4-ferzkopps-linux-software/19-sdlgfx
+
+
+License
+=======
+see file COPYING
+
+
+Contact
+=======
+Florian "v66r" Feucht
+E-Mail:	pyro@tagtraummusik.org
+Web:	projects.sourceforge.net/sdldevil 
+
+
