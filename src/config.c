@@ -113,7 +113,6 @@ int savelvlconfig(FILE * f, struct leveldata *ld, int no)
  remove(init.lastname); return 0; }
 
 
-/* FLOSDL TODO  */
 int savestatus(int playlevel)
 {
     FILE *f;
@@ -1020,7 +1019,6 @@ int readconfig(void)
 /* FLOSDL TODO */
 int saveplaymsn(int savetoddir)
 {
-#if 0
     FILE *f, *sf;
     char fname[200], sfname[200], *data;
     unsigned long size;
@@ -1120,15 +1118,15 @@ int saveplaymsn(int savetoddir)
 	FREE(data);
     }
     if (init.d_ver >= d2_12_reg && l != NULL) {
-	char dr[MAXDRIVE], pa[MAXDIR], fi[MAXFILE], ex[MAXEXT];
-	char hxmfilename[MAXPATH];
+	char dr[3], pa[1024], fi[256], ex[16];
+	char hxmfilename[1024];
 	FILE *hxmfile;
 
-	fnsplit(l->filename, dr, pa, fi, ex);
-	fnmerge(hxmfilename, dr, pa, fi, ".hxm");
+	ws_splitpath(l->filename, dr, pa, fi, ex);
+	ws_mergepath(hxmfilename, dr, pa, fi, ".hxm");
 	hxmfile = fopen(hxmfilename, "rb");
 	if (!hxmfile) {
-	    fnmerge(hxmfilename, dr, pa, "devil", ".hxm");
+	    ws_mergepath(hxmfilename, dr, pa, "devil", ".hxm");
 	    hxmfile = fopen(hxmfilename, "rb");
 	}
 	if (hxmfile) {
@@ -1164,23 +1162,23 @@ int saveplaymsn(int savetoddir)
     }
     if (((init.d_ver == d1_10_sw) || (d1_10_reg) || (d1_14_reg))
 	&& l != NULL) {
-	char dr[MAXDRIVE], pa[MAXDIR], fi[MAXFILE], ex[MAXEXT];
-	char pg1filename[MAXPATH], hx1filename[MAXPATH];
+	char dr[3], pa[1024], fi[256], ex[16];
+	char pg1filename[1024], hx1filename[1024];
 	FILE *pg1file, *hx1file;
 
-	fnsplit(l->filename, dr, pa, fi, ex);
-	fnmerge(pg1filename, dr, pa, fi, ".pg1");
+	ws_splitpath(l->filename, dr, pa, fi, ex);
+	ws_mergepath(pg1filename, dr, pa, fi, ".pg1");
 	pg1file = fopen(pg1filename, "rb");
 	if (!pg1file) {
-	    fnmerge(pg1filename, dr, pa, fi, ".dtx");
+	    ws_mergepath(pg1filename, dr, pa, fi, ".dtx");
 	    pg1file = fopen(pg1filename, "rb");
 	}
 	if (!pg1file) {
-	    fnmerge(pg1filename, dr, pa, "devil", ".pg1");
+	    ws_mergepath(pg1filename, dr, pa, "devil", ".pg1");
 	    pg1file = fopen(pg1filename, "rb");
 	}
 	if (!pg1file) {
-	    fnmerge(pg1filename, dr, pa, "devil", ".dtx");
+	    ws_mergepath(pg1filename, dr, pa, "devil", ".dtx");
 	    pg1file = fopen(pg1filename, "rb");
 	}
 	if (pg1file) {
@@ -1213,10 +1211,10 @@ int saveplaymsn(int savetoddir)
 	    FREE(data);
 	    fclose(pg1file);
 	}
-	fnmerge(hx1filename, dr, pa, fi, ".hx1");
+	ws_mergepath(hx1filename, dr, pa, fi, ".hx1");
 	hx1file = fopen(hx1filename, "rb");
 	if (!hx1file) {
-	    fnmerge(hx1filename, dr, pa, "devil", ".hx1");
+	    ws_mergepath(hx1filename, dr, pa, "devil", ".hx1");
 	    hx1file = fopen(hx1filename, "rb");
 	}
 	if (hx1file) {
@@ -1253,5 +1251,4 @@ int saveplaymsn(int savetoddir)
 
     fclose(f);
     return 1;
-#endif
 }

@@ -11,7 +11,8 @@ separate configurable descent binary, data and mission dirs
 graphical configuration tool
 fix: littlebulbs in texture lists are garbage (opt_txt.c)
 partially done: software texture mapper (lighting is missing plotsys.c)
-port: hogmanager still crashing
+lookup in full rendering when entering level
+fix initial paths - especially on windows
 
 
 minor:
@@ -61,3 +62,4 @@ fix: no movement of corridor wizard end possible - only bending it
 fix: doubleclick not working
 Version and Title 
 SDLWindow title
+port: hogmanager still crashing

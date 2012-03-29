@@ -2,5 +2,5 @@
     Copyright (C) 2012  Florian Feucht (pyro@tagtraummusik.org) */
 
 /* Well, this is the version number */
-#define VERSION "V0.1"
+#define VERSION "V0.3"
 #define LC_VERSION  ""

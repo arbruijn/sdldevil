@@ -1,3 +1,7 @@
+V0.3
+ * fixed HOG manager
+
+
 V0.2
  * State saving (remembering last level, dirs etc) now works
  * arrows for direction of animated textures now are displayed

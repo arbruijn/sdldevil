@@ -20,13 +20,9 @@
 #include <signal.h>
 #include <stdint.h>
 #include <stdlib.h>
-// #include <grx20.h>
-// #include <dos.h>
-//#include <dir.h>
 #include <unistd.h>
 //#include <fnmatch.h>
 #include <dirent.h>
-// #include <sys/farptr.h>
 #include <sys/stat.h>
 #include "wins_int.h"
 #include "w_tools.h"
@@ -34,23 +30,14 @@
 #include <SDL/SDL.h>
 #include "SDL_gfxPrimitives.h"
 #include "devilfont.h"
-//#include <SDL/SDL_gfx_5x7_fnt.h>
 
-
-//#define DEFAULT_FONT "wins.fnt"
 
 struct ws_internals {
     SDL_Surface *screen;
-    //FLOSDL TODO: GrTextOption textopt;
-    //FLOSDL TODO: GrPattern pat_box;
     int mousecounter;		/* displaymouse & erasemouse */
 } ws_private = 
 {
     NULL,
-/*    {
-    	NULL, {0}, {0}, GR_BYTE_TEXT, GR_TEXT_RIGHT, GR_ALIGN_LEFT, GR_ALIGN_TOP
-    }, 
-    {0}, */
     0
 };
 
@@ -75,24 +62,14 @@ extern FILE *errf;
    If you can't initialize this mode, return a 0. */
 int ws_initgrfx(int xres, int yres, int color_depth, const char *fontname)
 {
-	static unsigned char pixels[2];
-/* unsigned char value; */
+	//static unsigned char pixels[2];
     
-
-    //FLOSDL TODO: GrBitmap pat_bm = { 0, 2, pixels, 1, 0, 0 };
-
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		fprintf(errf, "Can't init SDL: %s\n", SDL_GetError());
 		return 0;
 	}
 	SDL_EnableUNICODE(1);
 
-    /* 
-    if ((ws_private.textopt.txo_font = GrLoadFont((char *) (fontname == NULL ? DEFAULT_FONT : fontname))) == NULL) {
-	    fprintf(errf, "Can't find font %s\n", fontname);
-	    return 0;
-    }
-    */
 	gfxPrimitivesSetFont(gfxDevilFontdata, 6, 14);
 
 
@@ -106,51 +83,28 @@ int ws_initgrfx(int xres, int yres, int color_depth, const char *fontname)
         return 0;
     }
 
-    /* FLOSDL TODO: Unneeded?
-    GrClearScreen(0);
-    
-    if (!GrMouseDetect()) {
-	    fprintf(errf, "Can't find mouse\n");
-    	return 0;
-    }
-    GrMouseEventMode(0);
-    GrMouseInit();
-    GrMouseSetColors(255, 0);
-    GrMouseDisplayCursor();
-    pixels[0] = 0xaa;
-    pixels[1] = 0x55;
-    ws_private.pat_box.gp_bitmap = pat_bm;
-    */
-/* value=_farpeekb(0x40,0x17);
- _farpokeb(0x40,0x17,value^0x20); */
     return 1;
 }
 
 /* Setting colors. */
-/* FLOSDL DONE */
 void ws_setcolor(int i, int r, int g, int b)
 {
-    ws_palette[i] = (r<<24) | (g << 16) | (b << 8) | 255;
-    //GrFreeColor(i);
-    //GrSetColor(i, r, g, b);
+	ws_palette[i] = (r<<24) | (g << 16) | (b << 8) | 255;
 }
 
 /* Reinit mouse colors (if palette is new) */
-/* FLOSDL TODO: */
 void ws_resetmousecolors(void)
 {
-	printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
-    //GrMouseEraseCursor();
-    //GrMouseSetColors(w_makecolor(255, 255, 255), w_makecolor(0, 0, 0));
-    //GrMouseUpdateCursor();
-    //GrMouseDisplayCursor();
+	// FFE unneeded since we use truecolor printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
+	//GrMouseEraseCursor();
+	//GrMouseSetColors(w_makecolor(255, 255, 255), w_makecolor(0, 0, 0));
+	//GrMouseUpdateCursor();
+	//GrMouseDisplayCursor();
 }
 
 /* Getting color. */
-/* FLOSDL TODO */
 void ws_getcolor(int i, int *r, int *g, int *b)
 {
-    //GrQueryColor(i, r, g, b)
 	(*r) = (ws_palette[i] >> 24) & 0xff;
 	(*g) = (ws_palette[i] >> 16) & 0xff;
 	(*b) = (ws_palette[i] >> 8) & 0xff;
@@ -162,7 +116,6 @@ struct ws_bitmap *ws_createbitmap8from(int xsize, int ysize, uint8_t *bm)
 //	printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
     SDL_Surface *gc;
     struct ws_bitmap *bmap;
-    // char *mem[4];
     int x, y;
 
     if ((bmap = MALLOC(sizeof(struct ws_bitmap))) == NULL)
@@ -191,72 +144,33 @@ struct ws_bitmap *ws_createbitmap8from(int xsize, int ysize, uint8_t *bm)
 struct ws_bitmap *ws_createbitmap(int xsize, int ysize, uint32_t **bm)
 {
 //	printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
-    SDL_Surface *gc;
-    struct ws_bitmap *bmap;
-    // char *mem[4];
-    int x, y;
+	SDL_Surface *gc;
+	struct ws_bitmap *bmap;
+	int x, y;
 
-// FLOSDL TODO:
-//    if (xsize < 0 || ysize < 0 || xsize > GrSizeX() || ysize > GrSizeY())
-//    	return NULL;
-    if ((bmap = MALLOC(sizeof(struct ws_bitmap))) == NULL)
-    	return NULL;
-/*
-    if ((gc = GrCreateContext(xsize, ysize, bm != NULL ? mem : NULL, NULL)) == NULL) {
-        FREE(bmap);
-        ireturn NULL;
-    }
-*/
+	if ((bmap = MALLOC(sizeof(struct ws_bitmap))) == NULL)
+		return NULL;
+
 	if ((gc = create_sdl_sw_surface(xsize, ysize)) == NULL) {
 		FREE(bmap);
 		return NULL;
 	}
 	if (bm != NULL) {
-        	//mem[0] = bm;
-	        //mem[1] = mem[2] = mem[3] = NULL;
-		//(*bm) = gc->pixels;
 		(*bm) = gc->pixels;
-/*
-		if (SDL_MUSTLOCK(gc)) {
-			if (SDL_LockSurface(gc) < 0) {
-				return (NULL);
-			}
-		}
-
-		for (y=0; y<ysize; y++) {
-			for (x=0; x<xsize; x++) {
-				fastPixelColorNolock (gc, x, y, ws_palette[bm[y*ysize + x]], 0);
-				printf (" === pixeldata: %u\n", bm[y*ysize+x]);
-			}
-		}
-		if (SDL_MUSTLOCK(gc)) {
-			SDL_UnlockSurface(gc);
-		}
-*/	
     	}
 
-/*
-    if (bm == NULL) {
-        GrSetContext(gc);
-        GrClearContext(notes.colindex[cv_winfill]);
-        GrSetContext(NULL);
-    }
-*/
-    bmap->bitmap = (void *) gc;
-    bmap->xpos = 0;
-    bmap->ypos = 0;
-    bmap->xsize = xsize;
-    bmap->ysize = ysize;
-    bmap->w = NULL;
-    return bmap;
+	bmap->bitmap = (void *) gc;
+	bmap->xpos = 0;
+	bmap->ypos = 0;
+	bmap->xsize = xsize;
+	bmap->ysize = ysize;
+	bmap->w = NULL;
+	return bmap;
 }
 
 /* get the pointer to the data of the bitmap. */
-// FLOSDL TODO:
 uint32_t *ws_getbitmapdata(struct ws_bitmap *b)
 {
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
-    //return ((GrContext *) (b->bitmap))->gc_baseaddr[0];
 	return ((SDL_Surface *)(b->bitmap))->pixels;
 }
 
@@ -280,8 +194,6 @@ void ws_copybitmap(struct ws_bitmap *dst, int x1, int y1,
 		   struct ws_bitmap *src, int xpos, int ypos, int xsize,
 		   int ysize, int withbg)
 {
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
-
 	SDL_Rect rect_src;
 	rect_src.x = xpos;
 	rect_src.y = ypos;
@@ -317,12 +229,6 @@ void ws_copybitmap(struct ws_bitmap *dst, int x1, int y1,
 		SDL_SetColorKey (srcSurface, 0, 0);
 	}
 
-/*
-    GrBitBlt(dst == NULL ? NULL : dst->bitmap, x1, y1,
-	     src == NULL ? NULL : src->bitmap, xpos, ypos,
-	     xpos + xsize - 1, ypos + ysize - 1,
-	     withbg ? GrWRITE : GrIMAGE | notes.colindex[cv_winfill]);
-*/
 }
 
 /* Copy area (x1,y1)-(x2,y2) from a bitmap (if bm==NULL from the screen)
@@ -334,12 +240,6 @@ struct ws_bitmap *ws_savebitmap(struct ws_bitmap *bm, int x1, int y1, int xsize,
     SDL_Surface *gc;
     struct ws_bitmap *bmap;
 
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
-   /*
-    if (xsize < 0 || ysize < 0 || y1 < 0 || x1 < 0
-	|| x1 + xsize > GrSizeX() || y1 + ysize > GrSizeY())
-	return NULL;
-    */
     checkmem(bmap = MALLOC(sizeof(struct ws_bitmap)));
     checkmem(gc = create_sdl_sw_surface (xsize, ysize));// GrCreateContext(xsize, ysize, NULL, NULL));
 
@@ -359,12 +259,6 @@ struct ws_bitmap *ws_savebitmap(struct ws_bitmap *bm, int x1, int y1, int xsize,
 		printf("save blit FAILED\n");
 	}
 
-
-
-//GrBitBlt(gc, 0, 0, bm == NULL ? NULL : bm->bitmap, x1, y1, x1 + xsize - 1, y1 + ysize - 1, GrWRITE);
-
-    //SDL_UpdateRect(gc, 0, 0, xsize, ysize);
-
     bmap->bitmap = (void *) gc;
     bmap->xpos = x1;
     bmap->ypos = y1;
@@ -378,17 +272,10 @@ struct ws_bitmap *ws_savebitmap(struct ws_bitmap *bm, int x1, int y1, int xsize,
 /* Free complete structure bm (with the structure itself) */
 void ws_freebitmap(struct ws_bitmap *bm)
 {
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
 	my_assert(bm);
 	if (bm->bitmap)
 		SDL_FreeSurface((SDL_Surface *)bm->bitmap);
 	free (bm);
-/*
-    my_assert(bm);
-    if (bm->bitmap)
-	GrDestroyContext((GrContext *) bm->bitmap);
-    free(bm);
-*/
 }
 
 /* Restore the content of bitmap on the position saved in bitmap and
@@ -396,7 +283,6 @@ void ws_freebitmap(struct ws_bitmap *bm)
 void ws_restorebitmap(struct ws_bitmap *bm)
 {
 
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
 	my_assert(bm != NULL && bm->bitmap != NULL);
 
 	SDL_Rect rect_src;
@@ -420,19 +306,11 @@ void ws_restorebitmap(struct ws_bitmap *bm)
 	ws_freebitmap(bm);
 
 
-/*
-    my_assert(bm != NULL && bm->bitmap != NULL);
-    GrBitBlt(NULL, bm->xpos, bm->ypos, (GrContext *) bm->bitmap, 0, 0,
-	     bm->xsize - 1, bm->ysize - 1, GrWRITE);
-    ws_freebitmap(bm);
-*/
 }
 
 /* Draw a line with color c. */
 void ws_drawline(int x1, int y1, int x2, int y2, int c, int xor)
 {
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
-    //GrLine(x1, y1, x2, y2, c | (xor ? GrXOR : 0));
 	int updx;
 	int updy;
 	int updw;
@@ -471,8 +349,6 @@ void ws_drawline(int x1, int y1, int x2, int y2, int c, int xor)
 /* Draw a circle with color c. */
 void ws_drawcircle(int x, int y, int r, int c, int xor)
 {
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
-    //GrCircle(x, y, r, c | (xor ? GrXOR : 0));
 	int rx, ry, rw, rh;
 	circleColor(ws_private.screen, x, y, r, ws_palette[c], xor);
 	
@@ -488,7 +364,6 @@ void ws_drawcircle(int x, int y, int r, int c, int xor)
 
 
 	SDL_UpdateRect(ws_private.screen, rx, ry, rw, rh);
-	//printf ("x %i y %i w %i h %i\n", x-r, y-r, x+r, y+r);
 }
 
 /* Draw a line with color c to bitmap bm. */
@@ -507,13 +382,6 @@ void ws_bmdrawline(struct ws_bitmap *bm, int x1, int y1, int x2, int y2,
 
 	lineColor ((SDL_Surface *)bm->bitmap, x1, y1, x2, y2, ws_palette[c], xor);
 
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
-	
-/*
-    GrSetContext((GrContext *) bm->bitmap);
-    GrLine(x1, y1, x2, y2, c | (xor ? GrXOR : 0));
-    GrSetContext(NULL);
-*/
 }
 
 /* Draw a (not-filled) box with color c. */
@@ -529,9 +397,7 @@ void ws_drawbox(int x1, int y1, int xsize, int ysize, int c, int xor)
 	}
 
 	if (xsize >0 && ysize >0) {
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
 		rectangleColor(ws_private.screen, x1, y1, (x1+xsize)-1, (y1+ysize)-1, ws_palette[c], xor);
-    //GrBox(x1, y1, x1 + xsize - 1, y1 + ysize - 1, c | (xor ? GrXOR : 0));
 		ws_flip(x1, y1, xsize, ysize);
 	}
 }
@@ -539,11 +405,8 @@ void ws_drawbox(int x1, int y1, int xsize, int ysize, int c, int xor)
 /* Draw a (filled) box with color c. */
 void ws_drawfilledbox(int x1, int y1, int xsize, int ysize, int c, int xor)
 {
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
-    //GrFilledBox(x1, y1, x1 + xsize - 1, y1 + ysize - 1,	c | (xor ? GrXOR : 0));
 	boxColor(ws_private.screen, x1, y1, (x1+xsize)-1, (y1+ysize)-1, ws_palette[c], xor);
 	ws_flip(x1, y1, xsize, ysize);
-
 }
 
 /* draw framed box, x,y left upper edge (xs,ys size) of box with frame.
@@ -552,7 +415,6 @@ void ws_drawfilledbox(int x1, int y1, int xsize, int ysize, int c, int xor)
 void ws_drawframedbox(int x, int y, int xs, int ys, int w, int ltc,
 		      int rbc, int inc)
 {
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
 	int i;
 	for (i=0; i<w; i++) {
 		vlineColor(ws_private.screen, x+i, y+i, (y+ys-1)-i, ws_palette[ltc], 0);
@@ -566,24 +428,12 @@ void ws_drawframedbox(int x, int y, int xs, int ys, int w, int ltc,
 
 	ws_flip(x, y, xs, ys);
 
-/*
-    GrFBoxColors bc;
-    bc.fbx_intcolor = inc;
-    bc.fbx_topcolor = bc.fbx_leftcolor = ltc;
-    bc.fbx_rightcolor = bc.fbx_bottomcolor = rbc;
-    GrFramedBox(x + w, y + w, x + xs - 2 * w, y + ys - 2 * w, w, &bc);
-*/
 }
 
 /* set clip box. All routines can only draw in this box. if x1==-1 the
  box is the whole screen */
-// FLOSDL TODO
 void ws_setclipping(int x1, int y1, int x2, int y2)
 {
-//	printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
-
-	//printf ("CLIPPING: %i,%i  %ix%i\n", x1, y1, x2, y2);
-	
 	SDL_Rect rect;
 	if (x1 < 0) {
 		SDL_SetClipRect(ws_private.screen, NULL);
@@ -593,26 +443,12 @@ void ws_setclipping(int x1, int y1, int x2, int y2)
 		rect.w = x2 - x1;
 		rect.h = y2 - y1;
 		SDL_SetClipRect(ws_private.screen, &rect);
-		//rectangleColor(ws_private.screen, x1, y1, x2, y2, 0x00ff00ff, 0);
-		//ws_flip(x1, y1, x2, y2);
-
 	}	
 }
 
-/*
-    if (x1 < 0) {
-	GrResetClipBox();
-    } else
-	GrSetClipBox(x1, y1, x2, y2);
-*/
-
-
 /* String length in pixels */
-// FLOSDL TODO
 int ws_pixstrlen(const char *txt)
 {
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
-//    return txt == NULL ? 0 : GrStringWidth((char *) txt, strlen(txt), &ws_private.textopt);
 	if (txt == NULL)
 		return 0;
 	else
@@ -621,20 +457,15 @@ int ws_pixstrlen(const char *txt)
 
 /* String length in chars which fit in w pixels (assuming all chars
    have an equal width) */
-// FLOSDL TODO
 int ws_charstrlen(int w)
 {
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
-//    return w / GrCharWidth('M', &ws_private.textopt);
 	return w / 6;
 }
 
 /* Draw text txt to x,y (left, upper edge). maximum pixel width is w.
    fg,bg=fore/background color. if bg=-1 background is transparent. */
-// FLOSDL TODO
 void ws_drawtext(int x, int y, int w, const char *txt, int fg, int bg)
 {
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
 	char buffer[256];
 	int clen = ws_charstrlen(w);
 	if (clen > 255)
@@ -649,68 +480,23 @@ void ws_drawtext(int x, int y, int w, const char *txt, int fg, int bg)
 	int plen = ws_pixstrlen(buffer);
 	stringColor(ws_private.screen, x, y, buffer, ws_palette[fg]);
 	
-	//printf("===TEXT: x=%i, y=%i, w=%i\n", x, y ,w);
-
-	//rectangleColor(ws_private.screen, x, y, (x+plen), (y+14), 0x00ff00ff, 0);
 	SDL_UpdateRect (ws_private.screen, x, y, plen, 16);
 
-	//printf ("%s @ %i %i\n", txt, x, y);
-	
-	//SDL_UpdateRect (ws_private.screen, 0, 0, 0, 0);
-	
-/*
-    char buffer[256];
-    int clen = ws_charstrlen(w);
-    my_assert(txt != NULL);
-    if (clen > 255)
-	clen = 255;
-    strncpy(buffer, txt, clen);
-    buffer[clen] = 0;
-    if (strlen(buffer) == 0)
-	return;
-    ws_private.textopt.txo_bgcolor.v = bg == -1 ? GrOR : bg;
-    ws_private.textopt.txo_fgcolor.v = fg;
-    GrDrawString(buffer, strlen(buffer), x, y, &ws_private.textopt);
-*/
 }
 
 // FLOSDL TODO
 void ws_bmdrawtext(struct ws_bitmap *bm, int x, int y, int w,
 		   const char *txt, int fg, int bg)
 {
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
 
 	int clen = ws_charstrlen(w);
 	stringColor((SDL_Surface *)bm->bitmap, x, y, txt, ws_palette[fg]);
-
-    /*
-    char buffer[256];
-    int clen = ws_charstrlen(w);
-    my_assert(txt != NULL);
-    if (clen > 255)
-	clen = 255;
-    strncpy(buffer, txt, clen);
-    buffer[clen] = 0;
-    if (strlen(buffer) == 0)
-	return;
-    ws_private.textopt.txo_bgcolor.v = bg == -1 ? GrOR : bg;
-    ws_private.textopt.txo_fgcolor.v = fg;
-    GrSetContext((GrContext *) bm->bitmap);
-    GrDrawString(buffer, strlen(buffer), x, y, &ws_private.textopt);
-    GrSetContext(NULL);
-*/
 }
 
 /* Switch to normal textmode */
-// FLOSDL TODO
 void ws_textmode(void)
 {
-//	printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
 	SDL_Quit ();
-/*
-    GrMouseUnInit();
-    GrSetMode(GR_default_text);
-*/
 }
 
 int altkeys_az[26] =
@@ -947,59 +733,7 @@ char **ws_getallfsentries (const char *path, const char *exts, int *no, int type
 
 char **ws_getallfilenames(const char *path, const char *ext, int *no)
 {
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
-	
 	return ws_getallfsentries(path, ext, no, S_IFREG);
-
-/*
-    struct ffblk files;
-    char buffer[255], real_path[255], **filenames, new_ext[4];
-    const char *ext_pos, *old_pos = ext;
-*/
-
-
-/*
-    strcpy(buffer, path);
-
-    if (buffer[strlen(buffer) - 1] == '/' || buffer[strlen(buffer) - 1] == '\\')
-        buffer[strlen(buffer) - 1] = 0;
-    
-    if (strlen(buffer) != 2 || buffer[1] != ':')
-        if (findfirst(buffer, &files, FA_ARCH | FA_RDONLY | FA_DIREC) || (files.ff_attrib & FA_DIREC) == 0) {
-            *no = -1;
-            return NULL;
-	    }
-
-    *no = 0;
-    filenames = NULL;
-    strcpy(real_path, buffer);
-
-    do {
-        ext_pos = strchr(old_pos, '.');
-        if (ext_pos == NULL)
-            ext_pos = &old_pos[strlen(old_pos)];
-        if (ext_pos - old_pos > 3)
-            return filenames;
-
-        strncpy(new_ext, old_pos, ext_pos - old_pos);
-        new_ext[ext_pos - old_pos] = 0;
-        old_pos = ext_pos + 1;
-        strcpy(buffer, real_path);
-//        strcat(buffer, "/*.");
-        strcat(buffer, new_ext);
-        if (!findfirst(buffer, &files, FA_ARCH | FA_RDONLY))
-            do {
-            checkmem(filenames = REALLOC(filenames, sizeof(char *) * (++*no)));
-            checkmem(filenames[*no - 1] = MALLOC((strlen(files.ff_name) + 1) * sizeof(char)));
-            strcpy(filenames[*no - 1], files.ff_name);
-        }
-	    while (!findnext(&files));
-    }
-
-    while (strlen(ext_pos) > 0);
-    return filenames;
-*/
-
 }
 
 /* gives all directories at 'path' with extension(s) 'ext' (the extensions
@@ -1010,59 +744,7 @@ char **ws_getallfilenames(const char *path, const char *ext, int *no)
 // FLOSDL TODO
 char **ws_getalldirs(const char *path, const char *ext, int *no)
 {
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
 	return ws_getallfsentries(path, ext, no, S_IFDIR);
-/*
-    struct ffblk files;
-    char buffer[255], real_path[255], **filenames, new_ext[4];
-    const char *ext_pos, *old_pos = ext;
-    if (path == NULL || strlen(path) == 0) {
-	*no = -2;
-	return NULL;
-    }
-    strcpy(buffer, path);
-    if (buffer[strlen(buffer) - 1] == '/'
-	|| buffer[strlen(buffer) - 1] == '\\')
-	buffer[strlen(buffer) - 1] = 0;
-    if (strlen(buffer) != 2 || buffer[1] != ':')
-	if (findfirst(buffer, &files, FA_ARCH | FA_RDONLY | FA_DIREC) ||
-	    (files.ff_attrib & FA_DIREC) == 0) {
-	    *no = -1;
-	    return NULL;
-	}
-    *no = 0;
-    filenames = NULL;
-    strcpy(real_path, buffer);
-    do {
-	ext_pos = strchr(old_pos, '.');
-	if (ext_pos == NULL)
-	    ext_pos = &old_pos[strlen(old_pos)];
-	if (ext_pos - old_pos > 3)
-	    return filenames;
-	strncpy(new_ext, old_pos, ext_pos - old_pos);
-	new_ext[ext_pos - old_pos] = 0;
-	old_pos = ext_pos + 1;
-	strcpy(buffer, real_path);
-//	strcat(buffer, "/*.");
-	strcat(buffer, new_ext);
-	if (!findfirst(buffer, &files, FA_ARCH | FA_RDONLY | FA_DIREC))
-	    do {
-		if (files.ff_attrib & FA_DIREC) {
-		    checkmem(filenames =
-			     REALLOC(filenames, sizeof(char *) * (++*no)));
-		    checkmem(filenames[*no - 1] =
-			     MALLOC((strlen(files.ff_name) +
-				     2) * sizeof(char)));
-		    strcpy(filenames[*no - 1], files.ff_name);
-		    filenames[*no - 1][strlen(files.ff_name)] = '/';
-		    filenames[*no - 1][strlen(files.ff_name) + 1] = 0;
-		}
-	    }
-	    while (!findnext(&files));
-    }
-    while (strlen(ext_pos) > 0);
-    return filenames;
-*/
 }
 
 
@@ -1085,8 +767,7 @@ void ws_fixpath(char * in, char * out)
 		if (!strcmp(part, "..")) {
 			if (strchr(out, '/') != strrchr(out, '/')) {
 				do {
-					
-out[strlen(out) - 1] = '\0';
+					out[strlen(out) - 1] = '\0';
 				} while (out[strlen(out) - 1] != '/');
 			}
 		} else {
@@ -1106,7 +787,6 @@ out[strlen(out) - 1] = '\0';
 
 /* Make the most simple path from oldpath and store it in newpath.
    Therefore remove all '..' etc. */
-// FLOSDL TODO
 void ws_makepath(const char *oldpath, char *newpath)
 {
 
@@ -1140,9 +820,6 @@ void ws_splitpath(char *fullpath, char *drive, char *path, char *name,
 	char buffer2[1024];	
 	char * pos;
 	struct stat fileinfo;
-
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
-    //fnsplit(fullpath, drive, path, name, ext);
 
 	path[0] = '\0';
 	name[0] = '\0';
@@ -1220,7 +897,6 @@ int ws_matchname(char *wildcard, char *name)
 }
 
 /* Disable control-c. (remember: Cube-menu) */
-// FLOSDL TODO: UNNEEDED?
 void ws_disablectrlc(void)
 {
 	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
@@ -1229,55 +905,36 @@ void ws_disablectrlc(void)
 }
 
 /* Plot a dot-non-dot-non filled Box */
-// FLOSDL TODO
 void ws_drawpatternedbox(int x1, int y1, int xsize, int ysize, int c)
 {
 
 	int x, y, m;
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
-/* This is not yet working in my release from grx 2.0:
- ws_private.pat_box.gp_bitmap.bmp_fgcolor=c|GrXOR;
- ws_private.pat_box.gp_bitmap.bmp_bgcolor=GrXOR;
- GrPatternFilledBox(x1,y1,x1+xsize,y1+ysize,&ws_private.pat_box); */
-
-    //m = GrMouseBlock(NULL, x1, y1, x1 + xsize, y1 + ysize);
-    for (y = y1; y < y1 + ysize; y++)
-	for (x = x1 + (y & 1); x < x1 + xsize; x += 2)
-		fastPixelColor(ws_private.screen, x, y, gfxWriteModeXOR | c);
+	for (y = y1; y < y1 + ysize; y++)
+		for (x = x1 + (y & 1); x < x1 + xsize; x += 2)
+			fastPixelColor(ws_private.screen, x, y, gfxWriteModeXOR | c);
 
 	SDL_UpdateRect (ws_private.screen, x1, y1, xsize, ysize);
-    //GrMouseUnBlock(m);
-
 }
 
 /* remove the mouse from the screen, so that the drawing is faster. */
 void ws_erasemouse(void)
 {
-	
-//    GrMouseEraseCursor();
-    ws_private.mousecounter--;
+	ws_private.mousecounter--;
 	SDL_ShowCursor(0);
 }
 
 void ws_displaymouse(void)
 {
-	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
-
     if (++ws_private.mousecounter >= 0) {
 	ws_private.mousecounter = 0;
-	//GrMouseDisplayCursor();
 	SDL_ShowCursor(1);
     }
-
 }
 
 /* beams the mouse to x,y */
-// FLOSDL TODO
 void ws_mousewarp(int x, int y)
 {
-	//printf ("MOUSEWARP: %s\n", __FUNCTION__);
 	SDL_WarpMouse(x, y);
-	//    GrMouseWarp(x, y);
 }
 
 // FLOSDL TODO

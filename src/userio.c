@@ -1162,8 +1162,8 @@ void hogfilemanager(void)
 	}
     }
     w.xpos = w.ypos = -1;
-    xsize = ws_pixstrlen("M") * 12;
-    w.xsize = 378;
+    xsize = ws_pixstrlen("M") * FILENAME_LIMIT;
+    w.xsize = (FILENAME_LIMIT * 3) + 522;
     w.ysize = w_ymaxwinsize() * 3 / 4;
     w.maxxsize = w.maxysize = -1;
     w.shrunk = 0;
