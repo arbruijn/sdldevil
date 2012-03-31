@@ -816,15 +816,22 @@ void ws_splitpath(char *fullpath, char *drive, char *path, char *name,
 		  char *ext)
 {
 
-	char buffer[256];
+	char buffer[1024];
 	char buffer2[1024];	
 	char * pos;
 	struct stat fileinfo;
 
-	path[0] = '\0';
-	name[0] = '\0';
-	ext[0] = '\0';
-	drive[0] = '\0';
+	if (path)
+		path[0] = '\0';
+
+	if (name)
+		name[0] = '\0';
+
+	if (ext)
+		ext[0] = '\0';
+
+	if (drive)
+		drive[0] = '\0';
 	
 	//if (fullpath[strlen(fullpath)-1] != '/') {
 		stat (fullpath, &fileinfo);
@@ -833,18 +840,27 @@ void ws_splitpath(char *fullpath, char *drive, char *path, char *name,
 			if (pos = strrchr(buffer2, '/')) {
 				*pos = '\0';
 				strncpy(buffer, pos + 1, 255);
-				strcpy(path, buffer2);
+				if (path)
+					strcpy(path, buffer2);
 			} else {
 				strcpy(buffer, fullpath);
-				path[0] = '\0';
+				if (path)
+					path[0] = '\0';
 			}
-			if (pos = strrchr(buffer, '.')) {
-				strcpy(ext, pos);
-				*pos = '\0';
+			if (ext) {
+				if (pos = strrchr(buffer, '.')) {
+					strcpy(ext, pos);
+					*pos = '\0';
+				}
+				strcpy (name, buffer);
+			} else {
+				if (name) {
+					strcpy(name, buffer);
+				}
 			}
-			strcpy (name, buffer);
 		} else {
-			strcpy (path, fullpath);
+			if (path)
+				strcpy (path, fullpath);
 		}
 		
 	//}
