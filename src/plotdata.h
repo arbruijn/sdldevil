@@ -15,7 +15,7 @@ struct point_2d { float x[2]; };
 struct point_txt { int x[2]; };
 struct render_point 
  { struct render_point *prev,*next;
-   float x[2]; long light; };
+   float x[2]; int32_t light; };
 struct polygon_point
  { struct polygon_point *prev,*next; /* prev/next pp. This is a 
     counter-clockwise sorted ring of pnts */

@@ -109,6 +109,13 @@ int clipline(struct point_2d *sp,struct point_2d *ep,
   "m1 %g %g m2 %g %g det %g m1_ds %g m1_de %g\n",
   sb->x[0],sb->x[1],eb->x[0],eb->x[1],m1.x[0],m1.x[1],m2.x[0],m2.x[1],
   det,m1_ds,m1_de);
+
+ 
+ // FFE Division by zero hack - TODO:better solution
+ // as soon I got how this stuff is working...
+ if (det == 0) 
+	det = 1;
+ 
  if(m1_ds>ZERO) /* start outside */
   { if(m1_de<-ZERO) /* end inside */ { *e_f1=m1_ds/det; return 1; }
     else /* end on border or outside */ return 0; }
@@ -216,17 +223,29 @@ struct render_point *pol_clip_pnts(struct polygon *p,
  if(!vis || num_rp<3) return NULL;
  /* clip all points on 2d-bounds */
  bp=bounds;
+
  do
   {
+
   if(DEBUG>1) fprintf(errf,"Next bounds: %g %g -> %g %g\n",
    bp->prev->x[0],bp->prev->x[1],bp->x[0],bp->x[1]);
-  b_sp.x[0]=bp->prev->x[0]; b_sp.x[1]=bp->prev->x[1];
-  b_ep.x[0]=bp->x[0]; b_ep.x[1]=bp->x[1];
-  sp.x[0]=first_rp->prev->x[0]; sp.x[1]=first_rp->prev->x[1];
+
+  b_sp.x[0]=bp->prev->x[0]; 
+  b_sp.x[1]=bp->prev->x[1];
+
+  b_ep.x[0]=bp->x[0]; 
+  b_ep.x[1]=bp->x[1];
+
+  sp.x[0]=first_rp->prev->x[0]; 
+  sp.x[1]=first_rp->prev->x[1];
+
   ls=first_rp->prev->light;
   o_num_rp=num_rp;
+
   for(rp=first_rp,i=0;i<o_num_rp;i++,rp=rp->next) 
    { 
+
+ 	fprintf(errf," === %d\n", cur_rp);
    ep.x[0]=rp->x[0]; ep.x[1]=rp->x[1]; le=rp->light;
    if(DEBUG>1) fprintf(errf,
     "Clip l %d (of %d no %ld prev %ld next %ld): sp=%g %g ep=%g %g\n",
@@ -316,8 +335,8 @@ void render_filled_polygon(int lr,struct polygon *p,struct render_point *rp,
  maxlight=31+sublight;
  if(maxlight<0) maxlight=0;
  else maxlight=(maxlight<<16)+0xffff;
- rp->x[0]=round(rp->x[0]);
- rp->x[1]=round(rp->x[1]);
+ rp->x[0]=psysround(rp->x[0]);
+ rp->x[1]=psysround(rp->x[1]);
  rp->light=(rp->light*(NUM_LIGHTCOLORS-1-(view.gamma_corr>>10)))/
   (NUM_LIGHTCOLORS-1)-0x8000;
  if(rp->light<0) rp->light=0;
@@ -327,8 +346,8 @@ void render_filled_polygon(int lr,struct polygon *p,struct render_point *rp,
  db_rp=rp->next;
  do
   {
-  db_rp->x[0]=round(db_rp->x[0]);
-  db_rp->x[1]=round(db_rp->x[1]); 
+  db_rp->x[0]=psysround(db_rp->x[0]);
+  db_rp->x[1]=psysround(db_rp->x[1]); 
   if(db_rp->x[0]==db_rp->prev->x[0] &&
    db_rp->x[1]==db_rp->prev->x[1])
    { db_rp->prev->next=db_rp->next;

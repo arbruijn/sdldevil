@@ -643,12 +643,12 @@ void plotpnt(struct node *n,int w,int c,int hilight)
    
 /* plot current level l. */
 void plotlevel(void) { struct lightsource *ls; cont_plotlevel(&ls); }
-unsigned long cont_plotlevel(struct lightsource **ls)
+uint32_t cont_plotlevel(struct lightsource **ls)
  {
  struct node *n;
  int lr,i;
  struct point d;
- long dt=-1;
+ int32_t dt=-1;
  if(l==NULL || l->w==NULL || l->w->shrunk) return 0;
  w_refreshstart(l->w); 
  /* kill oldpicture */

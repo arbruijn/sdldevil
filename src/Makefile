@@ -12,7 +12,7 @@ CFLAGS=-Wall -g -DGNU_C -DGO32 -ffast-math -Wwrite-strings -I wins -I language
 
 
 $(BINARY): $(WINS_OBJ) $(OBJ) 
-	@gcc -o $(BINARY) $(OBJ) $(WINS_OBJ) $(LIBS)
+	@gcc $(CFLAGS) -o $(BINARY) $(OBJ) $(WINS_OBJ) $(LIBS)
 	@echo "LD $(BINARY)"
 
 

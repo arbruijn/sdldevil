@@ -1,6 +1,6 @@
 V0.3
  * fixed HOG manager
-
+ * worked around renderer crashes/freezes
 
 V0.2
  * State saving (remembering last level, dirs etc) now works

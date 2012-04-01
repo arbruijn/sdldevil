@@ -5,6 +5,7 @@ SDLDevil ToDos Brainstorm
 mandatory:
 partially done: all code that depends on sizeof(long) == 4 which breaks on 64bit machines
 user report (pumo): specific levels crash when loading or showing bogus infos
+  DMB2 created levels showing this issue? need further investigation here.
 
 
 major:
@@ -12,7 +13,6 @@ separate configurable descent binary, data and mission dirs
 graphical configuration tool
 fix: littlebulbs in texture lists are garbage (opt_txt.c)
 partially done: software texture mapper (lighting is missing plotsys.c)
-lookup in full rendering when entering level
 fix initial paths - especially on windows
 texture set not loaded correctly when loading new level on unix (uppercase)
 
@@ -65,3 +65,4 @@ fix: doubleclick not working
 Version and Title 
 SDLWindow title
 port: hogmanager still crashing
+lookup in full rendering when entering level
