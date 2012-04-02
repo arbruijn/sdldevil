@@ -505,7 +505,8 @@ char *getfilename(char **path, const char *defname, const char *ext,
 	    waitmsg(TXT_ILLEGALPATH, current_path);
 	if (no == -1 || dno == -1)
 	    waitmsg(TXT_CANTFINDPATH, current_path);
-	ws_makepath("/", current_path);
+	//ws_makepath("/", current_path);
+	ws_getcwd(current_path, 255);
 	files = ws_getallfilenames(current_path, current_ext, &no);
 	dirs = ws_getalldirs(current_path, "*", &dno);
 	if (no == -2 || dno == -2) {
@@ -1149,7 +1150,8 @@ void hogfilemanager(void)
 	    waitmsg(TXT_ILLEGALPATH, current_path);
 	if (no == -1 || dno == -1)
 	    waitmsg(TXT_CANTFINDPATH, current_path);
-	ws_makepath("/", current_path);
+	ws_getcwd(current_path, 255);
+	//ws_makepath("/", current_path);
 	files = ws_getallfilenames(current_path, current_ext, &no);
 	dirs = ws_getalldirs(current_path, "*", &dno);
 	if (no == -2 || dno == -2) {

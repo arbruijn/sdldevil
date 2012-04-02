@@ -92,6 +92,7 @@ void ws_makepath(const char *oldpath, char *newpath);
 void ws_splitpath(char *fullpath, char *drive, char *path, char *name, char *ext);
 void ws_mergepath(char *fullpath, const char *drive, const char *path, const char *name, const char *ext);
 int ws_matchname(char *wildcard, char *name);
+void ws_getcwd(char * buffer, int maxlen); 
 void ws_disablectrlc(void);
 int ws_waitforkey(void);
 int ws_testforkey(void);

@@ -13,7 +13,6 @@ separate configurable descent binary, data and mission dirs
 graphical configuration tool
 fix: littlebulbs in texture lists are garbage (opt_txt.c)
 partially done: software texture mapper (lighting is missing plotsys.c)
-fix initial paths - especially on windows
 texture set not loaded correctly when loading new level on unix (uppercase)
 
 
@@ -66,3 +65,4 @@ Version and Title
 SDLWindow title
 port: hogmanager still crashing
 lookup in full rendering when entering level
+fix initial paths - especially on windows

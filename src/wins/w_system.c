@@ -912,6 +912,14 @@ int ws_matchname(char *wildcard, char *name)
     return !fnmatch(wildcard, name, 0);
 }
 
+// FFE get the current working directory
+void ws_getcwd(char * buffer, int maxlen) 
+{
+	getcwd(buffer, maxlen);
+}
+
+
+
 /* Disable control-c. (remember: Cube-menu) */
 void ws_disablectrlc(void)
 {

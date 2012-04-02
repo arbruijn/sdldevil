@@ -1,6 +1,7 @@
 V0.3
  * fixed HOG manager
  * worked around renderer crashes/freezes
+ * fixed initial paths on windows
 
 V0.2
  * State saving (remembering last level, dirs etc) now works
