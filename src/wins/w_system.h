@@ -97,6 +97,7 @@ void ws_disablectrlc(void);
 int ws_waitforkey(void);
 int ws_testforkey(void);
 void ws_setdriver(const char *name);
+char * ws_getkeyname(int key); 
 void ws_translatepixels (unsigned char* src, uint32_t* dst, int length);
 uint32_t ws_getRGBAColor(unsigned char i);
 uint32_t ws_getNativeColorRGB(int r, int g, int b);

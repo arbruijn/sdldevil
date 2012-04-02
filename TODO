@@ -66,3 +66,4 @@ SDLWindow title
 port: hogmanager still crashing
 lookup in full rendering when entering level
 fix initial paths - especially on windows
+fix keys help screen to display sdl keynames

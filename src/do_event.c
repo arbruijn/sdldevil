@@ -152,6 +152,7 @@ int cur_help_pos,num_codes,num_columns;
 void help_refresh(struct w_window *w)
  {
  char buffer[100];
+ char *keyname;
  int i,j,o_y,x,y;
  o_y=(int)w->data; 
  ws_drawfilledbox(w_xwinincoord(w,0),w_ywinincoord(w,o_y),
@@ -164,13 +165,25 @@ void help_refresh(struct w_window *w)
   for(j=0;j<NUM_KBSTATSDESCR;j++)
    if(view.ec_keycodes[i].kbstat&txt_kbstat[j].kbstat)
     sprintf(&buffer[strlen(buffer)],"%s+",txt_kbstat[j].txt);
+  /*
   for(j=0;j<NUM_KEYDESCR;j++)
    if(view.ec_keycodes[i].key==txt_key[j].key)
     { sprintf(&buffer[strlen(buffer)],"%s: ",txt_key[j].txt); break; }
+  */
+  keyname = ws_getkeyname(view.ec_keycodes[i].key);
+  if (keyname != NULL) {
+	sprintf(&buffer[strlen(buffer)],"%s: ", keyname);  
+  } else {
+	sprintf(&buffer[strlen(buffer)],"???: ");
+  }
+
+  /*
   if(j>=NUM_KEYDESCR) 
    if(!isgraph(view.ec_keycodes[i].key))
     sprintf(&buffer[strlen(buffer)],"???: ");
-   else sprintf(&buffer[strlen(buffer)],"%c: ",view.ec_keycodes[i].key);
+  
+   else */
+  //sprintf(&buffer[strlen(buffer)],"%c: ",view.ec_keycodes[i].key);
   sprintf(&buffer[strlen(buffer)],"%s",view.txt_keycode[i]);  
   ws_drawtext(w_xwinincoord(w,x*COLUMNSIZE+5),
    w_ywinincoord(w,o_y+y*w_titlebarheight()),
