@@ -1,11 +1,8 @@
 V0.3
  * fixed HOG manager
  * worked around renderer crashes/freezes
-<<<<<<< HEAD
  * fixed initial paths on windows
-=======
  * Help / Keys menu now shows the actual keys (mapping changed due to sdl)
->>>>>>> 10d7ff05553f4ed2d39cb94100d3ec425d204ed3
 
 V0.2
  * State saving (remembering last level, dirs etc) now works
