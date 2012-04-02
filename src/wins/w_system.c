@@ -1007,6 +1007,12 @@ void ws_killcursor(ws_cursor * cursor)
 }
 
 
+// FFE get sdl key name
+char * ws_getkeyname(int key) {
+	return SDL_GetKeyName((SDLKey) key);
+}
+
+
 
 
 // translate pixels from palette to native format

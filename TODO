@@ -66,3 +66,4 @@ Version and Title
 SDLWindow title
 port: hogmanager still crashing
 lookup in full rendering when entering level
+fix keys help screen to display sdl keynames
