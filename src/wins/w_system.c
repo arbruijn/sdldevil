@@ -867,22 +867,22 @@ void ws_splitpath(char *fullpath, char *drive, char *path, char *name,
 	//}
 	
 #ifdef _WIN32
-	if (drive) {
-		if (path)
-			strcpy (buffer2, path);
-		else
-			strcpy (buffer2, fullpath);
+	if (path)
+		strcpy (buffer2, path);
+	else
+		strcpy (buffer2, fullpath);
 
-		if (buffer2[2] == ':') {
+	if (buffer2[2] == ':') {
+		if (drive) {
 			strncpy(drive, buffer2, 2);
 			drive[2] = '\0';
-			if (path) {
-				if (strlen(buffer2) > 2) {
-					strcpy(path, &buffer2[2]);
-				} else {
-					path[0] ='\0';
-					strcat(path, '/');
-				}
+		}
+		if (path) {
+			if (strlen(buffer2) > 2) {
+				strcpy(path, &buffer2[2]);
+			} else {
+				path[0] ='\0';
+				strcat(path, '/');
 			}
 		}
 	}
