@@ -882,7 +882,7 @@ void ws_splitpath(char *fullpath, char *drive, char *path, char *name,
 				strcpy(path, &buffer2[2]);
 			} else {
 				path[0] ='\0';
-				strcat(path, '/');
+				strcat(path, "/");
 			}
 		}
 	}
