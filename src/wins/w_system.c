@@ -653,6 +653,7 @@ int ws_getevent(struct ws_event *se, int wait)
    allowed. You must free filenames[i] and filenames. */
 
 char **ws_getallfsentries (const char *path, const char *exts, int *no, int types) {
+
 	int i;
 	char **filenames = NULL;
 	char *ext;
@@ -778,9 +779,13 @@ void ws_fixpath(char * in, char * out)
 		part = strtok(NULL, "/");
 	}
 
-	// remove trailing / if not root directory
-	if (strlen(out) > 1) 
-		out[strlen(out) - 1] = '\0';
+	// remove trailing / if not root directory and not drive only
+	if (strlen(out) > 1) {
+		if ((out[1] == ':') && (strlen(out) == 2)) {
+		} else {
+			out[strlen(out) - 1] = '\0';
+		}
+	}
 
 }
 
@@ -882,7 +887,6 @@ void ws_splitpath(char *fullpath, char *drive, char *path, char *name,
 				strcpy(path, &buffer2[2]);
 			} else {
 				path[0] ='\0';
-				strcat(path, "/");
 			}
 		}
 	}
