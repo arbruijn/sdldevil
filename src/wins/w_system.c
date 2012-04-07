@@ -781,7 +781,7 @@ void ws_fixpath(char * in, char * out)
 
 	// remove trailing / if not root directory and not drive only
 	if (strlen(out) > 1) {
-		if ((out[1] == ':') && (strlen(out) == 2)) {
+		if ((out[1] == ':') && (strlen(out) == 3)) {
 		} else {
 			out[strlen(out) - 1] = '\0';
 		}
