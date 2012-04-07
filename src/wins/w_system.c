@@ -872,7 +872,7 @@ void ws_splitpath(char *fullpath, char *drive, char *path, char *name,
 	else
 		strcpy (buffer2, fullpath);
 
-	if (buffer2[2] == ':') {
+	if (buffer2[1] == ':') {
 		if (drive) {
 			strncpy(drive, buffer2, 2);
 			drive[2] = '\0';
