@@ -3,6 +3,9 @@ V0.3
  * worked around renderer crashes/freezes
  * fixed initial paths on windows
  * Help / Keys menu now shows the actual keys (mapping changed due to sdl)
+ * fixed bug which caused crash when changing texture set / loading / closing
+ * made numpad enter key act as return in entry fields
+ * ported all other keys to SDL
 
 V0.2
  * State saving (remembering last level, dirs etc) now works

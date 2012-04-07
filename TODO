@@ -14,6 +14,7 @@ graphical configuration tool
 fix: littlebulbs in texture lists are garbage (opt_txt.c)
 partially done: software texture mapper (lighting is missing plotsys.c)
 texture set not loaded correctly when loading new level on unix (uppercase)
+fix ALOT of memory leaks (according to valgrind)
 
 
 minor:
@@ -21,6 +22,7 @@ nice title picture
 cleanup: format all code in k&r style
 cleanup: rewrite large macro code to inline (mainly for debugging)
 fix: Texture animation arrows are only black, every second should be white
+cleanup: get rid of all palette stuff except where it is needed (textures...)
 
 
 new features:
@@ -67,3 +69,5 @@ port: hogmanager still crashing
 lookup in full rendering when entering level
 fix initial paths - especially on windows
 fix keys help screen to display sdl keynames
+fix make keypad enter work for entry boxes
+port other still not working keys

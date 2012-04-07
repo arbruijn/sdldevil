@@ -590,6 +590,7 @@ int wi_handlestringbutton(struct ws_event *ws,struct wi_button *b,int p,
    {
    switch(ws->key)
     {
+    case 271:
     case 0xd: change=end=1; 
      strcpy(oldstr,buffer); break;
     case 0x1b: end=1; break;

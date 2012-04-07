@@ -636,7 +636,7 @@ int ws_getevent(struct ws_event *se, int wait)
 	*/
 
 
-	/*
+	/*	
 	if (got_event) {	
 		printf ("event - flags=%i, key=%i, unicode=%i, kbstat=%i, x=%i, y=%i, buttons=%i, wait=%i\n", se->flags, se->key, se->unicode, se->kbstat, se->x, se->y, se->buttons, wait);
 	}

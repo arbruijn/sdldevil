@@ -537,6 +537,13 @@ int newpigfile(char *pigname, FILE * pogfile)
 	    return 0;
 	}
 
+	// FFE changing pigfile handle ASAP
+	/*
+	if (pig.pigfile)
+	    fclose(pig.pigfile);
+	pig.pigfile = pf;
+	*/
+
 	if (pogfile != pig.pogfile)
 	    fclose(pig.pogfile);
 	readpogfile(pogfile);
@@ -558,13 +565,18 @@ int newpigfile(char *pigname, FILE * pogfile)
 	FREE(pig.current_pigname);
 	checkmem(pig.current_pigname = MALLOC(strlen(pigname) + 1));
 	strcpy(pig.current_pigname, pigname);
+	
 	if (pig.pigfile)
 	    fclose(pig.pigfile);
 	pig.pigfile = pf;
+	
 	changepigfile(palettes[i].name);
 	view.lightcolors = &palettes[i].lighttables[256 * NUM_SECURITY];
+	inittxts();  //FFE now called before newpalette - because newpalette
+			// redraws windows and these access textures
+			// which caused access to invalid mem before
+			// initializing textures
 	newpalette(palettes[i].palette);
-	inittxts();
     }
     return 1;
 }
