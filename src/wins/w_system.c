@@ -867,14 +867,27 @@ void ws_splitpath(char *fullpath, char *drive, char *path, char *name,
 	//}
 	
 #ifdef _WIN32
-	strcpy (buffer2, path);
-	if (path[1] == ':') {
-		strncpy(drive, buffer2,2);
-		drive[2] = '\0';
-		if (strlen(buffer2) > 2) {
-			strcpy(path, &buffer2[2]);
-		} else {
-			path[0] ='\0';
+	if (drive) {
+		if (path)
+			strcpy (buffer2, path);
+		else if (name)
+			strcpy (buffer2, name);
+
+		if (buffer[2] == ':') {
+			strncpy(drive, buffer2,2);
+			drive[2] = '\0';
+			if (strlen(buffer2) > 2) {
+				if (path)
+					strcpy(path, &buffer2[2]);
+				else if (name)
+					strcpy(name, &buffer2[2]);
+
+			} else {
+				if (path)
+					path[0] ='\0';
+				else if (name)
+					name[0] = '\0';
+			}
 		}
 	}
 	//printf("windoze - drive:%s,path:%s,file:%s,ext:%s\n", drive, path, name, ext);
