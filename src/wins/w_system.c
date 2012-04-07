@@ -873,15 +873,13 @@ void ws_splitpath(char *fullpath, char *drive, char *path, char *name,
 		else
 			strcpy (buffer2, fullpath);
 
-		if (buffer[2] == ':') {
-			strncpy(drive, buffer2,2);
+		if (buffer2[2] == ':') {
+			strncpy(drive, buffer2, 2);
 			drive[2] = '\0';
-			if (strlen(buffer2) > 2) {
-				if (path)
+			if (path) {
+				if (strlen(buffer2) > 2) {
 					strcpy(path, &buffer2[2]);
-
-			} else {
-				if (path) {
+				} else {
 					path[0] ='\0';
 					strcat(path, '/');
 				}
