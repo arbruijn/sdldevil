@@ -790,7 +790,7 @@ void ws_fixpath(char * in, char * out)
 void ws_makepath(const char *oldpath, char *newpath)
 {
 
-    char *p, *hp, buffer[300];
+    char *p, *hp, buffer[1024];
     if (newpath != oldpath)
 		p = hp = newpath;
     else
@@ -806,7 +806,8 @@ void ws_makepath(const char *oldpath, char *newpath)
 		//*p = toupper(*p);
 		p++;
     }
-    strcpy(newpath, hp);
+    if (newpath != hp)
+    	strcpy(newpath, hp);
 
 }
 
