@@ -973,6 +973,8 @@ void drawoptbuttons(struct infoitem *i)
 		init_txt_buffer ((uint32_t *)pig.txt_buffer, 64*64, 255, 255, 255);
 //		    memset(pig.txt_buffer, 0xff, 64 * 64);
 	    if (activate) {
+
+		memset(tmptxtdata, 0, 64*64);
 		if (w->texture1 >= 0 && w->texture1 < pig.num_rdltxts &&
 		    pig.rdl_txts[w->texture1].pig) {
 			readbitmap(tmptxtdata, NULL, &pig.rdl_txts[w->texture1], 0);

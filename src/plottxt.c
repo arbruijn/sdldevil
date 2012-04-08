@@ -366,16 +366,6 @@ void render_filled_polygon(int lr,struct polygon *p,struct render_point *rp,
    db_rp->light=(((int)view.gamma_corr<<6)&0x1f0000)+(db_rp->light&0x1fffff);
    if(db_rp->light>maxlight) db_rp->light=maxlight;
    }
-  // FFE fix coords exceeding the bounds... TODO: find out WHY they do so
-  if (db_rp->x[0] < -max_xcoord)
-	db_rp->x[0] = -max_xcoord;
-  if (db_rp->x[0] > max_xcoord)
-	db_rp->x[0] = max_xcoord;
-
-  if (db_rp->x[1] < -max_ycoord)
-	db_rp->x[1] = -max_ycoord;
-  if (db_rp->x[1] > max_ycoord)
-	db_rp->x[1] = max_ycoord;
 
   db_rp=db_rp->next; 
   }
