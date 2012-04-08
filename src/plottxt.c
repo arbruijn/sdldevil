@@ -116,7 +116,7 @@ int clipline(struct point_2d *sp,struct point_2d *ep,
  if (det == 0) {
 	if (DEBUG > 2)
 		fprintf(errf, "fixed det=0!\n");
-	det = 0.000001;
+	det = 1;
  }
  
  if(m1_ds>ZERO) /* start outside */
