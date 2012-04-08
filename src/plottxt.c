@@ -113,8 +113,11 @@ int clipline(struct point_2d *sp,struct point_2d *ep,
  
  // FFE Division by zero hack - TODO:better solution
  // as soon I got how this stuff is working...
- if (det == 0) 
-	det = 1;
+ if (det == 0) {
+	if (DEBUG > 2)
+		fprintf(errf, "fixed det=0!\n");
+	det = 0.000001;
+ }
  
  if(m1_ds>ZERO) /* start outside */
   { if(m1_de<-ZERO) /* end inside */ { *e_f1=m1_ds/det; return 1; }
@@ -245,7 +248,7 @@ struct render_point *pol_clip_pnts(struct polygon *p,
   for(rp=first_rp,i=0;i<o_num_rp;i++,rp=rp->next) 
    { 
 
- 	fprintf(errf," === %d\n", cur_rp);
+// 	fprintf(errf," === %d\n", cur_rp);
    ep.x[0]=rp->x[0]; ep.x[1]=rp->x[1]; le=rp->light;
    if(DEBUG>1) fprintf(errf,
     "Clip l %d (of %d no %ld prev %ld next %ld): sp=%g %g ep=%g %g\n",
@@ -363,9 +366,40 @@ void render_filled_polygon(int lr,struct polygon *p,struct render_point *rp,
    db_rp->light=(((int)view.gamma_corr<<6)&0x1f0000)+(db_rp->light&0x1fffff);
    if(db_rp->light>maxlight) db_rp->light=maxlight;
    }
+  // FFE fix coords exceeding the bounds... TODO: find out WHY they do so
+  if (db_rp->x[0] < -max_xcoord)
+	db_rp->x[0] = -max_xcoord;
+  if (db_rp->x[0] > max_xcoord)
+	db_rp->x[0] = max_xcoord;
+
+  if (db_rp->x[1] < -max_ycoord)
+	db_rp->x[1] = -max_ycoord;
+  if (db_rp->x[1] > max_ycoord)
+	db_rp->x[1] = max_ycoord;
+
   db_rp=db_rp->next; 
   }
  while(db_rp!=rp);
+
+
+
+ // FFE HACK: fix coords exceeding the bounds... TODO: find out WHY they do so
+ db_rp=rp;
+ do {
+	if (db_rp->x[0] < -max_xcoord)
+		db_rp->x[0] = -max_xcoord;
+	if (db_rp->x[0] > max_xcoord)
+		db_rp->x[0] = max_xcoord;
+
+	if (db_rp->x[1] < -max_ycoord)
+		db_rp->x[1] = -max_ycoord;
+	if (db_rp->x[1] > max_ycoord)
+		db_rp->x[1] = max_ycoord;
+
+	db_rp=db_rp->next; 
+ } while(db_rp!=rp);
+
+
  if(rp->next==rp->prev) return;
  if(DEBUG)
   {
