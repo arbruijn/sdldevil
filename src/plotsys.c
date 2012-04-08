@@ -309,7 +309,7 @@ void psys_256_plottxt(struct polygon *p,struct render_point *start, uint32_t off
       if((pixel=\
        *(txt_data+((txt_u>>8)&0x3f)+((txt_v>>8)&(0x3f*TXTSIZE))))!= \
        TRANSPARENT_COLOR) \
-       *(cur_pos++)=*(colors+pixel); \
+       *(cur_pos++)=ws_getNativeColor(*(colors+pixel)); \
       else cur_pos++; \
       txt_u+=add_txt_u; txt_v+=add_txt_v; light+=d_light; \
       if(light>c_light) { c_light+=d_x; colors+=add_colors; }\
@@ -335,7 +335,7 @@ void psys_256_plottxt(struct polygon *p,struct render_point *start, uint32_t off
        if((pixel= \
         *(txt_data+((txt_u>>8)&0x3f)+((txt_v>>8)&(0x3f*TXTSIZE))))!= \
 	TRANSPARENT_COLOR) \
-        *(cur_pos++)=*(colors+pixel); \
+        *(cur_pos++)=ws_getNativeColor(*(colors+pixel)); \
        else cur_pos++; \
        txt_u+=add_txt_u; txt_v+=add_txt_v; light+=d_light;\
        if(light>c_light) { c_light+=d_x; colors+=add_colors; } \
@@ -360,7 +360,7 @@ void psys_256_plottxt(struct polygon *p,struct render_point *start, uint32_t off
       if((pixel= \
        *(txt_data+((txt_u>>8)&0x3f)+((txt_v>>8)&(0x3f*TXTSIZE))))!= \
        TRANSPARENT_COLOR) \
-       *(cur_pos++)=*(colors+pixel); \
+       *(cur_pos++)=ws_getNativeColor(*(colors+pixel)); \
       else cur_pos++; \
       txt_u+=add_txt_u; txt_v+=add_txt_v; \
       }   \
@@ -385,7 +385,7 @@ void psys_256_plottxt(struct polygon *p,struct render_point *start, uint32_t off
        if((pixel= \
         *(txt_data+((txt_u>>8)&0x3f)+((txt_v>>8)&(0x3f*TXTSIZE)))) \
         !=TRANSPARENT_COLOR) \
-        *(cur_pos++)=*(colors+pixel); \
+        *(cur_pos++)=ws_getNativeColor(*(colors+pixel)); \
        else cur_pos++; \
        txt_u+=add_txt_u; txt_v+=add_txt_v; \
        } \

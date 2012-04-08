@@ -4,6 +4,7 @@ V0.4
    on windows
  * fixed another renderer crash bug
  * fixed side menu texture display showing garbage when having transparency
+ * fixed blue taint of wall textures in rendering
 
 V0.3
  * fixed HOG manager
