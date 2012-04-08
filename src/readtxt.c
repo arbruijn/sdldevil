@@ -157,7 +157,7 @@ int readtxts(FILE * f)
     if (!newpig) {		/* kill the old textures */
 	for (i = 0; i < pig.num_pigtxts; i++) {
 	    if (pig.pig_txts[i].data) {
-		printf ("==== freeing pig.pig_txts[%i].data = %p\n", i, pig.pig_txts[i].data);
+		//printf ("==== freeing pig.pig_txts[%i].data = %p\n", i, pig.pig_txts[i].data);
 		FREE(pig.pig_txts[i].data);
 	    }
 	}

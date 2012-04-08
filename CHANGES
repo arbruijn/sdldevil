@@ -1,5 +1,6 @@
 V0.4
  * fixed HOG manager crash on windows
+ * fixed debug output which inflated devil.err with useless crap
  * fixed stupid bug preventing from accessing the root directory of a drive
    on windows
  * fixed another renderer crash bug
