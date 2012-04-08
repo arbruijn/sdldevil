@@ -1,3 +1,8 @@
+V0.4
+ * fixed HOG manager crash on windows
+ * fixed stupid bug preventing from accessing the root directory of a drive
+   on windows
+
 V0.3
  * fixed HOG manager
  * worked around renderer crashes/freezes
