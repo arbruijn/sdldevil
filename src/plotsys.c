@@ -75,9 +75,10 @@ inline void sys_lightscanline(num_pixels, add_f1, add_f2, add_f3)
      add_txt_v=(n_txt_v-txt_v)/(NUM_PIXELS); \
      for(cur_pos=cur_line+ps_x,i=(NUM_PIXELS);i>0;i--)\
       {\
-      *(cur_pos++)= ws_getNativeColor(*(txt_data+((txt_u>>8)&0x3f)+((txt_v>>8)&(0x3f*TXTSIZE)))); \
+	pixel = *(txt_data+((txt_u>>8)&0x3f)+((txt_v>>8)&(0x3f*TXTSIZE))); \
+      *(cur_pos++)= ws_getNativeColor(*(colors+pixel)); \
       txt_u+=add_txt_u; txt_v+=add_txt_v; light+=d_light;\
-      if(light>c_light) { c_light+=d_x; /*colors+=add_colors;*/ }\
+      if(light>c_light) { c_light+=d_x; colors+=add_colors; }\
       }   \
      ps_x+=(NUM_PIXELS); \
      }
@@ -98,9 +99,10 @@ inline void sys_lightscanline(num_pixels, add_f1, add_f2, add_f3)
       txt_u=n_txt_u; txt_v=n_txt_v; \
       for(cur_pos=cur_line+e_r_ps_x,i=e_rest;i>0;i--) \
        { \
-       *(cur_pos++) = ws_getNativeColor(*(txt_data+((txt_u>>8)&0x3f)+((txt_v>>8)&(0x3f*TXTSIZE)))); \
+ 	pixel = *(txt_data+((txt_u>>8)&0x3f)+((txt_v>>8)&(0x3f*TXTSIZE))); \
+       *(cur_pos++) = ws_getNativeColor(*(colors+pixel)); \
        txt_u+=add_txt_u; txt_v+=add_txt_v; light+=d_light;\
-       if(light>c_light) { c_light+=d_x; /*colors+=add_colors;*/ } \
+       if(light>c_light) { c_light+=d_x; colors+=add_colors; } \
        } \
       } \
      } \
@@ -170,7 +172,8 @@ void psys_256_plottxt(struct polygon *p,struct render_point *start, uint32_t off
 		of multiplied) for better performance */
 	/* light, left/right edge light and adds */
 	uint32_t *cur_line,*cur_pos;
-	uint32_t *colors;
+	unsigned char pixel;
+	unsigned char *colors;
 	uint32_t *dest;
 	int32_t add_txt_u=0,add_txt_v=0,n_txt_u,n_txt_v,ps_x,c_light,
 		ps_y,e_ps_x,e_r_ps_x,e_rest,add_ll=0,add_rl=0,
@@ -259,9 +262,8 @@ void psys_256_plottxt(struct polygon *p,struct render_point *start, uint32_t off
 				n_txt_v=p->a_txt.x[1]+(f1*p->r_txt.x[1])+(f2*p->s_txt.x[1]); 
 
 				if(d_light!=0) { 
-
-
-					//SYS_PLOTWITHCOLOR 
+					SYS_PLOTWITHCOLOR 
+					/*
 					if(d_x>=LIN_PIXELS>>1) { 
 						e_r_ps_x=d_x/LIN_PIXELS*LIN_PIXELS+ps_x; d_x<<=16; 
 						while(ps_x<e_r_ps_x) { 
@@ -279,7 +281,7 @@ void psys_256_plottxt(struct polygon *p,struct render_point *start, uint32_t off
 								light+=d_light;
        								if(light>c_light) { 
 									c_light+=d_x; 
-									/*colors+=add_colors;*/ 
+									colors+=add_colors; 
 								} 
        							} 
       						} 
@@ -288,6 +290,7 @@ void psys_256_plottxt(struct polygon *p,struct render_point *start, uint32_t off
 						d_x<<=16; 
 						SYS_LIGHTSCANLINE(e_rest,er_n_3d.x[0]*e_rest,er_rXd.x[0]*e_rest,er_dXs.x[0]*e_rest) 
 					} 
+					*/
     				} else {
 					SYS_PLOTWITHOUTCOLOR 
 				}

@@ -12,7 +12,6 @@ major:
 separate configurable descent binary, data and mission dirs
 graphical configuration tool
 fix: littlebulbs in texture lists are garbage (opt_txt.c)
-partially done: software texture mapper (lighting is missing plotsys.c)
 texture set not loaded correctly when loading new level on unix (uppercase)
 fix ALOT of memory leaks (according to valgrind)
 
@@ -71,3 +70,4 @@ fix initial paths - especially on windows
 fix keys help screen to display sdl keynames
 fix make keypad enter work for entry boxes
 port other still not working keys
+partially done: software texture mapper (lighting is missing plotsys.c) => done
