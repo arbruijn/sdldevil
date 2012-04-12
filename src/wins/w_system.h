@@ -47,7 +47,7 @@ struct ws_bitmap {
 
 typedef void ws_cursor;
 
-int ws_initgrfx(int xres, int yres, int color_depth, const char *fontname);
+int ws_initgrfx(int xres, int yres, int color_depth, int fullscreen, const char *fontname);
 void ws_resetmousecolors(void);
 ws_cursor *ws_initcursor(char *data, int w, int h, int xo, int yo,
 			 long *colortable);
@@ -98,6 +98,7 @@ int ws_waitforkey(void);
 int ws_testforkey(void);
 void ws_setdriver(const char *name);
 char * ws_getkeyname(int key); 
+char ** ws_getscreenmodes(int * modes_count);
 void ws_translatepixels (unsigned char* src, uint32_t* dst, int length);
 uint32_t ws_getRGBAColor(unsigned char i);
 uint32_t ws_getNativeColorRGB(int r, int g, int b);

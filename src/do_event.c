@@ -38,6 +38,7 @@
 #include "credits.h"
 #include "do_event.h"
 #include "lac_cfg.h"
+#include "sdlconfig.h"
 
 void dec_fastquit(int ec) { savestatus(0); closegrph(); exit(1); }
 
@@ -466,6 +467,14 @@ void dec_changeview(int ec)
 void dec_wireframe(int ec)
  { view.drawwhat^=DW_CUBES; plotlevel(); }
 
+
+// FFE run configuration 
+void dec_sdldevilcfg(int ec)
+{
+	sdlconfigdialog();
+}
+
+
 void dec_dummy(int ec) { waitmsg("Functioncode %x not used"); }
 
 void (*do_event[ec_num_of_codes])(int ec)=
@@ -497,5 +506,5 @@ void (*do_event[ec_num_of_codes])(int ec)=
    dec_render,dec_render,dec_render,dec_render,dec_tagflatsides,
    dec_usepnttag,dec_nextedge,dec_prevedge,dec_edgemode,dec_makestdside,
    dec_setcornerlight,dec_resetsideedge,dec_loadmacro,dec_savelevel,
-   dec_makeedgecoplanar };
+   dec_makeedgecoplanar,dec_sdldevilcfg };
 

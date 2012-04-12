@@ -11,6 +11,7 @@ user report (pumo): specific levels crash when loading or showing bogus infos
 major:
 separate configurable descent binary, data and mission dirs
 graphical configuration tool
+keyrepeat
 fix: littlebulbs in texture lists are garbage (opt_txt.c)
 texture set not loaded correctly when loading new level on unix (uppercase)
 fix ALOT of memory leaks (according to valgrind)

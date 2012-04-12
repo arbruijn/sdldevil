@@ -87,7 +87,7 @@ int w_initwins(int xres, int yres, int colors, const char *fontname)
     notes.titlebar_text = NULL;
     if ((errf = fopen("devil.err", "w")) == NULL)
 	errf = stdout;
-    if (!ws_initgrfx(xres, yres, colors, fontname))
+    if (!ws_initgrfx(xres, yres, colors, 0, fontname))
 	return 0;
     ws_setcolor(0, 0, 0, 0);
     notes.colindex[cv_bg] = w_makecolor(0, 0, 0);

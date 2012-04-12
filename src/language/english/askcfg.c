@@ -103,7 +103,7 @@ void testscreen(int grfxdrv,int res)
   "Press a key.",grfxdrvs[grfxdrv],xs=res_xysize[res][0],
   ys=res_xysize[res][1]);
  ws_waitforkey();
- if(ws_initgrfx(xs,ys,32,init.fontname))
+ if(ws_initgrfx(xs,ys,32,0,init.fontname))
   {
   ws_setcolor(1,255,255,255); ws_setcolor(2,0,0,255);
   ws_setcolor(3,255,0,0);

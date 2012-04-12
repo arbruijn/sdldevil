@@ -1,3 +1,6 @@
+V0.5
+ * fixed errors in POG loading (double-free)
+
 V0.4
  * fixed HOG manager crash on windows
  * fixed debug output which inflated devil.err with useless crap

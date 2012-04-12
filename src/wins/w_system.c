@@ -60,7 +60,7 @@ extern FILE *errf;
 /* Initialize Grfx-Mode&Mouse.Try to use xres,yres,colors and font <fontname>.
    If you are successful, return a 1.
    If you can't initialize this mode, return a 0. */
-int ws_initgrfx(int xres, int yres, int color_depth, const char *fontname)
+int ws_initgrfx(int xres, int yres, int color_depth, int fullscreen, const char *fontname)
 {
 	//static unsigned char pixels[2];
     
@@ -539,7 +539,7 @@ int ws_getevent(struct ws_event *se, int wait)
 					break;
 				}
 			} while ((me.type != SDL_KEYDOWN) && (me.type != SDL_MOUSEBUTTONDOWN) && (me.type != SDL_MOUSEBUTTONUP));
-			if (got_event) { printf("gotevent\n"); }
+			//if (got_event) { printf("gotevent\n"); }
 		
 		} else {
 			do {
@@ -1035,6 +1035,31 @@ char * ws_getkeyname(int key) {
 }
 
 
+// get available screenmodes
+// result needs to be freed by caller
+char ** ws_getscreenmodes(int * modes_count) {
+	SDL_Rect ** modes;
+	int i, num_modes;
+	char ** screenmodes;
+
+	modes = SDL_ListModes(NULL, SDL_FULLSCREEN|SDL_HWSURFACE);
+	for (i=0; modes[i]; i++);
+	
+	num_modes = i;
+	screenmodes = malloc(sizeof(char*) * num_modes); 
+	
+	*modes_count = 0;
+	for (i=0; modes[i]; i++) {
+		if ((modes[i]->w < 640) || (modes[i]->h < 480))
+			continue;
+		screenmodes[*modes_count] = malloc(sizeof(char) * 10);
+		sprintf(screenmodes[*modes_count], "%ix%i", modes[i]->w, modes[i]->h);
+		(*modes_count)++;
+	}
+
+	return screenmodes;
+		
+}
 
 
 // translate pixels from palette to native format

@@ -170,7 +170,7 @@ void b_changepigfile(struct w_button *b)
 struct w_button *b_movemode, *b_currmode, *b_movebts[6], *b_pigfile,
     *b_pogfile;
 
-void changepogfile(char *pogfilename)
+void changepogfile(const char *pogfilename)
 {
     char const *pogname;
     FILE *pf = NULL;
@@ -190,8 +190,11 @@ void changepogfile(char *pogfilename)
 	checkmem(pig.current_pogname = MALLOC(strlen(pogname) + 1));
 	strcpy(pig.current_pogname, pogname);
     }
+    /* FFE prevent double-free - pogfilename is allocated
+    outside this function, so it should get freed there.
     if (pogfilename)
 	FREE(pogfilename);
+    */
     newpigfile(l ? l->pigname : pig.default_pigname, pf);
 }
 
