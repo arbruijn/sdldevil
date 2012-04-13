@@ -6,6 +6,9 @@ mandatory:
 partially done: all code that depends on sizeof(long) == 4 which breaks on 64bit machines
 user report (pumo): specific levels crash when loading or showing bogus infos
   DMB2 created levels showing this issue? need further investigation here.
+crash when deleting tagged cubes
+crash when flying around with rendering on and lighting
+
 
 
 major:
@@ -72,3 +75,4 @@ fix keys help screen to display sdl keynames
 fix make keypad enter work for entry boxes
 port other still not working keys
 partially done: software texture mapper (lighting is missing plotsys.c) => done
+crash when switching to /4 texture list

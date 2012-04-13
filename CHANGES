@@ -1,5 +1,6 @@
 V0.5
  * fixed errors in POG loading (double-free)
+ * fixed crash in /4 texture view
 
 V0.4
  * fixed HOG manager crash on windows

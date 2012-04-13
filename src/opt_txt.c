@@ -250,7 +250,7 @@ void tl_refreshtxts(struct txt_list_win *tlw)
 		size = 16;
 		if (i < tlw->maxnum) {
 		    memset(texture, view.color[BLACK], 64 * 64);
-			init_txt_buffer(tlw->txt_buffer[y*tl_xnumtxt(tlw)+x], 64*64, 0, 0, 0);
+			init_txt_buffer(tlw->txt_buffer[y*tl_xnumtxt(tlw)+x], 16*16, 0, 0, 0);
 		    readbitmap(texture, NULL, tlw->t[i], 0);
 		    for (x2 = 0; x2 < 16; x2++)
 			for (y2 = 0; y2 < 16; y2++)
