@@ -36,6 +36,9 @@ void sdlconfigdialog(void)
 //	char ** screenmodes = { "bla", "blubb"};
 //	screenmodes_count = 2;
 
+	char ** keys = { "move forward", "move backward", "do whatever", "dominate world" };
+	int keys_count = 4;
+
 
 	char d1datapath[MAX_PATH_LEN], d1missionpath[MAX_PATH_LEN], d1binarypath[MAX_PATH_LEN];
 	char d2datapath[MAX_PATH_LEN], d2missionpath[MAX_PATH_LEN], d2binarypath[MAX_PATH_LEN];
@@ -47,11 +50,13 @@ void sdlconfigdialog(void)
 	*d2missionpath = 0;
 	*d2binarypath = 0;
 
-	struct w_b_press b_ok, b_cancel;
+	struct w_b_press b_ok, b_cancel, b_keymapup, b_keymapdown;
 
 	// Fields for Descent Paths
 	struct w_b_string b_d1datapath, b_d1missionpath, b_d1binarypath;
 	struct w_b_string b_d2datapath, b_d2missionpath, b_d2binarypath;
+
+	struct w_b_strlist b_keymap;
 
 	struct w_b_string b_winxsize, b_winysize;
 	struct w_b_choose b_descentversion, b_fullscreenresolution;
@@ -103,6 +108,13 @@ void sdlconfigdialog(void)
 	b_fullscreenresolution.d_xsize = 64;
 	b_fullscreenresolution.select_lroutine = b_fullscreenresolution.select_rroutine = NULL;
 
+	b_keymap.max_selected = 1;
+	b_keymap.no_rows = keys_count;
+	b_keymap.strings = keys;
+	b_keymap.no_strings = keys_count;
+	b_keymap.start_no = 0;
+	b_keymap.l_string_selected = b_keymap.r_string_selected = NULL;
+
 	i = 0;
 	checkmem(b[0] = w_addstdbutton(ow, w_b_string, 0, i, w.xsize-2, -1, "Descent 1 data path      ", &b_d1datapath, 1));
 	checkmem(b[1] = w_addstdbutton(ow, w_b_string, 0, i+=ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 1 mission path   ", &b_d1missionpath, 1));
@@ -110,8 +122,10 @@ void sdlconfigdialog(void)
 	checkmem(b[3] = w_addstdbutton(ow, w_b_string, 0, i+=ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 2 data path      ", &b_d2datapath, 1));
 	checkmem(b[4] = w_addstdbutton(ow, w_b_string, 0, i+=ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 2 mission path   ", &b_d2missionpath, 1));
 	checkmem(b[5] = w_addstdbutton(ow, w_b_string, 0, i+=ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 2 executable path", &b_d2binarypath, 1));
-	checkmem(b[6] = w_addstdbutton(ow, w_b_switch, 0, i+=ELEMENT_HEIGHT, 64, -1, "Fullscreen", &b_fullscreen, 1));
-	checkmem(b[6] = w_addstdbutton(ow, w_b_choose, 64, i, 128, -1, "Screen res", &b_fullscreenresolution, 1));
+	checkmem(b[6] = w_addstdbutton(ow, w_b_switch, 200, i+=ELEMENT_HEIGHT, 198, -1, "Fullscreen", &b_fullscreen, 1));
+	b[10] = w_addstdbutton(ow, w_b_list, 0, i, 200, -1, NULL, &b_keymap, 1);
+	checkmem(b[7] = w_addstdbutton(ow, w_b_choose, 200, i+=ELEMENT_HEIGHT, 198, -1, "Screen res", &b_fullscreenresolution, 1));
+
 
 	w_handleuser(1, &b[16], 1, &ow, 0, NULL, NULL);
 

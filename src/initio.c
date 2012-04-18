@@ -232,7 +232,8 @@ int readpalettes(FILE * f)
 	checkmem(palettes[i].mem_lighttables = malloc((NUM_SECURITY * 2 + NUM_LIGHTCOLORS + 1) * 256));
 	
 	// FLOSDL: TODO find out how this shoudl work - was 0xffffff00...
-	palettes[i].lighttables = (unsigned char *) ((unsigned long) palettes[i].mem_lighttables & 0xffffffff);
+	palettes[i].lighttables = (unsigned char *) ((unsigned long) palettes[i].mem_lighttables & 0xffffffffffffff00);
+	palettes[i].lighttables += 256;
 	if (fread(&palettes[i].lighttables[256 * NUM_SECURITY], 256, NUM_LIGHTCOLORS, f) != NUM_LIGHTCOLORS)
 	    return 0;
 	/* this is to get proper light values even if we have some trouble with
