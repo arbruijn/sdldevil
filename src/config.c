@@ -769,7 +769,7 @@ int readconfig(void)
     int i, j;
     FILE *f, *hamf;
     char *ininame, *hamname, *hamfname, buffer[300];
-    long int hamver;
+    int32_t hamver;
     lac_read_cfg();
     while ((f = fopen(init.cfgname, "r+")) == NULL) {
 	printf(TXT_CANTREADCFG, init.cfgname);

@@ -47,19 +47,19 @@ int maxdepth; /* =(view.quarterway/(10*65536.0))^2+4.5, approx. value */
 
 /* set the light on c,wd,cd from the lightsource at spos with brightness 
  light. return a 0 if the transferred light is nearly 0, 1 otherwise */
-int setcornerlight(struct point *spos,unsigned int light,
- struct node *n,int wd,int cd,unsigned short *add)
+int setcornerlight(struct point *spos,uint32_t light,
+ struct node *n,int wd,int cd,uint16_t *add)
  {
  int j;
  float s,l;
  struct point d1,*epos=n->d.c->p[wallpts[wd][cd]]->d.p;
- unsigned long tmp;
+ uint32_t tmp;
  for(j=0;j<3;j++) d1.x[j]=epos->x[j]-spos->x[j];
  l=sqrt(SCALAR(&d1,&d1));
  s=(l<=MINWAY ? 1.0 : sqr_qw_mw/((l+qw_2mw)*(l+qw_2mw)));
  if(s<=MINFACTOR) return 0;
  if(n->d.c->walls[wd]!=NULL)
-  add[wd*4+cd]=(tmp=add[wd*4+cd]+(unsigned long)(s*light))>theMaxLight ?
+  add[wd*4+cd]=(tmp=add[wd*4+cd]+(uint32_t)(s*light))>theMaxLight ?
    theMaxLight :tmp; 
  return 1;
  }
@@ -246,11 +246,14 @@ void calcillumwall(struct node *c,int wall,int *light)
  struct lightsource *ls;
  struct list effects,illum_cubes;
  struct ls_effect *lse;
- unsigned long tmp;
+ uint32_t tmp;
  if(init_test&4) 
   fprintf(errf,"Calculating effects of light source %d,%d\n",c->no,wall);
  checkmem(nc_w=MALLOC(sizeof(int)*maxdepth));
  checkmem(nc=MALLOC(sizeof(struct node *)*maxdepth));
+ /* FFE - initialize the mem since calclseffects (line 176) 
+    comparison depends on it's initial value */
+ memset(nc, 0, sizeof(struct node *) * maxdepth);
  minx=miny=65536; maxx=maxy=-65536;
  for(i=0;i<4;i++)
   { if(minx>w->corners[i].x[0]) minx=w->corners[i].x[0];

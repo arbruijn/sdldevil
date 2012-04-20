@@ -371,7 +371,7 @@ void r_fl_mask(struct w_button *b)
 void select_button(struct w_button *b, int withtagged)
 {
     struct infoitem *i = (struct infoitem *) b->data;
-    unsigned long oldno, no;
+    uint32_t oldno, no;
     my_assert(getno(i, &oldno, NULL));
     if (b->d.ls->selected >= 0 && b->d.ls->selected < i->od->size)
 	no = i->od->data[b->d.ls->selected]->no;
