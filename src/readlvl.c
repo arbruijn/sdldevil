@@ -1152,7 +1152,10 @@ int closelevel(struct leveldata *ld, int warn)
 	    killnode(&view.levels, ld->n);
     }
     for (i = 0; i < tt_number; i++)
-	freelist(&ld->tagged[i], free);
+	/* FFE don't free tagged elements' data since they point just
+	   to other list elements which get freed below */
+	//freelist(&ld->tagged[i], free);
+	freelist(&ld->tagged[i], NULL);
     freelist(&ld->lightsources, freelightsource);
     freelist(&ld->lines, free);
     freelist(&ld->pts, free);
