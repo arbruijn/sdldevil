@@ -346,7 +346,7 @@ void delete_ref_ls(struct node* c)
             ls = p->d.ls;
             flag = 0;
 
-            for(pe=ls->effects.head; pe!=NULL; pe=pe->next)
+            for(pe=ls->effects.head; pe->next!=NULL; pe=pe->next)
             {
                 if(pe->d.lse!=NULL)
                 {
