@@ -277,8 +277,14 @@ void tagbox(int lr,int dx1,int dy1,int dx2,int dy2,int op)
    for(n=l->cubes.head;n->next!=NULL;n=n->next)
     {
     for(i=0;i<8;i++)
-     if(!tag_testfunc(lr,n->d.c->p[i]->d.p,dx1,dy1,dx2,dy2)) break;
-    if(i==8) if(op) tag(view.currmode,n); else untag(view.currmode,n);
+     if(!tag_testfunc(lr,n->d.c->p[i]->d.p,dx1,dy1,dx2,dy2)) 
+	break;
+    if(i==8) {
+	if(op) 
+		tag(view.currmode,n); 
+	else 
+		untag(view.currmode,n);
+    }
     }
    break;
   case tt_wall: 
@@ -288,7 +294,12 @@ void tagbox(int lr,int dx1,int dy1,int dx2,int dy2,int op)
      for(i=0;i<4;i++) 
       if(!tag_testfunc(lr,n->d.c->p[wallpts[j][i]]->d.p,dx1,dy1,dx2,dy2))
        break;
-     if(i==4) if(op) tag(view.currmode,n,j); else untag(view.currmode,n,j);
+     if(i==4) {
+	if(op) 
+		tag(view.currmode,n,j); 
+	else 
+		untag(view.currmode,n,j);
+     }
      }
    break;
   case tt_edge:
@@ -298,30 +309,47 @@ void tagbox(int lr,int dx1,int dy1,int dx2,int dy2,int op)
      for(k=0;k<3;k++) 
       { c.x[k]=0.0; 
         for(i=0;i<4;i++) c.x[k]+=n->d.c->p[wallpts[j][i]]->d.p->x[k]/4.0; }
-     for(i=0;i<4;i++) 
-      {
+     for(i=0;i<4;i++) {
       for(k=0;k<3;k++) 
        p.x[k]=c.x[k]*0.4+n->d.c->p[wallpts[j][i]]->d.p->x[k]*0.6;
-      if(tag_testfunc(lr,&p,dx1,dy1,dx2,dy2) &&
-       tag_testfunc(lr,n->d.c->p[wallpts[j][i]]->d.p,dx1,dy1,dx2,dy2))
-       if(op) tag(view.currmode,n,j,i); else untag(view.currmode,n,j,i);
+      if(tag_testfunc(lr,&p,dx1,dy1,dx2,dy2) && tag_testfunc(lr,n->d.c->p[wallpts[j][i]]->d.p,dx1,dy1,dx2,dy2)) {
+       	if(op) 
+		tag(view.currmode,n,j,i); 
+	else 
+		untag(view.currmode,n,j,i);
       }
+     }
      }
    break;
   case tt_pnt:
-   for(n=l->pts.head;n->next!=NULL;n=n->next)
-    if(tag_testfunc(lr,n->d.p,dx1,dy1,dx2,dy2)) 
-     if(op) tag(view.currmode,n); else untag(view.currmode,n);
+   for(n=l->pts.head;n->next!=NULL;n=n->next) {
+    if(tag_testfunc(lr,n->d.p,dx1,dy1,dx2,dy2)) {
+     	if(op) 
+		tag(view.currmode,n); 
+	else 
+		untag(view.currmode,n);
+    }
+   }
    break;
   case tt_door:
-   for(n=l->doors.head;n->next!=NULL;n=n->next)
-    if(tag_testfunc(lr,&n->d.d->p,dx1,dy1,dx2,dy2)) 
-     if(op) tag(view.currmode,n); else untag(view.currmode,n);
+   for(n=l->doors.head;n->next!=NULL;n=n->next) {
+    if(tag_testfunc(lr,&n->d.d->p,dx1,dy1,dx2,dy2)) {
+     	if(op) 
+		tag(view.currmode,n); 
+	else 
+		untag(view.currmode,n);
+    }
+   }
    break;
   case tt_thing:
-   for(n=l->things.head;n->next!=NULL;n=n->next)
-    if(tag_testfunc(lr,&n->d.t->p[0],dx1,dy1,dx2,dy2)) 
-     if(op) tag(view.currmode,n); else untag(view.currmode,n);
+   for(n=l->things.head;n->next!=NULL;n=n->next) {
+    if(tag_testfunc(lr,&n->d.t->p[0],dx1,dy1,dx2,dy2)) {
+     	if(op) 
+		tag(view.currmode,n); 
+	else 
+		untag(view.currmode,n);
+    }
+   }
    break;
   default: my_assert(0);
   }

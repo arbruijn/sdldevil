@@ -230,11 +230,12 @@ int wi_bk_list(struct ws_event *ws,struct wi_button *b)
   }
  while(!end);
  wi_drawbutton(b,0);
- if(end==1)
+ if(end==1) {
   if(leftright && b->b.d.sls->l_string_selected)
    b->b.d.sls->l_string_selected(&b->b);
   else if(!leftright && b->b.d.sls->r_string_selected)
    b->b.d.sls->r_string_selected(&b->b);
+ }
  return end==2 ? 0 : 1;
  }
  
