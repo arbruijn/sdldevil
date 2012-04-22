@@ -399,10 +399,12 @@ void makelightsources(struct leveldata *ld, struct turnoff *to, int tonum,
 	    if ((lse = cubelse[cl[ncl].cube]) == NULL) {
 		checkmem(cubelse[cl[ncl].cube] = lse =
 			 MALLOC(sizeof(struct ls_effect)));
-		checkmem(addnode(&ls->effects, -1, lse));
+		checkmem(addnode(&ls->effects, -1, (void *)lse));
 		lse->cube = cubes[cl[ncl].cube];
 		memset(lse->smoothed, 0, sizeof(unsigned char) * 24);
-		memset(lse->add_light, 0, sizeof(unsigned char) * 24);
+		// FFE: this must be sizeof(uint16_t)
+		//memset(lse->add_light, 0, sizeof(unsigned char) * 24);
+		memset(lse->add_light, 0, sizeof(uint16_t) * 24);
 	    }
 	    for (i = 0; i < 4; i++)
 		lse->add_light[cl[ncl].side * 4 + i] =

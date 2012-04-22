@@ -238,9 +238,10 @@ void setthingcube(struct thing *t)
  /* still no cube found? then brute force: Check all cubes */
  if(!t->nc) t->nc=findpntcube(&l->cubes,&t->p[0]);
  /* if the thing is in a new cube add it to the list */
- if(t->nc) 
-  if(n) listnode_tail(&t->nc->d.c->things,n);
-  else addnode(&t->nc->d.c->things,-1,t);
+  if(t->nc) {
+   if(n) listnode_tail(&t->nc->d.c->things,n);
+   else addnode(&t->nc->d.c->things,-1,t);
+  }
  }
  
 void setthingpts(struct thing *t)
