@@ -13,7 +13,7 @@ struct txt_list_win
  struct ham_txt **t;
  struct w_button *b_up,*b_down,*b_mode,*b_display,*b_zoom,*b_m_clear,
   *b_m_load,*b_m_save,*b_m_level,*b_m_down,**b_texture;
- char **txt_buffer;
+ uint32_t **txt_buffer;
  struct ws_bitmap **txt_bitmap;
  unsigned char *marked_txts;
  int oldxpos,oldypos,oldxsize,oldysize,offset,maxnum,maxoffset,txt_xoffset,

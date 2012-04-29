@@ -639,11 +639,12 @@ int readlvldata(char *filename, struct leveldata *ld)
     switch (fhv.version) {
     case LEVVER_D2_10_REG:
     case LEVVER_D2_11_REG:
+    case LEVVER_D2_12_REG:
 	loading_level_version = fhv.version;
 	return D2_REG_readlvldata(lf, ld, fhv.version);
-    case LEVVER_D2_12_REG:
+    /*case LEVVER_D2_12_REG:
 	waitmsg("Can't read levels from the Vertigo series.");
-	return 0;
+	return 0;*/
     case LEVVER_D1_REG:
 	loading_level_version = d1_14_reg;
 	return D1_REG_readlvldata(lf, ld, fhv.version);

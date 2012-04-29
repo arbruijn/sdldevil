@@ -270,23 +270,19 @@ void tl_refreshtxts(struct txt_list_win *tlw)
 		for (x2 = 0; x2 < ILLUM_GRIDSIZE * ILLUM_GRIDSIZE; x2++)
 		    if (tlw->t[i]->my_light[x2])
 			break;
-		if (view.littlebulbson
-		    && x2 < ILLUM_GRIDSIZE * ILLUM_GRIDSIZE) {
-		    for (x2 = 0; x2 < BULBSIZE; x2++)
-			for (y2 = 0; y2 < BULBSIZE; y2++)
-			    tlw->txt_buffer[y * tl_xnumtxt(tlw) +
-					    x][y2 * size + x2 +
-					       size * (size - BULBSIZE)] =
-				pig.bulb[y2 * BULBSIZE + x2];
-		    if (tlw->t[i]->shoot_out_txt >= 0
-			|| tlw->t[i]->anim_seq >= 0)
-			for (x2 = 0; x2 < BULBSIZE; x2++)
-			    for (y2 = 0; y2 < BULBSIZE; y2++)
-				tlw->txt_buffer[y * tl_xnumtxt(tlw) +
-						x][y2 * size + x2 + (size +
-								     1) *
-						   (size - BULBSIZE)] =
-				    pig.brokenbulb[y2 * BULBSIZE + x2];
+		if (view.littlebulbson && x2 < ILLUM_GRIDSIZE * ILLUM_GRIDSIZE) {
+		    for (x2 = 0; x2 < BULBSIZE; x2++) {
+			for (y2 = 0; y2 < BULBSIZE; y2++) {
+			    tlw->txt_buffer[y * tl_xnumtxt(tlw) + x][y2 * size + x2 + size * (size - BULBSIZE)] = ws_getNativeColor(pig.bulb[y2 * BULBSIZE + x2]);
+                        }
+                    }
+		    if (tlw->t[i]->shoot_out_txt >= 0 || tlw->t[i]->anim_seq >= 0) {
+			for (x2 = 0; x2 < BULBSIZE; x2++) { 
+			    for (y2 = 0; y2 < BULBSIZE; y2++) {
+				tlw->txt_buffer[y * tl_xnumtxt(tlw) + x][y2 * size + x2 + (size + 1) * (size - BULBSIZE)] = ws_getNativeColor(pig.brokenbulb[y2 * BULBSIZE + x2]);
+                            }
+                        }
+                    }
 		}
 	    }
 	    w_drawbutton(tlw->b_texture[y * tl_xnumtxt(tlw) + x]);
@@ -497,6 +493,7 @@ void tl_changeoffset(struct w_button *b, int amount)
   { checkmem(tlw->leveltxtlist=REALLOC(tlw->leveltxtlist, \
      ++tlw->num_leveltxtlist*sizeof(struct ham_txt *))); \
     tlw->leveltxtlist[tlw->num_leveltxtlist-1]=&pig.rdl_txts[num_rdlno]; }
+
 void tl_makelvllist(struct txt_list_win *tlw)
 {
     struct node *n;
@@ -1133,7 +1130,7 @@ void texture_list(struct infoitem *i, enum txttypes tt, int no)
     } else {
 	w_wintofront(tl_win[tlw_type].win);
         // FFE: also refresh the window to show the right textures
-        tl_refresh(tl_win[tlw_type].win, tl_win[tlw_type].win->data);
+        tl_refreshtxts(&tl_win[tlw_type]);
     }
 }
 
@@ -1355,7 +1352,7 @@ void b_selectdooranim(struct w_button *b, int withtagged)
 	rdlno = pig.anim_starts[animno];
     else
 	rdlno = pig.anim_starts[animno];
-    for (n = 0, txtno = -10; n < tlw->maxnum; n++)
+    for (n = 0, txtno = -10; n < tlw->maxnum; n++) 
 	if (tlw->t[n]->rdlno == rdlno) {
 	    txtno = n;
 	    break;
