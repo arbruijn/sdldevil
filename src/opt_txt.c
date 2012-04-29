@@ -1130,8 +1130,11 @@ void texture_list(struct infoitem *i, enum txttypes tt, int no)
 	    tl_win[tlw_type].zoom.selected = saved_zoom;
 	    tl_selectzoom(tl_win[tlw_type].b_zoom);
 	}
-    } else
+    } else {
 	w_wintofront(tl_win[tlw_type].win);
+        // FFE: also refresh the window to show the right textures
+        tl_refresh(tl_win[tlw_type].win, tl_win[tlw_type].win->data);
+    }
 }
 
 /* reinit txtlist for infoitem i */

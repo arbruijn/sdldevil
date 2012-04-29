@@ -729,9 +729,10 @@ int testcube(struct node *nc,int withmsg)
     l1.x[l3n]=nc->d.c->p[wallpts[l1n][l2n]]->d.p->x[l3n]-
      nc->d.c->p[wallpts[l1n][(l2n+1)&3]]->d.p->x[l3n]; 
    ll1=LENGTH(&l1);
+   /*
    if(ll1<=640.0 || ll1>32700*640.0)
     { if(withmsg) printmsg(TXT_TPLINETOOLONG,l2n,(l2n+1)&3,l1n,nc->no);
-      return 0; }
+      return 0; } */
    } 
  for(nt=nc->d.c->things.head;nt->next!=NULL;nt=nt->next) 
   setthingcube(nt->d.t);

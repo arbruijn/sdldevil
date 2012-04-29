@@ -586,7 +586,7 @@ struct viewdata {
     float illum_brightness;
 /* 120 */
     /* The basic value for every corner */
-    unsigned short illum_minvalue;
+    uint16_t illum_minvalue;
 /* 122 */
     /* Some options for warning */
     int warn_convex, warn_doublekeys,
@@ -599,15 +599,15 @@ struct viewdata {
     int doubleclick;
     int render;
 /* 162 */
-    unsigned short int gamma_corr;
+    uint16_t gamma_corr;
 /* 164 */
     int coord_axis;
     int flip_y_axis;
     int draw_orig_lines;
     int littlebulbson;
 /* 180 */
-    unsigned short int mouse_flipaxis;
-    unsigned short int blinkinglightson;
+    uint16_t mouse_flipaxis;
+    uint16_t blinkinglightson;
     float timescale;
     int warn_illuminate;
     int warn_frameratetoosmall;
@@ -713,10 +713,8 @@ struct pigdata {
 };
 struct initdata {
     enum descent d_ver;
-    char *fontname, *cfgname, *lastname, *menuname, *batchfilename,
-	*lightname, *convtablename;
-    char *macropath, *levelpath, *cfgpath, *missionpath, levelext[4],
-	*alllevelexts, *txtlistpath, *playmsnpath, *pogpath;
+    char *fontname, *cfgname, *lastname, *menuname, *batchfilename, *lightname, *convtablename;
+    char *macropath, *levelpath, *cfgpath, *missionpath, levelext[4], *alllevelexts, *txtlistpath, *playmsnpath, *pogpath;
     char *pigpaths[desc_number];
     int xres, yres;
     int numbuttons;

@@ -1,4 +1,8 @@
 /* Differences between Descent versions */
+
+#ifndef DESCDEFS_H
+#define DESCDEFS_H
+
 enum descent { d1_10_sw,d1_10_reg,d1_14_reg,d2_10_sw,d2_10_reg,
  d2_11_reg,d2_12_reg,desc_number };
 extern const char *extnames[desc_number];
@@ -48,3 +52,5 @@ enum switchtypes { switch_opendoor=0,switch_closedoor=1,switch_producer=2,
  switch_turnofflight=12,switch_turnonlight=13,
  /* for me: */switch_nothing=0xff };
 enum switchflags { switchflag_nomsg=1,switchflag_once=2 };
+
+#endif

@@ -20,26 +20,150 @@
 
 #include "structs.h"
 #include "sdlconfig.h"
-#include "wins/w_system.h"
+#include "sdlconfig_hotkeys.h"
+#include "wins/wins.h"
+//#include "wins/w_system.h"
+#include "userio.h"
+
 
 #define MAX_PATH_LEN 255
 #define ELEMENT_HEIGHT 21
 
-void sdlconfigdialog(void)
+// move lists up / down
+void sdld_list_updown(struct w_button **b, int bno, int add)
 {
-	int i, no, dno, no_rows, xsize;
+    struct w_b_strlist *bsls = b[bno]->d.sls;
+    if (add < -1 || add > 1)
+	bsls->start_no += bsls->no_rows / add;
+    else
+	bsls->start_no += add;
+    if (bsls->start_no > bsls->no_strings - bsls->no_rows)
+	bsls->start_no = bsls->no_strings - bsls->no_rows;
+    if (bsls->start_no < 0)
+	bsls->start_no = 0;
+    w_drawbutton(b[bno]);
+}
+
+// callbacks for buttons which scroll the keymap list
+void sdld_keymap_one_up(struct w_button * b) { 
+    sdld_list_updown(b->data, 10, -1);
+}
+void sdld_keymap_one_down(struct w_button * b) { 
+    sdld_list_updown(b->data, 10, 1);
+}
+void sdld_keymap_page_up(struct w_button * b) { 
+    sdld_list_updown(b->data, 10, -2);
+}
+void sdld_keymap_page_down(struct w_button * b) { 
+    sdld_list_updown(b->data, 10, 2);
+}
+
+
+// calculate the rank of a key ... the more modifiers, the higher the rank
+void sdld_set_rank (struct sdld_hotkey * hotkey) {
+    int i;
+    hotkey->rank = 0;
+    for (i=0; i<5; i++) {
+        if (hotkey->kbstat & (1<<i)) 
+            (hotkey->rank)++;
+    }
+}
+
+// generate human readable string for key and modifiers
+void sdld_generate_hotkeystring(char * dest, const int key, const int modifiers) {
+    int i;
+    char * keyname;
+    for (i=0; i<SDLD_NUM_KBSTATS; i++) {
+        if (modifiers & sdld_kbstats[i].kbstat) {
+            strcat(dest, sdld_kbstats[i].txt);
+            strcat(dest, "+");
+        }
+    }
+    keyname = ws_getkeyname(key);
+    strcat(dest, keyname);
+}
+
+// redefine key mapping for given key
+void sdld_redefine_key(struct sdld_hotkey * hotkey) 
+{
+    int ready, cancelled, gotevent;
+    ready = 0;
+    cancelled = 0;
+    struct ws_event evt;
+    
+    evt.buttons = 0;    
+    evt.key = 0;
+    evt.kbstat = 0;
+    
+    printf ("starting\n");
+    
+    while (!ready) {
+        
+        gotevent = ws_getevent(&evt, 1);
+        
+        // mouseclick cancels
+        if (evt.buttons) {
+            cancelled = 1;
+            ready = 1;
+        }
+        
+        if (gotevent) {
+            hotkey->key = evt.key;
+            hotkey->kbstat = evt.kbstat;
+            sdld_set_rank(hotkey);
+            ready = 1;
+        }
+            
+    }
+    
+    printf("finished\n");
+    
+}
+
+
+
+// callback for change key butten
+void sdld_keymap_change(struct w_button * b) {
+    int i;
+    struct sdld_keychange_data * keychange_data = b->data;
+    char buffer[64];
+    
+    struct w_b_strlist * list =  keychange_data->buttons[10]->d.sls;
+    for (i=0; i<list->no_strings; i++) {
+        if (list->sel_arr[i]) {
+            sdld_redefine_key(keychange_data->hotkeys[i]);
+            *buffer = 0;
+            sdld_generate_hotkeystring(buffer, keychange_data->hotkeys[i]->key, keychange_data->hotkeys[i]->kbstat);
+            strncpy (&(list->strings[i][34]), buffer, 24);
+            w_drawbutton(keychange_data->buttons[10]);
+            break;
+        }
+    }
+    
+}
+
+// show sdldevil config dialog
+void sdld_configdialog(void) {
+    
+	int i, j, key, kbstat, event;
 	struct w_window w, *ow;
 	struct w_button *b[20];
 
 	int screenmodes_count;
 	char ** screenmodes = ws_getscreenmodes(&screenmodes_count);
+        char buffer[64];
 //	char ** screenmodes = { "bla", "blubb"};
 //	screenmodes_count = 2;
 
-	char ** keys = { "move forward", "move backward", "do whatever", "dominate world" };
-	int keys_count = 4;
-
-
+        char ** descentversions;
+	char ** keys;
+	char * keys_sel_array;
+        int num_keys;
+        
+        struct sdld_hotkey ** new_hotkeys;
+        struct sdld_keychange_data * keychange_data;
+        keychange_data = MALLOC(sizeof(struct sdld_keychange_data));
+        
 	char d1datapath[MAX_PATH_LEN], d1missionpath[MAX_PATH_LEN], d1binarypath[MAX_PATH_LEN];
 	char d2datapath[MAX_PATH_LEN], d2missionpath[MAX_PATH_LEN], d2binarypath[MAX_PATH_LEN];
 
@@ -50,7 +174,7 @@ void sdlconfigdialog(void)
 	*d2missionpath = 0;
 	*d2binarypath = 0;
 
-	struct w_b_press b_ok, b_cancel, b_keymapup, b_keymapdown;
+	struct w_b_press b_save, b_cancel, b_keymapup, b_keymapdown, b_keymapchange;
 
 	// Fields for Descent Paths
 	struct w_b_string b_d1datapath, b_d1missionpath, b_d1binarypath;
@@ -58,15 +182,76 @@ void sdlconfigdialog(void)
 
 	struct w_b_strlist b_keymap;
 
-	struct w_b_string b_winxsize, b_winysize;
+	//struct w_b_string b_winxsize, b_winysize;
 	struct w_b_choose b_descentversion, b_fullscreenresolution;
 
 	struct w_b_switch b_keyrepeat, b_fullscreen;
 
+        
+        // init hotkeys config
+        num_keys = view.ec_keycodes == NULL ? SDLD_NUM_HOTKEYS : view.num_keycodes;
+        
+        keys = MALLOC(sizeof(char*) * num_keys);
+        keys_sel_array = MALLOC(sizeof(char) * num_keys);
+        new_hotkeys = MALLOC(sizeof(struct sdld_hotkey *) * num_keys);
+        
+        for (i=0; i<num_keys; i++) {
+            keys[i] = MALLOC(sizeof(char) * 64);
+            new_hotkeys[i] = MALLOC(sizeof(struct sdld_hotkey));
+            
+            if (view.ec_keycodes == NULL) {
+                strncpy(keys[i], sdld_hotkeys[i].txt, 32);    
+                new_hotkeys[i]->txt = sdld_hotkeys[i].txt;
+            } else {
+                strncpy(keys[i], view.txt_keycode[i], 32); 
+                new_hotkeys[i]->txt = view.txt_keycode[i];
+            }
+                                                           
+            while (strlen(keys[i]) < 34)
+                strcat(keys[i], " ");
+            
+            // in initial config there might be no keycodes defined..
+            // use the defaults then
+            if (view.ec_keycodes == NULL) {
+                key = sdld_hotkeys[i].key;
+                kbstat = sdld_hotkeys[i].kbstat;
+                event = sdld_hotkeys[i].event;
+            } else {
+                key = view.ec_keycodes[i].key;
+                kbstat = view.ec_keycodes[i].kbstat;
+                event = view.ec_keycodes[i].event;
+            }
+            
+            new_hotkeys[i]->key = key;
+            new_hotkeys[i]->kbstat = kbstat;
+            new_hotkeys[i]->event = event;
+            
+            sdld_set_rank(new_hotkeys[i]);
+            
+            *buffer = 0;
+
+            sdld_generate_hotkeystring(buffer, key, kbstat);
+            strncpy (&(keys[i][34]), buffer, 24);
+            
+            keys_sel_array[i] = 0;
+        }
+        
+        
+        keychange_data->buttons = b;
+        keychange_data->hotkeys = new_hotkeys;
+        
+        // init Descent versions
+        descentversions = MALLOC(sizeof(char*) * SDLD_NUM_DESCENTVERSIONS);
+        for (i=0 ; i<SDLD_NUM_DESCENTVERSIONS; i++) {
+            descentversions[i] = MALLOC(sizeof(char) * 64);
+            strncpy(descentversions[i], sdld_descentversions[i].txt, 63);
+        }
+            
+        
 	// init window
 	w.xpos = w.ypos = -1;
 	w.xsize = 400;
-	w.ysize = w_ymaxwinsize() * 3 / 4;
+	w.ysize = 400; //w_ymaxwinsize() * 3 / 4;
 	w.maxxsize = w.maxysize = -1;
 	w.shrunk = 0;
 	w.title = "SDLDevil configuration";
@@ -77,7 +262,7 @@ void sdlconfigdialog(void)
 	w.click_routine = NULL;
 	checkmem(ow = w_openwindow(&w));
 
-	// init pith buttons
+	// init path buttons
 	b_d1datapath.allowed_char = isprint;
 	b_d1datapath.str = d1datapath;
 	b_d1datapath.max_length = MAX_PATH_LEN;
@@ -98,8 +283,23 @@ void sdlconfigdialog(void)
 	b_d2binarypath = b_d1datapath;
 	b_d2binarypath.str = d2binarypath;
 
-	
+
+        b_keymapup.delay = b_keymapdown.delay = 40;
+        b_keymapup.repeat = b_keymapdown.repeat = 15;
+        
+        b_keymapup.l_pressed_routine = b_keymapup.l_routine = sdld_keymap_one_up;
+        b_keymapup.r_pressed_routine = b_keymapup.r_routine = sdld_keymap_page_up;
+
+        b_keymapdown.l_pressed_routine = b_keymapdown.l_routine = sdld_keymap_one_down;
+        b_keymapdown.r_pressed_routine = b_keymapdown.r_routine = sdld_keymap_page_down;
+
+        b_keymapchange.l_pressed_routine = b_keymapchange.r_pressed_routine = b_keymapchange.l_routine = b_keymapchange.r_routine = sdld_keymap_change;
+        
+        
+        b_cancel.l_pressed_routine = b_cancel.r_pressed_routine = b_cancel.l_routine = b_cancel.r_routine = NULL;
+                
 	b_fullscreen.l_routine = b_fullscreen.r_routine = NULL;
+        b_fullscreen.on = 0;
 	
 	
 	b_fullscreenresolution.num_options = screenmodes_count;
@@ -107,11 +307,19 @@ void sdlconfigdialog(void)
 	b_fullscreenresolution.selected = 0;
 	b_fullscreenresolution.d_xsize = 64;
 	b_fullscreenresolution.select_lroutine = b_fullscreenresolution.select_rroutine = NULL;
+        
+        b_descentversion.num_options = SDLD_NUM_DESCENTVERSIONS;
+        b_descentversion.options = descentversions;
+        b_descentversion.selected = 0;
+        b_descentversion.d_xsize = 128;
+        b_descentversion.select_lroutine = b_descentversion.select_rroutine = NULL;
+        
 
 	b_keymap.max_selected = 1;
-	b_keymap.no_rows = keys_count;
+	b_keymap.no_strings = SDLD_NUM_HOTKEYS;
 	b_keymap.strings = keys;
-	b_keymap.no_strings = keys_count;
+	b_keymap.sel_arr = keys_sel_array;
+	b_keymap.no_rows = 16;
 	b_keymap.start_no = 0;
 	b_keymap.l_string_selected = b_keymap.r_string_selected = NULL;
 
@@ -122,12 +330,44 @@ void sdlconfigdialog(void)
 	checkmem(b[3] = w_addstdbutton(ow, w_b_string, 0, i+=ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 2 data path      ", &b_d2datapath, 1));
 	checkmem(b[4] = w_addstdbutton(ow, w_b_string, 0, i+=ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 2 mission path   ", &b_d2missionpath, 1));
 	checkmem(b[5] = w_addstdbutton(ow, w_b_string, 0, i+=ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 2 executable path", &b_d2binarypath, 1));
-	checkmem(b[6] = w_addstdbutton(ow, w_b_switch, 200, i+=ELEMENT_HEIGHT, 198, -1, "Fullscreen", &b_fullscreen, 1));
-	b[10] = w_addstdbutton(ow, w_b_list, 0, i, 200, -1, NULL, &b_keymap, 1);
-	checkmem(b[7] = w_addstdbutton(ow, w_b_choose, 200, i+=ELEMENT_HEIGHT, 198, -1, "Screen res", &b_fullscreenresolution, 1));
+        
+        
+	w_drawbuttonbox(ow, 0, i+ELEMENT_HEIGHT, w.xsize-2, w.ysize-i-ELEMENT_HEIGHT*2);
+        checkmem(b[6] = w_addstdbutton(ow, w_b_switch, 0, i+=ELEMENT_HEIGHT, 200, ELEMENT_HEIGHT, "Fullscreen", &b_fullscreen, 1));
+	checkmem(b[7] = w_addstdbutton(ow, w_b_choose, 200, i, 198, -1, "screen resolution", &b_fullscreenresolution, 1));
+        checkmem(b[8] = w_addstdbutton(ow, w_b_choose, 0, i+=ELEMENT_HEIGHT, w.xsize-2, -1, "Descent version", &b_descentversion, 1));
+        
+        
+        checkmem(b[10] = w_addstdbutton(ow, w_b_list, 0, i+ELEMENT_HEIGHT, w.xsize-2, 164, NULL, &b_keymap, 1)); 
+        i += 185;
+        checkmem(b[11] = w_addstdbutton(ow, w_b_press, 0, i, 64, -1, "/\\", &b_keymapup, 1));
+        checkmem(b[12] = w_addstdbutton(ow, w_b_press, 64, i, 64, -1, "\\/", &b_keymapdown, 1));
+        checkmem(b[13] = w_addstdbutton(ow, w_b_press, 128, i, 64, -1, "change", &b_keymapchange, 1));
+        b[11]->data = b[12]->data = b;
+        b[13]->data = keychange_data;
+	
+        checkmem(b[16] = w_addstdbutton(ow, w_b_press, 10, 350, 64, -1, "Cancel", &b_cancel,1));
 
-
+        //waitmsg("wait");
+        // run dialog
 	w_handleuser(1, &b[16], 1, &ow, 0, NULL, NULL);
 
 	w_closewindow(ow);
+        
+        for (i=0 ; i<SDLD_NUM_DESCENTVERSIONS; i++)
+            FREE(descentversions[i]);
+        
+        FREE(descentversions);
+        
+        for (i=0; i<SDLD_NUM_HOTKEYS; i++) {
+            FREE(keys[i]);
+            FREE(new_hotkeys[i]);
+        }
+        
+        FREE(keys);
+        
+        FREE(keys_sel_array);
+        FREE(new_hotkeys);
+        FREE(keychange_data);
+
 }

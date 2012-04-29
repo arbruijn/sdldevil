@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="80">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df name="src" root="../src">
+      <df name="language">
+        <df name="english">
+          <in>askcfg.c</in>
+          <in>buyman.c</in>
+          <in>do_stat.c</in>
+          <in>text.h</in>
+        </df>
+        <df name="german">
+          <in>ASKCFG.C</in>
+          <in>BUYMAN.C</in>
+          <in>DO_STAT.C</in>
+          <in>TEXT.H</in>
+        </df>
+      </df>
+      <df name="wins">
+        <in>SDL_gfxPrimitives.c</in>
+        <in>SDL_gfxPrimitives.h</in>
+        <in>SDL_rotozoom.c</in>
+        <in>SDL_rotozoom.h</in>
+        <in>devilfont.h</in>
+        <in>w_draw.c</in>
+        <in>w_draw.h</in>
+        <in>w_event.c</in>
+        <in>w_event.h</in>
+        <in>w_init.c</in>
+        <in>w_init.h</in>
+        <in>w_list.c</in>
+        <in>w_list.h</in>
+        <in>w_system.c</in>
+        <in>w_system.h</in>
+        <in>w_test.c</in>
+        <in>w_tools.c</in>
+        <in>w_tools.h</in>
+        <in>wi_buts.c</in>
+        <in>wi_buts.h</in>
+        <in>wi_keys.c</in>
+        <in>wi_keys.h</in>
+        <in>wi_menu.c</in>
+        <in>wi_menu.h</in>
+        <in>wi_winma.c</in>
+        <in>wi_winma.h</in>
+        <in>wins.h</in>
+        <in>wins_all.h</in>
+        <in>wins_int.h</in>
+      </df>
+      <in>askcfg.c</in>
+      <in>askcfg.h</in>
+      <in>calctxt.c</in>
+      <in>calctxt.h</in>
+      <in>click.c</in>
+      <in>click.h</in>
+      <in>config.c</in>
+      <in>config.h</in>
+      <in>convtabl.h</in>
+      <in>credits.h</in>
+      <in>descdefs.h</in>
+      <in>devil.c</in>
+      <in>do_event.c</in>
+      <in>do_event.h</in>
+      <in>do_ins.c</in>
+      <in>do_ins.h</in>
+      <in>do_light.c</in>
+      <in>do_light.h</in>
+      <in>do_mod.c</in>
+      <in>do_mod.h</in>
+      <in>do_move.c</in>
+      <in>do_move.h</in>
+      <in>do_opts.c</in>
+      <in>do_opts.h</in>
+      <in>do_side.c</in>
+      <in>do_side.h</in>
+      <in>do_stat.c</in>
+      <in>do_stat.h</in>
+      <in>do_tag.c</in>
+      <in>do_tag.h</in>
+      <in>grfx.c</in>
+      <in>grfx.h</in>
+      <in>in_plot.h</in>
+      <in>initio.c</in>
+      <in>initio.h</in>
+      <in>insert.c</in>
+      <in>insert.h</in>
+      <in>lac_cfg.c</in>
+      <in>lac_cfg.h</in>
+      <in>macros.c</in>
+      <in>macros.h</in>
+      <in>nodeuni.h</in>
+      <in>opt_txt.c</in>
+      <in>opt_txt.h</in>
+      <in>options.c</in>
+      <in>options.h</in>
+      <in>plot.c</in>
+      <in>plot.h</in>
+      <in>plotdata.h</in>
+      <in>plotmath.c</in>
+      <in>plotsys.c</in>
+      <in>plotsys.h</in>
+      <in>plottxt.c</in>
+      <in>plottxt.h</in>
+      <in>pofdata.h</in>
+      <in>readlvl.c</in>
+      <in>readlvl.h</in>
+      <in>readtxt.c</in>
+      <in>readtxt.h</in>
+      <in>savetool.c</in>
+      <in>savetool.h</in>
+      <in>sdlconfig.c</in>
+      <in>sdlconfig.h</in>
+      <in>sdlconfig_hotkeys.h</in>
+      <in>stdtypes.h</in>
+      <in>structs.h</in>
+      <in>tag.c</in>
+      <in>tag.h</in>
+      <in>title.c</in>
+      <in>title.h</in>
+      <in>tools.c</in>
+      <in>tools.h</in>
+      <in>userio.c</in>
+      <in>userio.h</in>
+      <in>version.h</in>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>../src/Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>../src</Elem>
+  </sourceRootList>
+  <projectmakefile>../src/Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+      </toolsSet>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>../src</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath>../src/sdldevil</executablePath>
+          <cTool>
+            <incDir>
+              <pElem>../src/wins</pElem>
+              <pElem>../src/language</pElem>
+            </incDir>
+            <preprocessorList>
+              <Elem>GNU_C</Elem>
+              <Elem>GO32</Elem>
+            </preprocessorList>
+          </cTool>
+        </makeTool>
+      </makefileType>
+      <item path="../src/convtabl.h" ex="true" tool="3" flavor="0">
+      </item>
+      <item path="../src/language/english/askcfg.c" ex="false" tool="3" flavor="0">
+      </item>
+      <item path="../src/language/english/buyman.c" ex="true" tool="0" flavor="0">
+      </item>
+      <item path="../src/language/english/do_stat.c" ex="false" tool="3" flavor="0">
+      </item>
+      <item path="../src/language/german/ASKCFG.C" ex="true" tool="1" flavor="0">
+      </item>
+      <item path="../src/language/german/BUYMAN.C" ex="true" tool="1" flavor="0">
+      </item>
+      <item path="../src/language/german/DO_STAT.C" ex="true" tool="1" flavor="0">
+      </item>
+      <item path="../src/language/german/TEXT.H" ex="true" tool="3" flavor="0">
+      </item>
+      <item path="../src/plotmath.c" ex="false" tool="3" flavor="0">
+      </item>
+      <item path="../src/wins/w_test.c" ex="true" tool="0" flavor="0">
+      </item>
+      <folder path="src/wins">
+        <cTool>
+          <incDir>
+            <pElem>../src</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+    </conf>
+  </confs>
+</configurationDescriptor>

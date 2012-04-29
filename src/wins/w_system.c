@@ -587,20 +587,30 @@ int ws_getevent(struct ws_event *se, int wait)
 			se->kbstat = 0;	
 
 			if ( (me.key.keysym.mod & KMOD_LSHIFT) || (me.key.keysym.mod & KMOD_RSHIFT)) 
-				se->kbstat |= 1;
+                            se->kbstat |= 1;
 			
 			if ( (me.key.keysym.mod & KMOD_LALT) || (me.key.keysym.mod & KMOD_RALT)) 
-				se->kbstat |= 2;
+                            se->kbstat |= 2;
 			
 			if ( (me.key.keysym.mod & KMOD_LCTRL) || (me.key.keysym.mod & KMOD_RCTRL)) 
-				se->kbstat |= 4;
+                            se->kbstat |= 4;
+                        
 			
-			if (me.key.keysym.mod & KMOD_NUM) 
-				se->kbstat |= 8;
+			if (me.key.keysym.mod & KMOD_NUM)  
+                            se->kbstat |= 8;
+                        
 			
 			if (me.key.keysym.mod & KMOD_CAPS) 
-				se->kbstat |= 16;
+                            se->kbstat |= 16;
+                        
 			
+                        if (me.key.keysym.sym == SDLK_LSHIFT || me.key.keysym.sym == SDLK_RSHIFT
+                                || me.key.keysym.sym == SDLK_LALT || me.key.keysym.sym == SDLK_RALT
+                                || me.key.keysym.sym == SDLK_LCTRL || me.key.keysym.sym == SDLK_RCTRL) {
+                                got_event = 0;                            
+                        }
+                        
+                        
 			break;
 
 		case SDL_KEYUP:
