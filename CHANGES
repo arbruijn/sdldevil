@@ -1,6 +1,8 @@
 V0.5
  * fixed errors in POG loading (double-free)
  * fixed crash in /4 texture view
+ * fixed crash when closing levels with tagged objects
+ * fixed crash when deleting multiple cubes on 32 bit os
 
 V0.4
  * fixed HOG manager crash on windows
