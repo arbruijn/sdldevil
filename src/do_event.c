@@ -644,8 +644,17 @@ void dec_wireframe(int ec) {
 
 
 // FFE run configuration 
-
 void dec_sdldevilcfg(int ec) {
+    
+    /* if there are open levels, force the user clothing them
+     * we don't want to trash his/her work when exiting after
+     * configuration
+     */
+    if (view.levels.size > 0) {
+        printmsg("Please close all levels before reconfiguring SDLDevil.\n The configuration will close the editor and we don't want that you lose your work");
+        return;
+    }
+    
     sdld_configdialog();
 }
 

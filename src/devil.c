@@ -191,7 +191,8 @@ int main(int argc, char *argv[]) {
     
     if (!readconfig()) {
         
-        if (!w_initwins(640, 480, 32, NULL)) {
+        // FFE init rudimentary graphics for initial configuration
+        if (!w_initwins(640, 480, 32, 0, NULL)) {
             printf(TXT_CANTINITWINS);
             my_exit();
         }        

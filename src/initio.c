@@ -299,6 +299,11 @@ void initeditor(const char *fn, int c)
     addcfgpath(&pig.brokenbulbname);
     init.xres = 640;
     init.yres = 480;
+    // FFE my stuff
+    init.fullscreen = 0;
+    init.keyrepeat = 0;
+    init.binarypath = NULL;
+    
     view.drawwhat = DW_DEFAULT;
     if (init_test & 1)
 	printf("Init output on: %d.\n", init_test);
@@ -335,4 +340,5 @@ void initeditor(const char *fn, int c)
     pig.pig_txts = NULL;
     pig.num_pigtxts = 0;
     view.littlebulbson = 1;
+    
 }

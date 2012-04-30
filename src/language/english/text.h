@@ -299,8 +299,8 @@
 #define TXT_CANTREADCFG "Can't read cfg-file %s.\n"
 #define TXT_CFGWRONGVERSION "CFG-File %s is from an old version.\n"
 #define TXT_CANTWRITESTATUSFILE "Can't write status-file:\n%s"
-#define TXT_CANTREADSTATUSFILE "Can't read status-file:\n%s\n"\
- "This is correct if you start\nDevil for the first time."
+#define TXT_CANTREADSTATUSFILE "Can't read status-file: %s\n"\
+ "This is correct if you start SDLDevil for the first time or you recently reconfigured it"
 #define TXT_READKEYS "Reading keycodes...\n"
 #define TXT_ILLEGALDESCENTVERSION "Illegal Descent version in cfg-file.\n"
 #define TXT_NOEDITABLEDVER \

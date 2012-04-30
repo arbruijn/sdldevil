@@ -169,6 +169,13 @@ void sdld_descentversion_change(struct w_button * b) {
     config_data->descent_version = sdld_descentversions[btn->selected].descent_version;
 }
 
+// callback for fullscreen toggle button
+void sdld_fullscreen_change(struct w_button * b) {
+    struct w_b_switch * btn = b->d.s;
+    struct sdld_config_data * config_data = b->data;
+    config_data->fullscreen = btn->on;
+}
+
 /* sort comparator for qsort - sort sdld_hotkeys by their rank - highest first
  * aka descending ;-) 
  */
@@ -226,7 +233,12 @@ int sdld_write_config(struct sdld_config_data * config_data)  {
     
     fclose(f);
     
-    printmsg("Successfully saved configuration\nPlease restart the editor for the changes to take effect");
+    if (init.lastname)
+        remove(init.lastname);
+    
+    waitmsg("Successfully saved configuration, exiting SDLDevil");
+    ws_textmode();
+    exit(0);
     
     return 1;
     
@@ -242,9 +254,12 @@ void sdld_configdialog(void) {
 
     int screenmodes_count;
     char ** screenmodes = ws_getscreenmodes(&screenmodes_count);
+    int current_screenmode = 0;
     char buffer[64];
 
     char ** descentversions;
+    int current_descentversion = 0;
+    
     char ** keys;
     char * keys_sel_array;
     int num_keys;
@@ -277,8 +292,38 @@ void sdld_configdialog(void) {
     struct w_b_switch b_keyrepeat, b_fullscreen;
 
     struct sdld_config_data * config_data = MALLOC(sizeof(struct sdld_config_data));
+    
+    // find current screenmode
+    sprintf(buffer, "%ix%i", init.xres, init.yres);
+    for (i=0; i<screenmodes_count; i++) {
+        if (!strcmp(buffer, screenmodes[i])) {
+            current_screenmode = i;
+            break;
+        }
+    }
+    
+    
+    // load existing paths if any
+    if (init.descentpaths[0])
+        strncpy(d1datapath, init.descentpaths[0], SDLD_MAX_PATH_LEN);
+    
+    if (init.descentpaths[1])
+        strncpy(d1missionpath, init.descentpaths[1], SDLD_MAX_PATH_LEN);
+    
+    if (init.descentpaths[2])
+        strncpy(d1binarypath, init.descentpaths[2], SDLD_MAX_PATH_LEN);
+    
+    if (init.descentpaths[3])
+        strncpy(d2datapath, init.descentpaths[3], SDLD_MAX_PATH_LEN);
+    
+    if (init.descentpaths[4])
+        strncpy(d2missionpath, init.descentpaths[4], SDLD_MAX_PATH_LEN);
+    
+    if (init.descentpaths[5])
+        strncpy(d2binarypath, init.descentpaths[5], SDLD_MAX_PATH_LEN);
 
-
+    
+    
     // init hotkeys config
     num_keys = view.ec_keycodes == NULL ? SDLD_NUM_HOTKEYS : view.num_keycodes;
 
@@ -337,17 +382,24 @@ void sdld_configdialog(void) {
     for (i=0 ; i<SDLD_NUM_DESCENTVERSIONS; i++) {
         descentversions[i] = MALLOC(sizeof(char) * 64);
         strncpy(descentversions[i], sdld_descentversions[i].txt, 63);
+        // find current descent version
+        if (sdld_descentversions[i].descent_version == init.d_ver) 
+            current_descentversion = i;
     }
 
+    config_data->fullscreen = init.fullscreen;
+    config_data->keyrepeat = init.keyrepeat;
+    config_data->screenres_x = init.xres;
+    config_data->screenres_y = init.yres;
     config_data->d1_data_path = d1datapath;    
     config_data->d1_mission_path = d1missionpath;
     config_data->d1_binary_path = d1binarypath;
-    config_data->d2_data_path = d2datapath;    
+    config_data->d2_data_path = d2datapath;
     config_data->d2_mission_path = d2missionpath;
     config_data->d2_binary_path = d2binarypath;
     config_data->hotkeys = new_hotkeys;
     config_data->num_hotkeys = num_keys;
-
+    config_data->descent_version = sdld_descentversions[current_descentversion].descent_version;
 
 
     // init window
@@ -400,21 +452,23 @@ void sdld_configdialog(void) {
 
     b_cancel.l_pressed_routine = b_cancel.r_pressed_routine = b_cancel.l_routine = b_cancel.r_routine = NULL;
 
-    b_fullscreen.l_routine = b_fullscreen.r_routine = NULL;
-    b_fullscreen.on = 0;
+    b_fullscreen.l_routine = b_fullscreen.r_routine = sdld_fullscreen_change;
+    b_fullscreen.on = init.fullscreen;
+    if (b_fullscreen.on > 1)
+        b_fullscreen.on = 1;
 
 
     b_fullscreenresolution.num_options = screenmodes_count;
     b_fullscreenresolution.options = screenmodes;
-    b_fullscreenresolution.selected = 0;
+    b_fullscreenresolution.selected = current_screenmode;
     b_fullscreenresolution.d_xsize = 64;
     b_fullscreenresolution.select_lroutine = b_fullscreenresolution.select_rroutine = sdld_screenres_change;
 
     b_descentversion.num_options = SDLD_NUM_DESCENTVERSIONS;
     b_descentversion.options = descentversions;
-    b_descentversion.selected = 0;
+    b_descentversion.selected = current_descentversion;
     b_descentversion.d_xsize = 128;
-    b_descentversion.select_lroutine = b_descentversion.select_rroutine = NULL;
+    b_descentversion.select_lroutine = b_descentversion.select_rroutine = sdld_descentversion_change;
 
 
     b_keymap.max_selected = 1;

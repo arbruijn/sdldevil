@@ -3,6 +3,11 @@ V0.5
  * fixed crash in /4 texture view
  * fixed crash when closing levels with tagged objects
  * fixed crash when deleting multiple cubes on 32 bit os
+ * fixed texture list showing wrong textures when bringing to foreground
+ * fixed little bulbs (still some errors regarding colors)
+ * added graphical configuration tool
+ * added support for remapping keys
+ * added independent configurable data/mission/binary paths
 
 V0.4
  * fixed HOG manager crash on windows

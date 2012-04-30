@@ -578,8 +578,8 @@ void psys_plotline(int o_x1,int o_y1,int o_x2,
  }
  
 volatile unsigned long timer_count=0;
-void inc_timer(void) { timer_count++; }
-END_OF_FUNCTION(inc_timer);
+//void inc_timer(void) { timer_count++; }
+//END_OF_FUNCTION(inc_timer);
 
 void psys_inittimer(void)
  {

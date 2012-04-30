@@ -419,8 +419,9 @@ int makefilebuttons(struct w_window *w, int x, int y, int ysize,
 	b_fnames->start_no = i - b_fnames->no_rows;
 	if (b_fnames->start_no < 0)
 	    b_fnames->start_no = 0;
-    } else
+    } else {
 	b_fnames->start_no = 0;
+    }
     checkmem(b_up = MALLOC(sizeof(struct w_b_press)));
     checkmem(b_down = MALLOC(sizeof(struct w_b_press)));
     b_up->l_pressed_routine = b_up->l_routine = uio_files_one_up;

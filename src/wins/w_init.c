@@ -68,7 +68,7 @@ void w_skipline(FILE * f) {
    Returns zero if not successful.
    If it's not succesful you must remain in Textmode. 
    If successful return a 1 */
-int w_initwins(int xres, int yres, int colors, const char *fontname) {
+int w_initwins(int xres, int yres, int colors, int fullscreen, const char *fontname) {
     initlist(&notes.windows);
     initlist(&notes.menu);
     notes.print_msg = 1;
@@ -83,7 +83,7 @@ int w_initwins(int xres, int yres, int colors, const char *fontname) {
     notes.titlebar_text = NULL;
     if ((errf = fopen("devil.err", "w")) == NULL)
         errf = stdout;
-    if (!ws_initgrfx(xres, yres, colors, 0, fontname))
+    if (!ws_initgrfx(xres, yres, colors, fullscreen, fontname))
         return 0;
     ws_setcolor(0, 0, 0, 0);
     notes.colindex[cv_bg] = w_makecolor(0, 0, 0);

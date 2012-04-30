@@ -72,8 +72,11 @@ int ws_initgrfx(int xres, int yres, int color_depth, int fullscreen, const char 
 
 	gfxPrimitivesSetFont(gfxDevilFontdata, 6, 14);
 
-
-	ws_private.screen = SDL_SetVideoMode(xres, yres, color_depth, SDL_SWSURFACE);
+        uint32_t sdlflags = SDL_HWSURFACE;
+        if (fullscreen)
+            sdlflags |= SDL_FULLSCREEN;
+        
+	ws_private.screen = SDL_SetVideoMode(xres, yres, color_depth, sdlflags);
 
 	SDL_WM_SetCaption("SDLDevil", "SDLDevil");
 

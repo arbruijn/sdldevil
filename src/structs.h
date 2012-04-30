@@ -728,6 +728,7 @@ struct initdata {
     int keyrepeat;
     char * missiondir;
     char * binarypath;
+    char * descentpaths[6];
 };
 
 /* if m is a coordsystem in MATRIXMULT the vectors are in the columns */
