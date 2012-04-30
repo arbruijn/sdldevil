@@ -3,8 +3,8 @@
 #ifndef DESCDEFS_H
 #define DESCDEFS_H
 
-enum descent { d1_10_sw,d1_10_reg,d1_14_reg,d2_10_sw,d2_10_reg,
- d2_11_reg,d2_12_reg,desc_number };
+enum descent { d1_10_sw,d1_10_reg,d1_14_reg,d2_10_sw,d2_10_reg, d2_11_reg,d2_12_reg,desc_number };
+
 extern const char *extnames[desc_number];
 extern const char *ininames[desc_number];
 extern const char *vernames[desc_number];

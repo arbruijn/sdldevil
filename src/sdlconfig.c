@@ -28,8 +28,8 @@
 #include "version.h"
 
 
-#define MAX_PATH_LEN 255
-#define ELEMENT_HEIGHT 21
+#define SDLD_MAX_PATH_LEN 255
+#define SDLD_ELEMENT_HEIGHT 21
 
 // move lists up / down
 void sdld_list_updown(struct w_button **b, int bno, int add)
@@ -196,19 +196,22 @@ int sdld_write_config(struct sdld_config_data * config_data)  {
      * Descent 2 
      */
     fprintf(f, ":DESCENTPATHS 6\n", VERSION);
-    fprintf(f, "%s\n", config_data->d1_data_path);
-    fprintf(f, "%s\n", config_data->d1_mission_path);
-    fprintf(f, "%s\n", config_data->d1_binary_path);
-    fprintf(f, "%s\n", config_data->d2_data_path);
-    fprintf(f, "%s\n", config_data->d2_mission_path);
-    fprintf(f, "%s\n", config_data->d2_binary_path);
+    fprintf(f, "{%s}\n", config_data->d1_data_path);
+    fprintf(f, "{%s}\n", config_data->d1_mission_path);
+    fprintf(f, "{%s}\n", config_data->d1_binary_path);
+    fprintf(f, "{%s}\n", config_data->d2_data_path);
+    fprintf(f, "{%s}\n", config_data->d2_mission_path);
+    fprintf(f, "{%s}\n", config_data->d2_binary_path);
+    
+    // the ham file - hardcoded like in original askcfg
+    fprintf(f, "{descent2.ham}\n");
     
     // other parameters
-    fprintf(f, ":DESCENTVERSION %i", config_data->descent_version);
-    fprintf(f, ":FULLSCREEN %i", config_data->fullscreen);
-    fprintf(f, ":SCREENRES_X %i", config_data->screenres_x);
-    fprintf(f, ":SCREENRES_Y %i", config_data->screenres_y);
-    fprintf(f, ":KEYREPEAT %i", config_data->keyrepeat);
+    fprintf(f, ":DESCENTVERSION %i\n", config_data->descent_version);
+    fprintf(f, ":FULLSCREEN %i\n", config_data->fullscreen);
+    fprintf(f, ":SCREENRES_X %i\n", config_data->screenres_x);
+    fprintf(f, ":SCREENRES_Y %i\n", config_data->screenres_y);
+    fprintf(f, ":KEYREPEAT %i\n", config_data->keyrepeat);
     
     // hotkeys configuration
     fprintf(f, ":KEYS %i\n", config_data->num_hotkeys);
@@ -250,8 +253,8 @@ void sdld_configdialog(void) {
     struct sdld_keychange_data * keychange_data;
     keychange_data = MALLOC(sizeof(struct sdld_keychange_data));
 
-    char d1datapath[MAX_PATH_LEN], d1missionpath[MAX_PATH_LEN], d1binarypath[MAX_PATH_LEN];
-    char d2datapath[MAX_PATH_LEN], d2missionpath[MAX_PATH_LEN], d2binarypath[MAX_PATH_LEN];
+    char d1datapath[SDLD_MAX_PATH_LEN], d1missionpath[SDLD_MAX_PATH_LEN], d1binarypath[SDLD_MAX_PATH_LEN];
+    char d2datapath[SDLD_MAX_PATH_LEN], d2missionpath[SDLD_MAX_PATH_LEN], d2binarypath[SDLD_MAX_PATH_LEN];
 
     *d1datapath = 0;
     *d1missionpath = 0;
@@ -364,7 +367,7 @@ void sdld_configdialog(void) {
     // init path buttons
     b_d1datapath.allowed_char = isprint;
     b_d1datapath.str = d1datapath;
-    b_d1datapath.max_length = MAX_PATH_LEN;
+    b_d1datapath.max_length = SDLD_MAX_PATH_LEN;
     b_d1datapath.l_char_entered = b_d1datapath.r_char_entered = b_d1datapath.l_string_entered = b_d1datapath.r_string_entered = NULL;
 
     b_d1missionpath = b_d1datapath;
@@ -425,21 +428,21 @@ void sdld_configdialog(void) {
     // create the buttons on the window
     i = 0;
     checkmem(b[0] = w_addstdbutton(ow, w_b_string, 0, i, w.xsize-2, -1, "Descent 1 data path      ", &b_d1datapath, 1));
-    checkmem(b[1] = w_addstdbutton(ow, w_b_string, 0, i+=ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 1 mission path   ", &b_d1missionpath, 1));
-    checkmem(b[2] = w_addstdbutton(ow, w_b_string, 0, i+=ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 1 executable path", &b_d1binarypath, 1));
-    checkmem(b[3] = w_addstdbutton(ow, w_b_string, 0, i+=ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 2 data path      ", &b_d2datapath, 1));
-    checkmem(b[4] = w_addstdbutton(ow, w_b_string, 0, i+=ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 2 mission path   ", &b_d2missionpath, 1));
-    checkmem(b[5] = w_addstdbutton(ow, w_b_string, 0, i+=ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 2 executable path", &b_d2binarypath, 1));
+    checkmem(b[1] = w_addstdbutton(ow, w_b_string, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 1 mission path   ", &b_d1missionpath, 1));
+    checkmem(b[2] = w_addstdbutton(ow, w_b_string, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 1 executable path", &b_d1binarypath, 1));
+    checkmem(b[3] = w_addstdbutton(ow, w_b_string, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 2 data path      ", &b_d2datapath, 1));
+    checkmem(b[4] = w_addstdbutton(ow, w_b_string, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 2 mission path   ", &b_d2missionpath, 1));
+    checkmem(b[5] = w_addstdbutton(ow, w_b_string, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 2 executable path", &b_d2binarypath, 1));
 
 
-    w_drawbuttonbox(ow, 0, i+ELEMENT_HEIGHT, w.xsize-2, w.ysize-i-ELEMENT_HEIGHT*2+4);
-    checkmem(b[6] = w_addstdbutton(ow, w_b_switch, 0, i+=ELEMENT_HEIGHT, 200, ELEMENT_HEIGHT, "Fullscreen", &b_fullscreen, 1));
+    w_drawbuttonbox(ow, 0, i+SDLD_ELEMENT_HEIGHT, w.xsize-2, w.ysize-i-SDLD_ELEMENT_HEIGHT*2+4);
+    checkmem(b[6] = w_addstdbutton(ow, w_b_switch, 0, i+=SDLD_ELEMENT_HEIGHT, 200, SDLD_ELEMENT_HEIGHT, "Fullscreen", &b_fullscreen, 1));
     checkmem(b[7] = w_addstdbutton(ow, w_b_choose, 200, i, 198, -1, "screen resolution", &b_fullscreenresolution, 1));
-    checkmem(b[8] = w_addstdbutton(ow, w_b_choose, 0, i+=ELEMENT_HEIGHT, w.xsize-2, -1, "Descent version", &b_descentversion, 1));
+    checkmem(b[8] = w_addstdbutton(ow, w_b_choose, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-2, -1, "Descent version", &b_descentversion, 1));
     b[6]->data = b[7]->data = b[8]->data = config_data;
 
 
-    checkmem(b[10] = w_addstdbutton(ow, w_b_list, 0, i+ELEMENT_HEIGHT, w.xsize-2, 164, NULL, &b_keymap, 1)); 
+    checkmem(b[10] = w_addstdbutton(ow, w_b_list, 0, i+SDLD_ELEMENT_HEIGHT, w.xsize-2, 164, NULL, &b_keymap, 1)); 
     i += 185;
     checkmem(b[11] = w_addstdbutton(ow, w_b_press, 0, i, 64, -1, "/\\", &b_keymapup, 1));
     checkmem(b[12] = w_addstdbutton(ow, w_b_press, 64, i, 64, -1, "\\/", &b_keymapdown, 1));

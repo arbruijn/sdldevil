@@ -1,6 +1,7 @@
 #ifndef SDLCONFIG_H
 #define SDLCONFIG_H
 
+
 struct sdld_config_data {
     struct sdld_hotkey ** hotkeys;
     int num_hotkeys;

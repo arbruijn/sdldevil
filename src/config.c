@@ -36,6 +36,7 @@
 #include "askcfg.h"
 #include "config.h"
 #include "lac_cfg.h"
+#include "sdlconfig.h"
 
 #define CFG_FNAME "PLAY%.2d"
 #define CFG_CURNAME "TMPDEVIL"
@@ -769,10 +770,11 @@ int readconfig(void)
     int i, j;
     FILE *f, *hamf;
     char *ininame, *hamname, *hamfname, buffer[300];
+    char * descentpaths[6];
     int32_t hamver;
     lac_read_cfg();
     while ((f = fopen(init.cfgname, "r+")) == NULL) {
-	/printf(TXT_CANTREADCFG, init.cfgname);
+	//printf(TXT_CANTREADCFG, init.cfgname);
 	return 0;
     }
     if (fscanf(f, "%s", buffer) != 1) {
@@ -785,17 +787,37 @@ int readconfig(void)
     }
     my_assert(findmarker(f, "DESCENTPATHS", &i));
     
+    /* FFE number paths no longer corresponds with the number of descent versions
     if (i != desc_number) {
 	//printf(TXT_MUSTUPDATECFG);
 	return 0;
     }
+    */
     
+    // FFE new: read the paths
+    for (i=0; i<6; i++) 
+        iniread(f, "s", &descentpaths[i]);
+    
+    //strcpy
+    /* FFE this stuff is now initialized below - when we know about the descent 
+     * version we use
     iniread(f, "s", &init.playmsnpath);
     checkmem(init.missionpath = MALLOC(strlen(init.playmsnpath) + 1));
     strcpy(init.missionpath, init.playmsnpath);
+     */
     iniread(f, "s", &hamname);
-    for (i = 0; i < desc_number; i++)
-	iniread(f, "s", &init.pigpaths[i]);
+    
+    
+    // FFE copy descent 1 / 2 data paths to the pigpaths
+    for (i = 0; i < desc_number; i++) {
+        if (i < d2_10_sw) {
+                init.pigpaths[i] = MALLOC(strlen(descentpaths[0]) + 1);
+                strcpy(init.pigpaths[i], descentpaths[0]);
+        } else {
+                init.pigpaths[i] = MALLOC(strlen(descentpaths[3]) + 1);
+                strcpy(init.pigpaths[i], descentpaths[3]);            
+        }
+    }
     
     //printf(TXT_READKEYS);
     my_assert(findmarker(f, "KEYS", &view.num_keycodes));
@@ -820,11 +842,40 @@ int readconfig(void)
 	i = d2_12_reg;
     init.d_ver = i;
     
+    /* FFE now that we know what descent version we use, we can init the 
+     * playsavemsn paths and so on
+     */
+    if (init.d_ver < d2_10_sw) {
+        // descent 1
+        init.playmsnpath = MALLOC(strlen(descentpaths[1]) + 1);
+        init.missionpath = MALLOC(strlen(descentpaths[1]) + 1);
+        init.binarypath = MALLOC(strlen(descentpaths[2]) + 1);
+        strcpy(init.playmsnpath, descentpaths[1]);
+        strcpy(init.missionpath, descentpaths[1]);
+        strcpy(init.binarypath, descentpaths[2]);
+    } else {
+        // descent 2
+        init.playmsnpath = MALLOC(strlen(descentpaths[4]) + 1);
+        init.missionpath = MALLOC(strlen(descentpaths[4]) + 1);
+        init.binarypath = MALLOC(strlen(descentpaths[5]) + 1);
+        strcpy(init.playmsnpath, descentpaths[4]);
+        strcpy(init.missionpath, descentpaths[4]);
+        strcpy(init.binarypath, descentpaths[5]);        
+    }
+    /* FFE trashed since we save individual values for
+     *  x and y resolution
     my_assert(findmarker(f, "RESOLUTION", &i));
     if (i < 0 && i >= NUM_RESOLUTIONS)
 	i = 0;
     init.xres = res_xysize[i][0];
     init.yres = res_xysize[i][1];
+    */
+    
+    // FFE read my config valuses
+    my_assert(findmarker(f, "SCREENRES_X", &init.xres));
+    my_assert(findmarker(f, "SCREENRES_Y", &init.yres));
+    my_assert(findmarker(f, "FULLSCREEN", &init.fullscreen));
+    my_assert(findmarker(f, "KEYREPEAT", &init.keyrepeat));
     
     fclose(f); // finished reading cfg
     
