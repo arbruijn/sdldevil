@@ -158,7 +158,7 @@ int illum_checkwall(struct cube *c, int w) {
 void calclseffects(struct point *lsp, unsigned int light, struct node *cube_n,
         int depth, struct node **nc, int *nc_w, struct list *effects) {
     int w, j, vis, onevis, wd, cd;
-    unsigned short add[24];
+    uint16_t add[24];
     struct point endp;
     struct node *n;
     struct cube *c = cube_n->d.c;

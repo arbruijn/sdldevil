@@ -441,7 +441,7 @@ void initpalette(void)
 void newpalette(unsigned char *palette)
 {
     int i, j, nc;
-    long colortable[4];
+    //long colortable[4];
     FILE *f;
     if (init_test & 2) {
 	fprintf(errf, "New palette:\n");

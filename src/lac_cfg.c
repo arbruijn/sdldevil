@@ -8,11 +8,11 @@
 #include "userio.h"
 #include "lac_cfg.h"
 
-int isF2SavingAll = 0;
-int isAlwaysSmoothing = 0;
+int isF2SavingAll = 1;
+int isAlwaysSmoothing = 1;
 int theMinDeltaLight = 0;
 int theMaxLight = 65535;
-int changeCubeEnabled = 1;
+int changeCubeEnabled = 0;
 
 
 char* lac_find_value(char* s)

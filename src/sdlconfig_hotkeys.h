@@ -135,9 +135,9 @@ sdld_hotkeys[SDLD_NUM_HOTKEYS] = {
     { 0x01, 293, 113,   0, "back from cor. overview"},
     { 0x00, 121, 41,    0, "move backward"},
     { 0x00, 122, 41,    0, "move backward"},
-    { 0x00, 335, 41,    0, "move backward"},
+    { 0x00, 257, 41,    0, "move backward"},
     { 0x00, 97, 43,     0, "move forward"},
-    { 0x00, 337, 43,    0, "move forward"},
+    { 0x00, 259, 43,    0, "move forward"},
     { 0x01, 264, 48,    0, "turn down"},
     { 0x01, 260, 50,    0, "turn left"},
     { 0x01, 258, 51,    0, "turn up"},
@@ -146,8 +146,8 @@ sdld_hotkeys[SDLD_NUM_HOTKEYS] = {
     { 0x00, 260, 44,    0, "move left"},
     { 0x00, 258, 45,    0, "move up"},
     { 0x00, 262, 46,    0, "move right"},
-    { 0x00, 257, 47,    0, "bank left"},
-    { 0x00, 259, 49,    0, "bank right "},
+    { 0x01, 257, 47,    0, "bank left"},
+    { 0x01, 259, 49,    0, "bank right "},
     { 0x00, 282, 39,    0, "hot keys"},
     { 0x00, 283, 60,    0, "fast save"},
     { 0x00, 284, 25,    0, "make room"},
@@ -160,6 +160,7 @@ struct sdld_keychange_data {
     struct w_button ** buttons;
     struct sdld_hotkey ** hotkeys;
 };
+
 
 
 #endif	/* SDLCONFIG_HOTKEYS_H */

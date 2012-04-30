@@ -3,4 +3,4 @@
 
 /* Well, this is the version number */
 #define VERSION "V0.5"
-#define LC_VERSION  ""
+//#define LC_VERSION  ""

@@ -723,6 +723,11 @@ struct initdata {
     struct infoitem *info[in_number];
     int infonum[in_number];	/* number of displayed items */
     int *convtxts, *convanims, num_convtxts, num_convanims, def_t1, def_t2;
+    // FFE: following added for sdldevil
+    int fullscreen;
+    int keyrepeat;
+    char * missiondir;
+    char * binarypath;
 };
 
 /* if m is a coordsystem in MATRIXMULT the vectors are in the columns */

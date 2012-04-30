@@ -30,7 +30,8 @@
 #include "plottxt.h"
 #include "version.h"
 #include "do_event.h"
-#include "askcfg.h"
+//#include "askcfg.h"
+#include "sdlconfig.h"
 
 const char *extnames[desc_number] ={"SDL", "RDL", "RDL", "SL2", "RL2", "RL2", "RL2"};
 #ifdef GER
@@ -130,7 +131,7 @@ const char *cmdline_switches[num_cmdlineparams] = {"NEW", "NOTITLE", "CONFIG"};
 
 const char *cmdline_txts[num_cmdlineparams] ={TXT_CMDSTARTNEW, TXT_CMDDONTSHOWTITLE, TXT_CMDCONFIG};
 
-int main(int argn, char *argc[]) {
+int main(int argc, char *argv[]) {
     
     int i, j, title = 1;
     int with_cfg = 1, reconfig = 0;
@@ -142,8 +143,7 @@ int main(int argn, char *argc[]) {
     signal(SIGSEGV, my_abort);
     signal(SIGTERM, my_abort);
     
-    printf("SDLDevil %s%s\nCompiler: GNU GCC %s\nCompiled: %s %s\n", VERSION,
-            LC_VERSION, SYS_COMPILER_NAME, __DATE__, __TIME__);
+    //printf("SDLDevil %s\nCompiler: GNU GCC %s\nCompiled: %s %s\n", VERSION, SYS_COMPILER_NAME, __DATE__, __TIME__);
     /*
         if (sizeof(float) != 4 || sizeof(long int) != 8
             || sizeof(short int) != 2 || sizeof(int) != 4
@@ -153,8 +153,8 @@ int main(int argn, char *argc[]) {
         }
      */
     errf = stdout;
-    for (j = 1; j < argn; j++) {
-        sscanf(argc[j], " %s", buffer);
+    for (j = 1; j < argc; j++) {
+        sscanf(argv[j], " %s", buffer);
         for (i = 0; i < strlen(buffer); i++)
             buffer[i] = toupper(buffer[i]);
         if (buffer[0] == '/') {
@@ -183,16 +183,25 @@ int main(int argn, char *argc[]) {
                 exit(1);
             }
         } else {
-            load_file_name = argc[j];
+            load_file_name = argv[j];
         }
     }
 
     initeditor(INIFILE, title);
     
-    if (!readconfig())
-        writeconfig(0);
-    else if (reconfig)
+    if (!readconfig()) {
+        
+        if (!w_initwins(640, 480, 32, NULL)) {
+            printf(TXT_CANTINITWINS);
+            my_exit();
+        }        
+        newpalette(palettes[0].palette);
+        sdld_configdialog();
+        exit(0);
+        //writeconfig(0);
+    }/* else if (reconfig) {
         writeconfig(1);
+    }*/
     
     initgrph(title);
     

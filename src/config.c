@@ -772,56 +772,64 @@ int readconfig(void)
     int32_t hamver;
     lac_read_cfg();
     while ((f = fopen(init.cfgname, "r+")) == NULL) {
-	printf(TXT_CANTREADCFG, init.cfgname);
+	/printf(TXT_CANTREADCFG, init.cfgname);
 	return 0;
     }
     if (fscanf(f, "%s", buffer) != 1) {
-	printf(TXT_CANTREADCFG, init.cfgname);
+	//printf(TXT_CANTREADCFG, init.cfgname);
 	return 0;
     }
     if (strcmp(buffer, VERSION)) {
-	printf(TXT_CFGWRONGVERSION, init.cfgname);
+	//printf(TXT_CFGWRONGVERSION, init.cfgname);
 	return 0;
     }
-    my_assert(findmarker(f, "PATHS", &i));
+    my_assert(findmarker(f, "DESCENTPATHS", &i));
+    
     if (i != desc_number) {
-	printf(TXT_MUSTUPDATECFG);
+	//printf(TXT_MUSTUPDATECFG);
 	return 0;
     }
+    
     iniread(f, "s", &init.playmsnpath);
     checkmem(init.missionpath = MALLOC(strlen(init.playmsnpath) + 1));
     strcpy(init.missionpath, init.playmsnpath);
     iniread(f, "s", &hamname);
     for (i = 0; i < desc_number; i++)
 	iniread(f, "s", &init.pigpaths[i]);
-    printf(TXT_READKEYS);
+    
+    //printf(TXT_READKEYS);
     my_assert(findmarker(f, "KEYS", &view.num_keycodes));
-    checkmem(view.ec_keycodes = MALLOC(view.num_keycodes *
-				       sizeof(struct w_keycode)));
-    checkmem(view.txt_keycode =
-	     MALLOC(view.num_keycodes * sizeof(char *)));
+    
+    checkmem(view.ec_keycodes = MALLOC(view.num_keycodes * sizeof(struct w_keycode)));
+    checkmem(view.txt_keycode = MALLOC(view.num_keycodes * sizeof(char *)));
+    
     for (i = 0; i < view.num_keycodes; i++) {
 	iniread(f, "k", &view.ec_keycodes[i], &view.txt_keycode[i]);
 	view.ec_keycodes[i].flags = 0;
-	if (view.ec_keycodes[i].event < 0
-	    || view.ec_keycodes[i].event >= ec_num_of_codes) {
+	if (view.ec_keycodes[i].event < 0 || view.ec_keycodes[i].event >= ec_num_of_codes) {
 	    printf("Illegal keycode %#x %d %d\n",
-		   view.ec_keycodes[i].kbstat, view.ec_keycodes[i].key,
+		   view.ec_keycodes[i].kbstat, 
+                   view.ec_keycodes[i].key,
 		   view.ec_keycodes[i].event);
 	    return 0;
 	}
     }
+    
     my_assert(findmarker(f, "DESCENTVERSION", &i));
-    if (i != d1_14_reg && i != d1_10_reg && i != d2_10_reg
-	&& i != d2_11_reg && i != d2_12_reg)
+    if (i != d1_14_reg && i != d1_10_reg && i != d2_10_reg && i != d2_11_reg && i != d2_12_reg)
 	i = d2_12_reg;
     init.d_ver = i;
+    
     my_assert(findmarker(f, "RESOLUTION", &i));
     if (i < 0 && i >= NUM_RESOLUTIONS)
 	i = 0;
     init.xres = res_xysize[i][0];
     init.yres = res_xysize[i][1];
-    fclose(f);
+    
+    fclose(f); // finished reading cfg
+    
+    
+    
     if (init.d_ver >= desc_number) {
 	printf(TXT_ILLEGALDESCENTVERSION);
 	return 0;
