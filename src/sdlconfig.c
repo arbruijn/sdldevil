@@ -231,19 +231,19 @@ int sdld_write_config(struct sdld_config_data * config_data)  {
                 config_data->hotkeys[i]->txt);
     }
     
+    config_data->restart_required = 1;
+    
     fclose(f);
-    
-    if (init.lastname)
-        remove(init.lastname);
-    
-    waitmsg("Successfully saved configuration, exiting SDLDevil");
-    ws_textmode();
-    exit(0);
     
     return 1;
     
 }
 
+// callback for save button
+void sdld_save_click(struct w_button * b) {
+    struct sdld_config_data * config_data = b->data;
+    sdld_write_config(config_data);
+}
 
 // show sdldevil config dialog
 void sdld_configdialog(void) {
@@ -400,7 +400,7 @@ void sdld_configdialog(void) {
     config_data->hotkeys = new_hotkeys;
     config_data->num_hotkeys = num_keys;
     config_data->descent_version = sdld_descentversions[current_descentversion].descent_version;
-
+    config_data->restart_required = 0;
 
     // init window
     w.xpos = w.ypos = -1;
@@ -451,6 +451,8 @@ void sdld_configdialog(void) {
 
 
     b_cancel.l_pressed_routine = b_cancel.r_pressed_routine = b_cancel.l_routine = b_cancel.r_routine = NULL;
+    b_save.l_pressed_routine = b_cancel.r_pressed_routine = NULL;
+    b_save.l_routine = b_save.r_routine = sdld_save_click;
 
     b_fullscreen.l_routine = b_fullscreen.r_routine = sdld_fullscreen_change;
     b_fullscreen.on = init.fullscreen;
@@ -470,7 +472,7 @@ void sdld_configdialog(void) {
     b_descentversion.d_xsize = 128;
     b_descentversion.select_lroutine = b_descentversion.select_rroutine = sdld_descentversion_change;
 
-
+    
     b_keymap.max_selected = 1;
     b_keymap.no_strings = SDLD_NUM_HOTKEYS;
     b_keymap.strings = keys;
@@ -488,31 +490,32 @@ void sdld_configdialog(void) {
     checkmem(b[4] = w_addstdbutton(ow, w_b_string, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 2 mission path   ", &b_d2missionpath, 1));
     checkmem(b[5] = w_addstdbutton(ow, w_b_string, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 2 executable path", &b_d2binarypath, 1));
 
-
     w_drawbuttonbox(ow, 0, i+SDLD_ELEMENT_HEIGHT, w.xsize-2, w.ysize-i-SDLD_ELEMENT_HEIGHT*2+4);
     checkmem(b[6] = w_addstdbutton(ow, w_b_switch, 0, i+=SDLD_ELEMENT_HEIGHT, 200, SDLD_ELEMENT_HEIGHT, "Fullscreen", &b_fullscreen, 1));
     checkmem(b[7] = w_addstdbutton(ow, w_b_choose, 200, i, 198, -1, "screen resolution", &b_fullscreenresolution, 1));
     checkmem(b[8] = w_addstdbutton(ow, w_b_choose, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-2, -1, "Descent version", &b_descentversion, 1));
     b[6]->data = b[7]->data = b[8]->data = config_data;
 
-
-    checkmem(b[10] = w_addstdbutton(ow, w_b_list, 0, i+SDLD_ELEMENT_HEIGHT, w.xsize-2, 164, NULL, &b_keymap, 1)); 
-    i += 185;
+    
+    int no_rows = (w_ywininsize(ow) - (i )) / (w_titlebarheight() + 2) - 4;
+    b_keymap.no_rows = no_rows;
+    checkmem(b[10] = w_addstdbutton(ow, w_b_list, 0, i+SDLD_ELEMENT_HEIGHT, w.xsize-2, no_rows * (w_titlebarheight() + 2), NULL, &b_keymap, 1)); 
+    i += no_rows * (w_titlebarheight() + 2) + SDLD_ELEMENT_HEIGHT;
     checkmem(b[11] = w_addstdbutton(ow, w_b_press, 0, i, 64, -1, "/\\", &b_keymapup, 1));
     checkmem(b[12] = w_addstdbutton(ow, w_b_press, 64, i, 64, -1, "\\/", &b_keymapdown, 1));
     checkmem(b[13] = w_addstdbutton(ow, w_b_press, 128, i, 64, -1, "change", &b_keymapchange, 1));
     b[11]->data = b[12]->data = b;
     b[13]->data = keychange_data;
 
-    checkmem(b[16] = w_addstdbutton(ow, w_b_press, 10, 350, 64, -1, "Cancel", &b_cancel,1));
-
+    checkmem(b[16] = w_addstdbutton(ow, w_b_press, w.xsize / 2 - 70, w.ysize - 36, 64, -1, "Cancel", &b_cancel, 1));
+    checkmem(b[17] = w_addstdbutton(ow, w_b_press, w.xsize / 2 + 14, w.ysize - 36, 64, -1, "Save", &b_save, 1));
+    b[17]->data = config_data;
+    
     // run dialog
-    w_handleuser(1, &b[16], 1, &ow, 0, NULL, NULL);
+    w_handleuser(2, &b[16], 1, &ow, 0, NULL, NULL);
 
     w_closewindow(ow);
     
-    sdld_write_config(config_data);
-
     for (i=0 ; i<SDLD_NUM_DESCENTVERSIONS; i++)
         FREE(descentversions[i]);
 
@@ -528,6 +531,19 @@ void sdld_configdialog(void) {
     FREE(keys_sel_array);
     FREE(new_hotkeys);
     FREE(keychange_data);
-    FREE(config_data);
+    
+    if (config_data->restart_required) {
+        if (init.lastname)
+                remove(init.lastname);
+    
+        waitmsg("Successfully saved configuration, exiting SDLDevil");
+        ws_textmode();
+        
+        FREE(config_data);
+        exit(0);
 
+    } else {
+        FREE(config_data);
+    }
+    
 }

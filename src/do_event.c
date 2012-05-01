@@ -47,10 +47,14 @@ void dec_fastquit(int ec) {
 }
 
 void dec_quit(int evcode) {
-    struct node *n;
+    struct node *n, *q;
     savestatus(0);
-    for (n = view.levels.head; n->next != NULL; n = n->next)
-        if (!closelevel(n->d.lev, 1)) return;
+    // FFE another fix here where the original code accessed already freed mem
+    for (n = view.levels.head; q->next != NULL; n = q) {
+        q = n->next;
+        if (!closelevel(n->d.lev, 1)) 
+            return;
+    }
     closegrph();
     exit(0);
 }

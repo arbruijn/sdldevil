@@ -16,6 +16,7 @@ struct sdld_config_data {
     int keyrepeat;
     int screenres_x;
     int screenres_y;
+    int restart_required;
 };
 
 
