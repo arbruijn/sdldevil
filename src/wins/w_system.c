@@ -35,9 +35,10 @@
 struct ws_internals {
     SDL_Surface *screen;
     int mousecounter;		/* displaymouse & erasemouse */
-} ws_private = 
-{
+    int fullscreen;
+} ws_private = {
     NULL,
+    0,
     0
 };
 
@@ -73,8 +74,10 @@ int ws_initgrfx(int xres, int yres, int color_depth, int fullscreen, const char 
 	gfxPrimitivesSetFont(gfxDevilFontdata, 6, 14);
 
         uint32_t sdlflags = SDL_HWSURFACE;
-        if (fullscreen)
+        if (fullscreen) {
             sdlflags |= SDL_FULLSCREEN;
+            ws_private.fullscreen = 1;
+        }
         
 	ws_private.screen = SDL_SetVideoMode(xres, yres, color_depth, sdlflags);
 
@@ -580,7 +583,6 @@ int ws_getevent(struct ws_event *se, int wait)
 			se->x = me.button.x;
 			se->y = me.button.y;
 
-
 			break;
 
 		case SDL_KEYDOWN:
@@ -649,11 +651,11 @@ int ws_getevent(struct ws_event *se, int wait)
 	*/
 
 
-	/*	
+		
 	if (got_event) {	
 		printf ("event - flags=%i, key=%i, unicode=%i, kbstat=%i, x=%i, y=%i, buttons=%i, wait=%i\n", se->flags, se->key, se->unicode, se->kbstat, se->x, se->y, se->buttons, wait);
 	}
-	*/
+	
 
 	return got_event;
 
@@ -970,22 +972,31 @@ void ws_drawpatternedbox(int x1, int y1, int xsize, int ysize, int c)
 /* remove the mouse from the screen, so that the drawing is faster. */
 void ws_erasemouse(void)
 {
-	ws_private.mousecounter--;
-	SDL_ShowCursor(0);
+    /* FFE quickhack: don't disable the cursor in fullscreen since movement
+     * does not work proper then.
+     */
+    if (ws_private.fullscreen)
+        return;
+    
+    ws_private.mousecounter--;
+    SDL_ShowCursor(0);
 }
 
 void ws_displaymouse(void)
 {
+    if (ws_private.fullscreen)
+        return;
+
     if (++ws_private.mousecounter >= 0) {
 	ws_private.mousecounter = 0;
-	SDL_ShowCursor(1);
+        SDL_ShowCursor( SDL_ENABLE );
     }
 }
 
 /* beams the mouse to x,y */
 void ws_mousewarp(int x, int y)
 {
-	SDL_WarpMouse(x, y);
+    SDL_WarpMouse(x, y);
 }
 
 // FLOSDL TODO
