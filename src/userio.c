@@ -725,7 +725,7 @@ char *getfilename(char **path, const char *defname, const char *ext,
             }
         } else {
             // FFE if no ext is forced, just use the filename "as is"
-            checkmem(fullpath = MALLOC(strlen(current_path) + strlen(fname)));            
+            checkmem(fullpath = MALLOC(strlen(current_path) + strlen(fname) + 2));    // +2 for additional '/' and 0 termination
             strcpy(fullpath, current_path);
             strcat(fullpath, "/");
             strcat(fullpath, fname);
