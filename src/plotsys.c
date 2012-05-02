@@ -76,7 +76,7 @@ inline void sys_lightscanline(num_pixels, add_f1, add_f2, add_f3)
      for(cur_pos=cur_line+ps_x,i=(NUM_PIXELS);i>0;i--)\
       {\
 	pixel = *(txt_data+((txt_u>>8)&0x3f)+((txt_v>>8)&(0x3f*TXTSIZE))); \
-      *(cur_pos++)= ws_getNativeColor(*(colors+pixel)); \
+      *(cur_pos++)= ws_getNativeColor(pixel /* *(colors+pixel) */); \
       txt_u+=add_txt_u; txt_v+=add_txt_v; light+=d_light;\
       if(light>c_light) { c_light+=d_x; colors+=add_colors; }\
       }   \
@@ -100,7 +100,7 @@ inline void sys_lightscanline(num_pixels, add_f1, add_f2, add_f3)
       for(cur_pos=cur_line+e_r_ps_x,i=e_rest;i>0;i--) \
        { \
  	pixel = *(txt_data+((txt_u>>8)&0x3f)+((txt_v>>8)&(0x3f*TXTSIZE))); \
-       *(cur_pos++) = ws_getNativeColor(*(colors+pixel)); \
+       *(cur_pos++) = ws_getNativeColor(pixel /* *(colors+pixel)*/ ); \
        txt_u+=add_txt_u; txt_v+=add_txt_v; light+=d_light;\
        if(light>c_light) { c_light+=d_x; colors+=add_colors; } \
        } \

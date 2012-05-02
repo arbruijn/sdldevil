@@ -229,6 +229,51 @@ void uio_changedir(struct w_button **b, char *oldpath)
     w_drawbutton(b[5]);
 }
 
+void uio_dirlist_changedir(struct w_button **b, char *oldpath)
+{
+    struct w_b_strlist *b_dirs = b[2]->d.sls;
+    int i, dno;
+    char **dirs, *t;
+    
+    uio_drawpath(b[0]->w, b[0]->xpos, b[0]->ypos + b[0]->ysize + 1, b[0]->xsize);
+
+    dirs = ws_getalldirs(current_path, "*", &dno);
+    
+    if (dno < 0) {
+	if (dno == -2)
+	    waitmsg(TXT_ILLEGALPATH, current_path);
+	if (dno == -1)
+	    waitmsg(TXT_CANTFINDPATH, current_path);
+	strcpy(current_path, oldpath);
+	uio_drawpath(b[0]->w, b[0]->xpos, b[0]->ypos + b[0]->ysize + 1, b[0]->xsize);
+	dirs = ws_getalldirs(current_path, "*", &dno);
+	my_assert(dno >= 0);
+    }
+    
+    if (dirs)
+	qsort(dirs, dno, sizeof(char *), qs_compstrs);
+
+    for (i = 0; i < b_dirs->no_strings; i++) {
+	t = (char *) b_dirs->strings[i];
+	FREE(t);
+    }
+    
+    FREE(b_dirs->strings);
+    
+
+    b_dirs->no_strings = dno;
+
+    FREE(b_dirs->sel_arr);
+    checkmem(b_dirs->sel_arr = MALLOC(dno));
+    for (i = 0; i < dno; i++)
+	b_dirs->sel_arr[i] = 0;
+
+    b_dirs->strings = dirs;
+    w_drawbutton(b[2]);
+
+}
+
+
 void uio_string_getfname(struct w_button *b)
 {
     char *s = b->d.str->str, oldpath[300], fp[300], drive[3],
@@ -348,6 +393,31 @@ void uio_sel_dir(struct w_button *b)
 	//current_path[strlen(current_path) - 1] = 0;
 	uio_changedir(b->data, buffer);
 }
+
+void uio_dirlist_sel_dir(struct w_button *b)
+{
+	struct w_b_strlist *b_dirs = b->d.sls;
+	char buffer[1024];
+	int sel;
+	for (sel = 0; sel < b->d.sls->no_strings; sel++)
+		if (b->d.sls->sel_arr[sel])
+			break;
+
+	if (sel >= b->d.sls->no_strings)
+		return;
+	
+	strcpy(buffer, current_path);
+
+
+        if (current_path[strlen(current_path)-1] != '/') 
+                strcat(current_path, "/");
+
+        strcat(current_path, b_dirs->strings[sel]);
+
+	uio_dirlist_changedir(b->data, buffer);
+}
+
+
 
 /* makes a file-requester with the files files and the dirs dirs in the
    window w in the rectangle (x,y)-(x+as much place as needed,y+ysize), that
@@ -473,6 +543,67 @@ int makefilebuttons(struct w_window *w, int x, int y, int ysize,
     return xsize;
 }
 
+// FFE - same like above, but for directory-only selection
+int makedirbuttons(struct w_window *w, int x, int y, int ysize,
+		    char **dirs, int nodirs,
+		    struct w_button **b)
+{
+    struct w_b_press *b_up, *b_down;
+    struct w_b_strlist *b_dirs;
+    struct w_b_string *b_name;
+    int i, no_rows, xsize;
+    if (dirs)
+	qsort(dirs, nodirs, sizeof(char *), qs_compstrs);
+    no_rows = ysize / (w_titlebarheight() + 2) - 5;
+    if (no_rows <= 0)
+	return 0;
+    checkmem(b_name = MALLOC(sizeof(struct w_b_string)));
+    b_name->max_length = 255;	/* Should be enough for every path */
+    checkmem(b_name->str = MALLOC(b_name->max_length + 1));
+    b_name->str[b_name->max_length] = 0;
+
+    b_name->str[0] = 0;
+    
+    b_name->allowed_char = isgraph;
+    b_name->l_char_entered = b_name->r_char_entered = NULL;
+    b_name->l_string_entered = b_name->r_string_entered = uio_string_getfname;
+    
+    checkmem(b_dirs = MALLOC(sizeof(struct w_b_strlist)));
+    b_dirs->no_strings = nodirs;
+    b_dirs->strings = dirs;
+    checkmem(b_dirs->sel_arr = MALLOC(nodirs));
+    for (i = 0; i < nodirs; i++)
+	b_dirs->sel_arr[i] = 0;
+    b_dirs->no_rows = no_rows;
+    b_dirs->l_string_selected = b_dirs->r_string_selected = uio_dirlist_sel_dir;
+    b_dirs->start_no = 0;
+    
+    
+    checkmem(b_up = MALLOC(sizeof(struct w_b_press)));
+    checkmem(b_down = MALLOC(sizeof(struct w_b_press)));
+    b_up->l_pressed_routine = b_up->l_routine = uio_dirs_one_up;
+    b_up->r_pressed_routine = b_up->r_routine = uio_dirs_page_up;
+    b_up->delay = 40;
+    b_up->repeat = 15;
+    b_down->l_pressed_routine = b_down->l_routine = uio_dirs_one_down;
+    b_down->r_pressed_routine = b_down->r_routine = uio_dirs_page_down;
+    b_down->delay = 40;
+    b_down->repeat = 15;
+    
+    xsize = 20 + ws_pixstrlen("M") * FILENAME_LIMIT;
+    path_max_length = xsize - 6;
+    checkmem(b[0] = w_addstdbutton(w, w_b_string, x, y, xsize, -1, NULL, b_name, 1));
+    checkmem(b[1] = w_addstdbutton(w, w_b_press, x, b[0]->ypos + b[0]->ysize + w_titlebarheight() + 2, xsize, -1, "/\\", b_up, 1));
+    checkmem(b[2] = w_addstdbutton(w, w_b_list, x, b[1]->ypos + b[1]->ysize, xsize, no_rows * (w_titlebarheight() + 2), NULL, b_dirs, 1));
+    checkmem(b[3] = w_addstdbutton(w, w_b_press, x, b[2]->ypos + b[2]->ysize, xsize, -1, "\\/", b_down, 1));
+
+    for (i = 0; i < 4; i++)
+	b[i]->data = b;
+    return xsize;
+}
+
+
+
 /* Get a filename. Start with path *path and filename defname, only
  files with extension ext are allowed (there is more than one extension
  allowed, each must be three characters long and they must be seperated
@@ -498,7 +629,12 @@ char *getfilename(char **path, const char *defname, const char *ext,
     else
 	pnt = NULL;
     strcpy(current_path, *path);
-    strcpy(current_ext, ext);
+    // FFE fix for no forced extension
+    if (ext)
+        strcpy(current_ext, ext);
+    else 
+        strcpy(current_ext, "*");
+    
     files = ws_getallfilenames(current_path, current_ext, &no);
     dirs = ws_getalldirs(current_path, "*", &dno);
     if (no < 0 || dno < 0) {
@@ -566,26 +702,34 @@ char *getfilename(char **path, const char *defname, const char *ext,
 	return NULL;
     }
     if (fname != NULL) {
-	if ((oldpnt = pnt = strrchr(fname, '.')) == NULL)
-	    pnt = fname + strlen(fname);
-	if (pnt - fname > 8)
-	    pnt = fname + 8;
-	checkmem(fullpath =
-		 MALLOC((pnt - fname) + strlen(current_path) + 6));
-	*pnt = 0;
-	strcpy(fullpath, current_path);
-	strcat(fullpath, "/");
-	strcat(fullpath, fname);
-	strcat(fullpath, ".");
-	fullpath[strlen(fullpath) + 3] = 0;
-	if (oldpnt)
-	    strncat(fullpath, oldpnt + 1, 3);
-	else {
-	    oldpnt = strchr(ext, '.');
-	    strncat(fullpath, ext, (oldpnt ?
-				    oldpnt - ext : strlen(ext)) <=
-		    3 ? (oldpnt ? oldpnt - ext : strlen(ext)) : 3);
-	}
+        if (ext) {
+            if ((oldpnt = pnt = strrchr(fname, '.')) == NULL)
+                pnt = fname + strlen(fname);
+            if (pnt - fname > 8)
+                pnt = fname + 8;
+            checkmem(fullpath =
+                    MALLOC((pnt - fname) + strlen(current_path) + 6));
+            *pnt = 0;
+            strcpy(fullpath, current_path);
+            strcat(fullpath, "/");
+            strcat(fullpath, fname);
+            strcat(fullpath, ".");
+            fullpath[strlen(fullpath) + 3] = 0;
+            if (oldpnt)
+                strncat(fullpath, oldpnt + 1, 3);
+            else {
+                oldpnt = strchr(ext, '.');
+                strncat(fullpath, ext, (oldpnt ?
+                                        oldpnt - ext : strlen(ext)) <=
+                        3 ? (oldpnt ? oldpnt - ext : strlen(ext)) : 3);
+            }
+        } else {
+            // FFE if no ext is forced, just use the filename "as is"
+            checkmem(fullpath = MALLOC(strlen(current_path) + strlen(fname)));            
+            strcpy(fullpath, current_path);
+            strcat(fullpath, "/");
+            strcat(fullpath, fname);
+        }
 	FREE(fname);
 	checkmem(*path = REALLOC(*path, strlen(current_path) + 1));
 	strcpy(*path, current_path);
@@ -603,6 +747,95 @@ char *getfilename(char **path, const char *defname, const char *ext,
     }
     return fullpath;
 }
+
+
+char *getdirname(char **path, const char *title)
+{
+
+    char **dirs, *fname;
+    int i, dno, xsize, ok_cancel;
+    struct w_window w, *ow;
+    struct w_button *b[9];
+    struct w_b_press b_ok, b_cancel;
+    
+    my_assert(path != NULL);
+
+    strcpy(current_path, *path);
+    
+    dirs = ws_getalldirs(current_path, "*", &dno);
+    
+    if (dno < 0) {
+	if (dno == -2)
+	    waitmsg(TXT_ILLEGALPATH, current_path);
+	if (dno == -1)
+	    waitmsg(TXT_CANTFINDPATH, current_path);
+        
+	//ws_makepath("/", current_path);
+	ws_getcwd(current_path, 255);
+	
+	dirs = ws_getalldirs(current_path, "*", &dno);
+        
+	if (dno == -2) {
+	    waitmsg(TXT_ILLEGALPATH, current_path);
+	    return NULL;
+	}
+	if (dno == -1) {
+	    waitmsg(TXT_CANTFINDPATH, current_path);
+	    return NULL;
+	}
+    }
+    
+    w.xpos = w.ypos = -1;
+    w.xsize = 26 + ws_pixstrlen("M") * FILENAME_LIMIT;
+    w.ysize = w_ymaxwinsize() * 2 / 3;
+    w.maxxsize = w.maxysize = -1;
+    w.shrunk = 0;
+    w.title = title;
+    w.buttons = wb_drag;
+    w.refresh = wr_normal;
+    w.refresh_routine = NULL;
+    w.close_routine = NULL;
+    w.click_routine = NULL;
+    
+    checkmem(ow = w_openwindow(&w));
+    
+    b_ok.delay = 0;
+    b_ok.repeat = -1;
+    b_ok.l_pressed_routine = b_ok.r_pressed_routine = b_ok.l_routine =	b_ok.r_routine = NULL;
+    b_cancel = b_ok;
+    
+    my_assert((xsize = makedirbuttons(ow, 0, w_titlebarheight() + 2, w_ywininsize(ow), dirs, dno, b)) > 0);
+    w_resizeinwin(ow, xsize, b[3]->ypos + b[3]->ysize);
+    
+    checkmem(b[7] = w_addstdbutton(ow, w_b_press, 0, 0, w_xwininsize(ow) / 2, w_titlebarheight() + 2, TXT_OK, &b_ok, 1));
+    checkmem(b[8] = w_addstdbutton(ow, w_b_press, b[7]->xsize, 0, w_xwininsize(ow) / 2, b[7]->ysize, TXT_CANCEL, &b_cancel, 1));
+    
+    uio_drawpath(ow, b[0]->xpos, b[0]->ypos + b[0]->ysize + 1, w_xwininsize(ow));
+    
+    ok_cancel = w_handleuser(2, &b[7], 1, &ow, 0, NULL, NULL);
+    
+    fname = b[0]->d.str->str;
+    
+    for (i = 0; i < b[2]->d.sls->no_strings; i++)
+	FREE(b[2]->d.sls->strings[i]);
+    FREE(b[2]->d.sls->strings);
+   
+    for (i = 0; i < 4; i++)
+	FREE(b[i]->d.d);
+    
+    w_closewindow(ow);
+    
+    FREE(fname);
+    
+    if (ok_cancel != 0) {
+	return NULL;
+    }
+    
+    strcpy(*path, current_path);
+    return *path;
+}
+
+
 
 struct hoglevel {
     char name[14], fullpath[256];

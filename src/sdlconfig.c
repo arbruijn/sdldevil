@@ -245,12 +245,43 @@ void sdld_save_click(struct w_button * b) {
     sdld_write_config(config_data);
 }
 
+
+void sdld_browse_file(struct w_button * b) {
+    struct w_button * btn = b->data;
+    
+    char * path = MALLOC(strlen(btn->d.str->str) + 1);
+    char * file = MALLOC(256);
+    //strcpy(path, btn->d.str->str);
+    
+    ws_splitpath(btn->d.str->str, NULL, path, file, NULL);
+    
+    char * res;
+    res = getfilename(&path, file, NULL, "select file", 0);
+    
+    if (res){
+        strncpy(btn->d.str->str, res, SDLD_MAX_PATH_LEN);
+        FREE(res);
+    }
+    
+    FREE(path);
+    
+    
+    w_drawbutton(btn);
+}
+
+void sdld_browse_dir(struct w_button * b) {
+    struct w_button * btn = b->data;
+    getdirname(&btn->d.str->str, "select directory");
+    w_drawbutton(btn);
+}
+
+
 // show sdldevil config dialog
 void sdld_configdialog(void) {
 
     int i, j, key, kbstat, event;
     struct w_window w, *ow;
-    struct w_button *b[20];
+    struct w_button *b[26];
 
     int screenmodes_count;
     char ** screenmodes = ws_getscreenmodes(&screenmodes_count);
@@ -268,8 +299,8 @@ void sdld_configdialog(void) {
     struct sdld_keychange_data * keychange_data;
     keychange_data = MALLOC(sizeof(struct sdld_keychange_data));
 
-    char d1datapath[SDLD_MAX_PATH_LEN], d1missionpath[SDLD_MAX_PATH_LEN], d1binarypath[SDLD_MAX_PATH_LEN];
-    char d2datapath[SDLD_MAX_PATH_LEN], d2missionpath[SDLD_MAX_PATH_LEN], d2binarypath[SDLD_MAX_PATH_LEN];
+    char d1datapath[SDLD_MAX_PATH_LEN+1], d1missionpath[SDLD_MAX_PATH_LEN+1], d1binarypath[SDLD_MAX_PATH_LEN+1];
+    char d2datapath[SDLD_MAX_PATH_LEN+1], d2missionpath[SDLD_MAX_PATH_LEN+1], d2binarypath[SDLD_MAX_PATH_LEN+1];
 
     *d1datapath = 0;
     *d1missionpath = 0;
@@ -283,6 +314,9 @@ void sdld_configdialog(void) {
     // Fields for Descent Paths
     struct w_b_string b_d1datapath, b_d1missionpath, b_d1binarypath;
     struct w_b_string b_d2datapath, b_d2missionpath, b_d2binarypath;
+    
+    struct w_b_press b_d1datapath_browse, b_d1missionpath_browse, b_d1binarypath_browse;
+    struct w_b_press b_d2datapath_browse, b_d2missionpath_browse, b_d2binarypath_browse;
 
     struct w_b_strlist b_keymap;
 
@@ -404,7 +438,7 @@ void sdld_configdialog(void) {
 
     // init window
     w.xpos = w.ypos = -1;
-    w.xsize = 400;
+    w.xsize = 600;
     w.ysize = w_ymaxwinsize() * 3 / 3.5;
     w.maxxsize = w.maxysize = -1;
     w.shrunk = 0;
@@ -453,7 +487,17 @@ void sdld_configdialog(void) {
     b_cancel.l_pressed_routine = b_cancel.r_pressed_routine = b_cancel.l_routine = b_cancel.r_routine = NULL;
     b_save.l_pressed_routine = b_cancel.r_pressed_routine = NULL;
     b_save.l_routine = b_save.r_routine = sdld_save_click;
+    
+    // browsebuttons
+    b_d1binarypath_browse = b_d2binarypath_browse = b_save;
 
+    b_d1binarypath_browse.l_routine = b_d1binarypath_browse.r_routine = sdld_browse_file;
+    b_d2binarypath_browse.l_routine = b_d2binarypath_browse.r_routine = sdld_browse_file;
+
+    b_d1datapath_browse = b_d1binarypath_browse;
+    b_d1datapath_browse.l_routine = b_d1datapath_browse.r_routine = sdld_browse_dir;
+    b_d2datapath_browse = b_d1missionpath_browse = b_d2missionpath_browse = b_d1datapath_browse;
+    
     b_fullscreen.l_routine = b_fullscreen.r_routine = sdld_fullscreen_change;
     b_fullscreen.on = init.fullscreen;
     if (b_fullscreen.on > 1)
@@ -483,12 +527,33 @@ void sdld_configdialog(void) {
 
     // create the buttons on the window
     i = 0;
-    checkmem(b[0] = w_addstdbutton(ow, w_b_string, 0, i, w.xsize-2, -1, "Descent 1 data path      ", &b_d1datapath, 1));
-    checkmem(b[1] = w_addstdbutton(ow, w_b_string, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 1 mission path   ", &b_d1missionpath, 1));
-    checkmem(b[2] = w_addstdbutton(ow, w_b_string, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 1 executable path", &b_d1binarypath, 1));
-    checkmem(b[3] = w_addstdbutton(ow, w_b_string, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 2 data path      ", &b_d2datapath, 1));
-    checkmem(b[4] = w_addstdbutton(ow, w_b_string, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 2 mission path   ", &b_d2missionpath, 1));
-    checkmem(b[5] = w_addstdbutton(ow, w_b_string, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-2, -1, "Descent 2 executable path", &b_d2binarypath, 1));
+    checkmem(b[0] = w_addstdbutton(ow, w_b_string, 0, i, w.xsize-18, -1, "Descent 1 data path      ", &b_d1datapath, 1));
+    checkmem(b[20] = w_addstdbutton(ow, w_b_press,w.xsize-18, i, 16, SDLD_ELEMENT_HEIGHT, "...", &b_d1datapath_browse, 1));
+    b[20]->data = b[0];
+    
+    checkmem(b[1] = w_addstdbutton(ow, w_b_string, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-18, -1, "Descent 1 mission path   ", &b_d1missionpath, 1));
+    checkmem(b[21] = w_addstdbutton(ow, w_b_press,w.xsize-18, i, 16, SDLD_ELEMENT_HEIGHT, "...", &b_d1missionpath_browse, 1));
+    b[21]->data = b[1];
+    
+    
+    checkmem(b[2] = w_addstdbutton(ow, w_b_string, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-18, -1, "Descent 1 executable path", &b_d1binarypath, 1));
+    checkmem(b[22] = w_addstdbutton(ow, w_b_press,w.xsize-18, i, 16, SDLD_ELEMENT_HEIGHT, "...", &b_d1binarypath_browse, 1));
+    b[22]->data = b[2];
+    
+    
+    checkmem(b[3] = w_addstdbutton(ow, w_b_string, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-18, -1, "Descent 2 data path      ", &b_d2datapath, 1));
+    checkmem(b[23] = w_addstdbutton(ow, w_b_press,w.xsize-18, i, 16, SDLD_ELEMENT_HEIGHT, "...", &b_d2datapath_browse, 1));
+    b[23]->data = b[3];
+    
+    checkmem(b[4] = w_addstdbutton(ow, w_b_string, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-18, -1, "Descent 2 mission path   ", &b_d2missionpath, 1));
+    checkmem(b[24] = w_addstdbutton(ow, w_b_press,w.xsize-18, i, 16, SDLD_ELEMENT_HEIGHT, "...", &b_d2missionpath_browse, 1));
+    b[24]->data = b[4];
+
+    
+    checkmem(b[5] = w_addstdbutton(ow, w_b_string, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-18, -1, "Descent 2 executable path", &b_d2binarypath, 1));
+    checkmem(b[25] = w_addstdbutton(ow, w_b_press,w.xsize-18, i, 16, SDLD_ELEMENT_HEIGHT, "...", &b_d2binarypath_browse, 1));
+    b[25]->data = b[5];
+    
 
     w_drawbuttonbox(ow, 0, i+SDLD_ELEMENT_HEIGHT, w.xsize-2, w.ysize-i-SDLD_ELEMENT_HEIGHT*2+4);
     checkmem(b[6] = w_addstdbutton(ow, w_b_switch, 0, i+=SDLD_ELEMENT_HEIGHT, 200, SDLD_ELEMENT_HEIGHT, "Fullscreen", &b_fullscreen, 1));
