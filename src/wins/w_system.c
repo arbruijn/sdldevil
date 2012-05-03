@@ -505,12 +505,13 @@ void ws_textmode(void)
 	SDL_Quit ();
 }
 
+/*
 int altkeys_az[26] =
     { 286, 304, 302, 288, 274, 289, 290, 291, 279, 292, 293, 294,
     306, 305, 280, 281, 272, 275, 287, 276, 275, 303, 273, 301, 300, 277
 };
 int altkeys_09[10] = { 385, 376, 377, 378, 379, 380, 381, 382, 383, 384 };
-
+*/
 /* get an event (key or mousebutton pressed/released).
    if wait>0 wait for an event. 
    if wait==0 don't wait for an event. if there's no event return 0.
@@ -651,11 +652,11 @@ int ws_getevent(struct ws_event *se, int wait)
 	*/
 
 
-		
+	/*
 	if (got_event) {	
 		printf ("event - flags=%i, key=%i, unicode=%i, kbstat=%i, x=%i, y=%i, buttons=%i, wait=%i\n", se->flags, se->key, se->unicode, se->kbstat, se->x, se->y, se->buttons, wait);
 	}
-	
+	*/
 
 	return got_event;
 

@@ -183,6 +183,55 @@ int sdld_qs_comphotkeyrank(const void * a, const void * b) {
     return (*(struct sdld_hotkey **)b)->rank - (*(struct sdld_hotkey **)a)->rank;
 }
 
+/* Check if the user selected the right descent version
+ * quite important since wrong selections would crash the editor
+ */
+int sdld_check_descentversion(struct sdld_config_data * config_data) {
+    
+    enum descent actual_version;
+    uint32_t d;
+    char buffer[SDLD_MAX_PATH_LEN+1];
+    FILE * f;
+    
+    *buffer = 0;
+    
+    if (config_data->descent_version >= d2_10_sw) {
+        // descent 2 selected
+        // TODO: proper version checks
+    } else {
+        // descent 1 selected, do the pigfile check like original devil did
+        
+        strcat(buffer, config_data->d1_data_path);
+        strcat(buffer, "/");
+        strcat(buffer, "descent.pig");
+        
+        f = fopen(buffer, "rb");
+        if (f == NULL) {
+            waitmsg("No Descent 1 found in path %s.\n Please make sure that you selected the right directory where descent.pig resides in", config_data->d1_data_path);
+            return 0;
+        }
+        
+        my_assert(fread(&d, sizeof (uint32_t), 1, f) == 1);
+        fclose(f);
+        if (d >= 0x10000)  
+            actual_version = d1_14_reg;
+        else
+            actual_version = d1_10_reg;
+        
+        if (actual_version != config_data->descent_version) {
+            if (actual_version == d1_10_reg) {
+                waitmsg("You selected Descent v1.4+, but the data is from Descent 1.0.\nPlease select the right Descent version or update your Descent installation (the latter is strongly recommonded)");
+                return 0;
+            } else {
+                waitmsg("You selected Descent v1.0, but the data is from Descent 1.4+.\nPlease select the right Descent version.");
+                return 0;
+            }
+        }
+    }
+    
+    return 1;
+}
+
 
 // write the config file
 int sdld_write_config(struct sdld_config_data * config_data)  {
@@ -232,7 +281,6 @@ int sdld_write_config(struct sdld_config_data * config_data)  {
     }
     
     config_data->restart_required = 1;
-    
     fclose(f);
     
     return 1;
@@ -242,7 +290,9 @@ int sdld_write_config(struct sdld_config_data * config_data)  {
 // callback for save button
 void sdld_save_click(struct w_button * b) {
     struct sdld_config_data * config_data = b->data;
-    sdld_write_config(config_data);
+    if (sdld_check_descentversion(config_data)) {
+        sdld_write_config(config_data);
+    }
 }
 
 
@@ -265,7 +315,6 @@ void sdld_browse_file(struct w_button * b) {
     
     FREE(path);
     
-    
     w_drawbutton(btn);
 }
 
@@ -276,10 +325,13 @@ void sdld_browse_dir(struct w_button * b) {
 }
 
 
+
+
+
 // show sdldevil config dialog
 void sdld_configdialog(void) {
 
-    int i, j, key, kbstat, event;
+    int i, j, key, kbstat, event, dlg_result;
     struct w_window w, *ow;
     struct w_button *b[26];
 
@@ -556,9 +608,10 @@ void sdld_configdialog(void) {
     
 
     w_drawbuttonbox(ow, 0, i+SDLD_ELEMENT_HEIGHT, w.xsize-2, w.ysize-i-SDLD_ELEMENT_HEIGHT*2+4);
+    checkmem(b[8] = w_addstdbutton(ow, w_b_choose, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-2, -1,  "Descent version used     ", &b_descentversion, 1));
     checkmem(b[6] = w_addstdbutton(ow, w_b_switch, 0, i+=SDLD_ELEMENT_HEIGHT, 200, SDLD_ELEMENT_HEIGHT, "Fullscreen", &b_fullscreen, 1));
     checkmem(b[7] = w_addstdbutton(ow, w_b_choose, 200, i, 198, -1, "screen resolution", &b_fullscreenresolution, 1));
-    checkmem(b[8] = w_addstdbutton(ow, w_b_choose, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-2, -1, "Descent version", &b_descentversion, 1));
+
     b[6]->data = b[7]->data = b[8]->data = config_data;
 
     
@@ -577,7 +630,17 @@ void sdld_configdialog(void) {
     b[17]->data = config_data;
     
     // run dialog
-    w_handleuser(2, &b[16], 1, &ow, 0, NULL, NULL);
+    while(1) {
+        dlg_result = w_handleuser(2, &b[16], 1, &ow, 0, NULL, NULL);
+        if (dlg_result == 0) {
+            // cancel clicked
+            break;
+        } else {
+            // save clicked, if restart_required is not set, something went wrong... stay in the dialog then
+            if (config_data->restart_required) 
+                break;
+        }
+    }
 
     w_closewindow(ow);
     
@@ -601,7 +664,7 @@ void sdld_configdialog(void) {
         if (init.lastname)
                 remove(init.lastname);
     
-        waitmsg("Successfully saved configuration, exiting SDLDevil");
+        waitmsg("Successfully saved configuration, exiting SDLDevil\nRestart SDLDevil for the changes to take effect");
         ws_textmode();
         
         FREE(config_data);

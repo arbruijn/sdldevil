@@ -50,7 +50,7 @@ void dec_quit(int evcode) {
     struct node *n, *q;
     savestatus(0);
     // FFE another fix here where the original code accessed already freed mem
-    for (n = view.levels.head; q->next != NULL; n = q) {
+    for (n = view.levels.head; n->next != NULL; n = q) {
         q = n->next;
         if (!closelevel(n->d.lev, 1)) 
             return;

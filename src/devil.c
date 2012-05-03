@@ -32,6 +32,9 @@
 #include "do_event.h"
 //#include "askcfg.h"
 #include "sdlconfig.h"
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 const char *extnames[desc_number] ={"SDL", "RDL", "RDL", "SL2", "RL2", "RL2", "RL2"};
 #ifdef GER
@@ -131,7 +134,20 @@ const char *cmdline_switches[num_cmdlineparams] = {"NEW", "NOTITLE", "CONFIG"};
 
 const char *cmdline_txts[num_cmdlineparams] ={TXT_CMDSTARTNEW, TXT_CMDDONTSHOWTITLE, TXT_CMDCONFIG};
 
+#ifdef _WIN32
+
+int WINAPI winmain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+
+    int argc = 0;
+    char ** argv = NULL;
+    
+    // TODO cmdline Params
+    
+#else
+
 int main(int argc, char *argv[]) {
+    
+#endif
     
     int i, j, title = 1;
     int with_cfg = 1, reconfig = 0;
@@ -165,7 +181,7 @@ int main(int argc, char *argv[]) {
                             with_cfg = 0;
                             break;
                         case clp_notitle:
-                            printf("Devil is sponsored by PC Player!\n");
+                            //printf("Devil is sponsored by PC Player!\n");
                             title = 0;
                             break;
                         case clp_config:
@@ -189,8 +205,7 @@ int main(int argc, char *argv[]) {
 
     initeditor(INIFILE, title);
     
-    if (!readconfig()) {
-        
+    if (!readconfig() || reconfig) {
         // FFE init rudimentary graphics for initial configuration
         if (!w_initwins(640, 480, 32, 0, NULL)) {
             printf(TXT_CANTINITWINS);
@@ -199,14 +214,12 @@ int main(int argc, char *argv[]) {
         newpalette(palettes[0].palette);
         sdld_configdialog();
         exit(0);
-        //writeconfig(0);
-    }/* else if (reconfig) {
-        writeconfig(1);
-    }*/
+
+    }
     
     initgrph(title);
     
-    //ws_disablectrlc();
+    //ws_disablectrlc(); FFE no more needed
     
     // initialize current level pointer 
     l = NULL;

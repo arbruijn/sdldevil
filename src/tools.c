@@ -631,10 +631,8 @@ void freelightsource(void *n) {
     for (nlse = ls->effects.head->next; nlse != NULL; nlse = nlse->next) {
         for (w = 0; w < 6; w++) if (nlse->prev->d.lse->cube->d.c->walls[w])
                 for (c = 0; c < 4; c++) {
-                    overflow = nlse->prev->d.lse->cube->d.c->walls[w]->corners[c].light -
-                            nlse->prev->d.lse->add_light[w * 4 + c];
-                    nlse->prev->d.lse->cube->d.c->walls[w]->corners[c].light =
-                            overflow < view.illum_minvalue ? view.illum_minvalue : overflow;
+                    overflow = nlse->prev->d.lse->cube->d.c->walls[w]->corners[c].light - nlse->prev->d.lse->add_light[w * 4 + c];
+                    nlse->prev->d.lse->cube->d.c->walls[w]->corners[c].light = overflow < view.illum_minvalue ? view.illum_minvalue : overflow;
                 }
         freenode(&ls->effects, nlse->prev, free);
     }
