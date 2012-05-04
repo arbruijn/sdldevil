@@ -138,10 +138,25 @@ const char *cmdline_txts[num_cmdlineparams] ={TXT_CMDSTARTNEW, TXT_CMDDONTSHOWTI
 
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 
-    int argc = 0;
+    // generate UNIX like commandline parameters on windows
+    char * cmdline = (char *)lpCmdLine;
+    char * tp = NULL;
     char ** argv = NULL;
-    
-    // TODO cmdline Params
+
+    int argc = 1;
+
+    argv = (char **)MALLOC(sizeof(char *) * argc);
+    argv[0] = NULL;     // binary name not needed
+
+    tp = strtok(cmdline, " ");
+    if (tp) {
+            do {
+                    argv = (char **)REALLOC(argv, sizeof(char *) * (argc + 1));
+                    argv[argc] = (char *)MALLOC(strlen(tp) + 1);
+                    strcpy (argv[argc], tp);
+                    argc++;
+            } while (tp = strtok(NULL, " "));
+    }
     
 #else
 
@@ -202,12 +217,22 @@ int main(int argc, char *argv[]) {
             load_file_name = argv[j];
         }
     }
+    
+#ifdef _WIN32
+    
+    // free our "artificial" UNIX commandline params
+    for (i=0; i<argc; i++) {
+            if (argv[i])
+                    FREE(argv[i]);
+    }
+    FREE(argv);
 
+#endif
     initeditor(INIFILE, title);
     
     if (!readconfig() || reconfig) {
         // FFE init rudimentary graphics for initial configuration
-        if (!w_initwins(640, 480, 32, 0, NULL)) {
+        if (!w_initwins(640, 480, 32, 0, 0)) {
             printf(TXT_CANTINITWINS);
             my_exit();
         }        

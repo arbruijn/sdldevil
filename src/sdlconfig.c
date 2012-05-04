@@ -176,6 +176,13 @@ void sdld_fullscreen_change(struct w_button * b) {
     config_data->fullscreen = btn->on;
 }
 
+// callback for keyrepeat toggle button
+void sdld_keyrepeat_change(struct w_button * b) {
+    struct w_b_switch * btn = b->d.s;
+    struct sdld_config_data * config_data = b->data;
+    config_data->keyrepeat = btn->on;
+}
+
 /* sort comparator for qsort - sort sdld_hotkeys by their rank - highest first
  * aka descending ;-) 
  */
@@ -554,6 +561,11 @@ void sdld_configdialog(void) {
     b_fullscreen.on = init.fullscreen;
     if (b_fullscreen.on > 1)
         b_fullscreen.on = 1;
+    
+    b_keyrepeat.l_routine = b_keyrepeat.r_routine = sdld_keyrepeat_change;
+    b_keyrepeat.on = init.keyrepeat;
+    if (b_keyrepeat.on > 1)
+        b_keyrepeat.on = 1;
 
 
     b_fullscreenresolution.num_options = screenmodes_count;
@@ -610,9 +622,10 @@ void sdld_configdialog(void) {
     w_drawbuttonbox(ow, 0, i+SDLD_ELEMENT_HEIGHT, w.xsize-2, w.ysize-i-SDLD_ELEMENT_HEIGHT*2+4);
     checkmem(b[8] = w_addstdbutton(ow, w_b_choose, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-2, -1,  "Descent version used     ", &b_descentversion, 1));
     checkmem(b[6] = w_addstdbutton(ow, w_b_switch, 0, i+=SDLD_ELEMENT_HEIGHT, 200, SDLD_ELEMENT_HEIGHT, "Fullscreen", &b_fullscreen, 1));
-    checkmem(b[7] = w_addstdbutton(ow, w_b_choose, 200, i, 198, -1, "screen resolution", &b_fullscreenresolution, 1));
+    checkmem(b[7] = w_addstdbutton(ow, w_b_choose, 200, i, 200, -1, "screen resolution", &b_fullscreenresolution, 1));
+    checkmem(b[9] = w_addstdbutton(ow, w_b_switch, 400, i, 198, -1, "enable keyrepeat", &b_keyrepeat, 1));
 
-    b[6]->data = b[7]->data = b[8]->data = config_data;
+    b[6]->data = b[7]->data = b[8]->data = b[9]->data = config_data;
 
     
     int no_rows = (w_ywininsize(ow) - (i )) / (w_titlebarheight() + 2) - 4;

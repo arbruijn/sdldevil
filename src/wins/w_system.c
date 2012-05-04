@@ -61,7 +61,7 @@ extern FILE *errf;
 /* Initialize Grfx-Mode&Mouse.Try to use xres,yres,colors and font <fontname>.
    If you are successful, return a 1.
    If you can't initialize this mode, return a 0. */
-int ws_initgrfx(int xres, int yres, int color_depth, int fullscreen, const char *fontname)
+int ws_initgrfx(int xres, int yres, int color_depth, int fullscreen, int keyrepeat)
 {
 	//static unsigned char pixels[2];
     
@@ -70,6 +70,8 @@ int ws_initgrfx(int xres, int yres, int color_depth, int fullscreen, const char 
 		return 0;
 	}
 	SDL_EnableUNICODE(1);
+        if (keyrepeat)
+            SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 
 	gfxPrimitivesSetFont(gfxDevilFontdata, 6, 14);
 

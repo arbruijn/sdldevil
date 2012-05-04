@@ -8,6 +8,11 @@ V0.5
  * added graphical configuration tool
  * added support for remapping keys
  * added independent configurable data/mission/binary paths
+ * fixed access to already freed mem when closing level
+ * made Makefile more platform independent (no more changes needed on Win32
+   build)
+ * Icon ressource for Win32 exe 
+ * fixed commandline parsing issues on Windows
 
 V0.4
  * fixed HOG manager crash on windows

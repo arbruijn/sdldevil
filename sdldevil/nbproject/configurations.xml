@@ -16,6 +16,8 @@
           <in>TEXT.H</in>
         </df>
       </df>
+      <df name="res">
+      </df>
       <df name="wins">
         <in>SDL_gfxPrimitives.c</in>
         <in>SDL_gfxPrimitives.h</in>
@@ -152,10 +154,6 @@
               <pElem>../src/wins</pElem>
               <pElem>../src/language</pElem>
             </incDir>
-            <preprocessorList>
-              <Elem>GNU_C</Elem>
-              <Elem>GO32</Elem>
-            </preprocessorList>
           </cTool>
         </makeTool>
       </makefileType>

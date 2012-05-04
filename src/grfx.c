@@ -520,7 +520,7 @@ void initgrph(int showtitle)
     ws_textmode();
 */
 #endif
-    if (!w_initwins(init.xres, init.yres, 32, init.fullscreen, init.fontname)) {
+    if (!w_initwins(init.xres, init.yres, 32, init.fullscreen, init.keyrepeat)) {
 	printf(TXT_CANTINITWINS);
 	my_exit();
     }

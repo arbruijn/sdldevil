@@ -47,7 +47,7 @@ struct ws_bitmap {
 
 typedef void ws_cursor;
 
-int ws_initgrfx(int xres, int yres, int color_depth, int fullscreen, const char *fontname);
+int ws_initgrfx(int xres, int yres, int color_depth, int fullscreen, int keyrepeat);
 void ws_resetmousecolors(void);
 ws_cursor *ws_initcursor(char *data, int w, int h, int xo, int yo,
 			 long *colortable);
