@@ -229,7 +229,7 @@ int readpalettes(FILE * f)
 	    return 0;
 	for (j = 0; j < 3 * 255; j++)
 	    palettes[i].palette[j] = palettes[i].palette[j] << 2;	/* values are 0..63 */
-	checkmem(palettes[i].mem_lighttables = malloc((NUM_SECURITY * 2 + NUM_LIGHTCOLORS + 1) * 256) + 256);
+	checkmem(palettes[i].mem_lighttables = malloc((NUM_SECURITY * 2 + NUM_LIGHTCOLORS + 1) * 256));
 	
 	// FLOSDL: TODO find out how this shoudl work - was 0xffffff00...
 	//palettes[i].lighttables = (unsigned char *) (((uint64_t) palettes[i].mem_lighttables & 0xffffffffffffff00) + 256);
@@ -256,7 +256,7 @@ void initeditor(const char *fn, int c)
 	printf(TXT_CANTOPENINI TXT_UNZIPWITHD, fn);
 	exit(2);
     }
-    printf(TXT_READINI);
+    //printf(TXT_READINI);
     my_assert(findmarker(f, "INITDATA", &init_test));
     iniread(f,
 	    "dddpppdgggggggggdggggggggggggggggdddddddddddddddddsssssssssssssss",

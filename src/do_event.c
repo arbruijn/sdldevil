@@ -116,8 +116,10 @@ void dec_playlevel(int ec) {
             printmsg(TXT_LEVELSAVED, l->fullname, "Devil Play Level");
         l->levelsaved = 0;
     } else if (savestatus(1) && saveplaymsn(0)) {
-        closegrph();
-        exit(0);
+        //closegrph();
+        //exit(0);
+        system(init.binarypath);
+        l->levelsaved = 0;
     }
 }
 

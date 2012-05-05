@@ -856,6 +856,12 @@ void ws_splitpath(char *fullpath, char *drive, char *path, char *name,
 
 	if (drive)
 		drive[0] = '\0';
+        
+        if (fullpath == 0)
+            return;
+        
+        if (strlen(fullpath) == 0)
+            return;
 	
 	//if (fullpath[strlen(fullpath)-1] != '/') {
 		stat (fullpath, &fileinfo);
@@ -1029,7 +1035,7 @@ void ws_setdriver(const char *name)
 ws_cursor *ws_initcursor(char *data, int w, int h, int xo, int yo,
 			 long *colortable)
 {
-	printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
+//	printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
 //    return (ws_cursor *) GrBuildCursor(data, w, w, h, xo, yo, colortable);
 }
 
@@ -1038,7 +1044,7 @@ ws_cursor *ws_initcursor(char *data, int w, int h, int xo, int yo,
 void ws_changecursor(ws_cursor * cursor)
 {
 
-	printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
+	//printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
 	// ==> SDL_CreateCursor ... 
 //    if (cursor) {
 //	GrMouseEraseCursor();	/* GrMouseSetCursor((GrCursor *)cursor); */

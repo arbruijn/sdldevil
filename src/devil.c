@@ -19,6 +19,7 @@
     along with this program (file COPYING); if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
+#include <stdlib.h>
 #include "structs.h"
 #include "userio.h"
 #include "tools.h"
@@ -65,32 +66,19 @@ void my_exit(void) {
     }
     ws_textmode();
     releasetimer();
+    // FFE TODO: make better way to report this on modern systems (message box)
     printf("Severe bug.\n");
-    printf("This is the modified version of Devil made by\n");
-    printf("Lars Christensen. Try to redo your last operation with\n");
-    printf
-            ("the original version of Devil. If the problem persists then\n");
-    printf
-            ("follow the instructions below, if not then don't bother Achim\n");
-    printf("with this bug, it's probably introduced by me (Lars).\n");
-    printf
-            ("------------------------------------------------------------\n");
-    printf("Please have a look in the devil.err and try to\n");
-    printf
-            ("reconstruct how this happened and mail your bug report to the\n");
-    printf
-            ("Descent Designer Mailing List (see http://www.warpcore.org)\n");
-    printf
-            ("If you're lucky, your current work will be restored when you\n");
-    printf
-            ("enter the program again. If this doesn't work and it won't start\n");
-    printf("anymore at all, try devil /new.\n");
-    printf("WARNING: It is not sure that your levels will be properly\n");
-    printf("working after the reconstruction. You should save them\n");
-    printf
-            ("under a different filename than the last 'real' saved version\n");
-    printf("Press a key.\n");
-    ws_waitforkey();
+    printf("This is the SDLDevil sourceport of Devil made by\n");
+    printf("Florian \"v66r\" Feucht.\n");
+    printf("This version is NOT maintained by Achim Stremplat or Lars\n");
+    printf("Christensen. Please contact me (Florian) for reporting this\n");
+    printf("bug.\n");
+    printf("How to reach me:\n");
+    printf("On official SDLDevil Forum in the DXX-Rebirth Forums:\n");
+    printf("  http://www.dxx-rebirth.com\n");
+    printf("Via E-Mail:\n");
+    printf("  sdldevil@kr4d.de\n");
+    //ws_waitforkey();
     exit(2);
 }
 
@@ -136,6 +124,7 @@ const char *cmdline_txts[num_cmdlineparams] ={TXT_CMDSTARTNEW, TXT_CMDDONTSHOWTI
 
 #ifdef _WIN32
 
+// Win32 entry point
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 
     // generate UNIX like commandline parameters on windows
@@ -150,16 +139,17 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 
     tp = strtok(cmdline, " ");
     if (tp) {
-            do {
-                    argv = (char **)REALLOC(argv, sizeof(char *) * (argc + 1));
-                    argv[argc] = (char *)MALLOC(strlen(tp) + 1);
-                    strcpy (argv[argc], tp);
-                    argc++;
-            } while (tp = strtok(NULL, " "));
+        do {
+            argv = (char **)REALLOC(argv, sizeof(char *) * (argc + 1));
+            argv[argc] = (char *)MALLOC(strlen(tp) + 1);
+            strcpy (argv[argc], tp);
+            argc++;
+        } while (tp = strtok(NULL, " "));
     }
     
 #else
 
+// UNIX entry point
 int main(int argc, char *argv[]) {
     
 #endif

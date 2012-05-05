@@ -6,16 +6,10 @@ mandatory:
 partially done: all code that depends on sizeof(long) == 4 which breaks on 64bit machines
 user report (pumo): specific levels crash when loading or showing bogus infos
   DMB2 created levels showing this issue? need further investigation here.
-crash when deleting tagged cubes
 crash when flying around with rendering on and lighting
 
 
-
 major:
-separate configurable descent binary, data and mission dirs
-graphical configuration tool
-keyrepeat
-fix: littlebulbs in texture lists are garbage (opt_txt.c)
 texture set not loaded correctly when loading new level on unix (uppercase)
 fix ALOT of memory leaks (according to valgrind)
 
@@ -29,10 +23,7 @@ cleanup: get rid of all palette stuff except where it is needed (textures...)
 
 
 new features:
-fullscreen/window option
-free screen res selection
 optional opengl plotsys
-option for redefining keymappings (for NEO2 users like me :-) )
 
 
 DONE:
@@ -76,3 +67,11 @@ fix make keypad enter work for entry boxes
 port other still not working keys
 partially done: software texture mapper (lighting is missing plotsys.c) => done
 crash when switching to /4 texture list
+crash when deleting tagged cubes
+option for redefining keymappings (for NEO2 users like me :-) )
+fullscreen/window option
+free screen res selection
+separate configurable descent binary, data and mission dirs
+graphical configuration tool
+keyrepeat
+fix: littlebulbs in texture lists are garbage (opt_txt.c)

@@ -1,6 +1,8 @@
 /*  SDLDevil - Sourceport of Devil to libSDL
     Copyright (C) 2012  Florian Feucht (pyro@tagtraummusik.org) */
 
+// TODO: integrate these options into the main configuration
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -28,7 +30,7 @@ char* lac_find_value(char* s)
 void lac_read_cfg(void)
 {
     FILE* cfgfile = fopen("config/devilx.ini", "rt");
-    fprintf(stderr, "Reading DevilX.ini ...\n");
+    //fprintf(stderr, "Reading DevilX.ini ...\n");
     if(cfgfile)
     {
         char s[80];

@@ -203,15 +203,12 @@ int savestatus(int playlevel)
     for (n = view.levels.head, i = 0, j = -1; n->next != NULL; n = n->next) {
 	if (playlevel) {
 	    if (n->d.lev == l)
-		sprintf(fname, "%s/" CFG_CURNAME ".%s", init.cfgpath,
-			init.levelext);
+		sprintf(fname, "%s/" CFG_CURNAME ".%s", init.cfgpath, init.levelext);
 	    else
-		sprintf(fname, "%s/" CFG_FNAME ".%s", init.cfgpath, i++,
-			init.levelext);
+		sprintf(fname, "%s/" CFG_FNAME ".%s", init.cfgpath, i++, init.levelext);
+            
 	    i = n->d.lev->levelsaved;
-	    if (!savelevel
-		(fname, n->d.lev, playlevel > 0 ? n->d.lev == l : -1, 0,
-		 init.d_ver, 0))
+	    if (!savelevel(fname, n->d.lev, playlevel > 0 ? n->d.lev == l : -1, 0, init.d_ver, 0))
 		ERRORSAVECFG(f);
 	    n->d.lev->levelsaved = i;
 	    if (((init.d_ver == d1_10_sw) || (d1_10_reg) || (d1_14_reg))
@@ -222,36 +219,38 @@ int savestatus(int playlevel)
 		char *data;
 		int size;
 
-		ws_splitpath(l->filename, dr, pa, fi, ex);
-		ws_mergepath(pg1filename, dr, pa, fi, ".pg1");
-		pg1file = fopen(pg1filename, "rb");
-		if (!pg1file) {
-		    ws_mergepath(pg1filename, dr, pa, fi, ".dtx");
-		    pg1file = fopen(pg1filename, "rb");
-		}
-		if (!pg1file) {
-		    ws_mergepath(pg1filename, dr, pa, "devil", ".pg1");
-		    pg1file = fopen(pg1filename, "rb");
-		}
-		if (!pg1file) {
-		    ws_mergepath(pg1filename, dr, pa, "devil", ".dtx");
-		    pg1file = fopen(pg1filename, "rb");
-		}
-		if (pg1file) {
-		    ws_splitpath(fname, dr, pa, fi, ex);
-		    ws_mergepath(pg1tmpname, dr, pa, fi, ".dtx");
-		    tmpfile = fopen(pg1tmpname, "wb");
-		    fseek(pg1file, 0, SEEK_END);
-		    size = ftell(pg1file);
-		    rewind(pg1file);
-		    checkmem(data = MALLOC(size));
-		    if (fread(data, 1, size, pg1file) == size) {
-			fwrite(data, 1, size, tmpfile);
-		    }
-		    FREE(data);
-		    fclose(pg1file);
-		    fclose(tmpfile);
-		}
+                if (l->filename) {
+                    ws_splitpath(l->filename, dr, pa, fi, ex);
+                    ws_mergepath(pg1filename, dr, pa, fi, ".pg1");
+                    pg1file = fopen(pg1filename, "rb");
+                    if (!pg1file) {
+                        ws_mergepath(pg1filename, dr, pa, fi, ".dtx");
+                        pg1file = fopen(pg1filename, "rb");
+                    }
+                    if (!pg1file) {
+                        ws_mergepath(pg1filename, dr, pa, "devil", ".pg1");
+                        pg1file = fopen(pg1filename, "rb");
+                    }
+                    if (!pg1file) {
+                        ws_mergepath(pg1filename, dr, pa, "devil", ".dtx");
+                        pg1file = fopen(pg1filename, "rb");
+                    }
+                    if (pg1file) {
+                        ws_splitpath(fname, dr, pa, fi, ex);
+                        ws_mergepath(pg1tmpname, dr, pa, fi, ".dtx");
+                        tmpfile = fopen(pg1tmpname, "wb");
+                        fseek(pg1file, 0, SEEK_END);
+                        size = ftell(pg1file);
+                        rewind(pg1file);
+                        checkmem(data = MALLOC(size));
+                        if (fread(data, 1, size, pg1file) == size) {
+                            fwrite(data, 1, size, tmpfile);
+                        }
+                        FREE(data);
+                        fclose(pg1file);
+                        fclose(tmpfile);
+                    }
+                }
 	    }
 	    fprintf(f, "%s\n", fname);
 	} else if (n->d.lev->filename) {
@@ -263,8 +262,7 @@ int savestatus(int playlevel)
     }
     for (n = view.levels.head, i = 0; n->next != NULL; n = n->next)
 	if (playlevel || n->d.lev->filename) {
-	    if (fprintf(f, ":LEVELDATA%.2d %d\n", i++, !playlevel ? 1 :
-			n->d.lev->levelsaved) < 0)
+	    if (fprintf(f, ":LEVELDATA%.2d %d\n", i++, !playlevel ? 1 :	n->d.lev->levelsaved) < 0)
 		ERRORSAVECFG(f);
 	    if (playlevel)
 		n->d.lev->levelsaved = 1;	// that savelvl don't ask 
@@ -898,7 +896,7 @@ int readconfig(void)
 	strcpy(init.lightname, buffer);
     }
     if (init.d_ver >= d2_10_sw) {
-	printf(TXT_READCONVTABLEFILE, init.convtablename);
+	//printf(TXT_READCONVTABLEFILE, init.convtablename);
 	if ((f = fopen(init.convtablename, "r")) == NULL) {
 	    printf(TXT_CANTOPENCTFILE, init.convtablename);
 	    return 0;
@@ -942,7 +940,7 @@ int readconfig(void)
 	    }
 	fclose(f);
     }
-    printf(TXT_READINIFILEFORDV, vernames[init.d_ver]);
+    //printf(TXT_READINIFILEFORDV, vernames[init.d_ver]);
     checkmem(ininame = MALLOC(strlen(init.cfgpath) +
 			      strlen(ininames[init.d_ver]) + 2));
     strcpy(ininame, init.cfgpath);
@@ -1225,87 +1223,89 @@ int saveplaymsn(int savetoddir)
 	char pg1filename[1024], hx1filename[1024];
 	FILE *pg1file, *hx1file;
 
-	ws_splitpath(l->filename, dr, pa, fi, ex);
-	ws_mergepath(pg1filename, dr, pa, fi, ".pg1");
-	pg1file = fopen(pg1filename, "rb");
-	if (!pg1file) {
-	    ws_mergepath(pg1filename, dr, pa, fi, ".dtx");
-	    pg1file = fopen(pg1filename, "rb");
-	}
-	if (!pg1file) {
-	    ws_mergepath(pg1filename, dr, pa, "devil", ".pg1");
-	    pg1file = fopen(pg1filename, "rb");
-	}
-	if (!pg1file) {
-	    ws_mergepath(pg1filename, dr, pa, "devil", ".dtx");
-	    pg1file = fopen(pg1filename, "rb");
-	}
-	if (pg1file) {
-	    if (fwrite("TMPDEVIL.PG1", 1, 13, f) != 13) {
-		printmsg(TXT_CANTSAVEPLAYHOG, fname);
-		fclose(f);
-		return 0;
-	    }
-	    fseek(pg1file, 0, SEEK_END);
-	    size = ftell(pg1file);
-	    rewind(pg1file);
-	    if (fwrite(&size, 4, 1, f) != 1) {
-		printmsg(TXT_CANTSAVEPLAYHOG, fname);
-		fclose(f);
-		return 0;
-	    }
-	    checkmem(data = MALLOC(size));
-	    if (fread(data, 1, size, pg1file) != size) {
-		printmsg(TXT_CANTSAVEPLAYHOG, fname);
-		fclose(f);
-		FREE(data);
-		return 0;
-	    }
-	    if (fwrite(data, 1, size, f) != size) {
-		printmsg(TXT_CANTSAVEPLAYHOG, fname);
-		fclose(f);
-		FREE(data);
-		return 0;
-	    }
-	    FREE(data);
-	    fclose(pg1file);
-	}
-	ws_mergepath(hx1filename, dr, pa, fi, ".hx1");
-	hx1file = fopen(hx1filename, "rb");
-	if (!hx1file) {
-	    ws_mergepath(hx1filename, dr, pa, "devil", ".hx1");
-	    hx1file = fopen(hx1filename, "rb");
-	}
-	if (hx1file) {
-	    if (fwrite("TMPDEVIL.HX1", 1, 13, f) != 13) {
-		printmsg(TXT_CANTSAVEPLAYHOG, fname);
-		fclose(f);
-		return 0;
-	    }
-	    fseek(hx1file, 0, SEEK_END);
-	    size = ftell(hx1file);
-	    rewind(hx1file);
-	    if (fwrite(&size, 4, 1, f) != 1) {
-		printmsg(TXT_CANTSAVEPLAYHOG, fname);
-		fclose(f);
-		return 0;
-	    }
-	    checkmem(data = MALLOC(size));
-	    if (fread(data, 1, size, hx1file) != size) {
-		printmsg(TXT_CANTSAVEPLAYHOG, fname);
-		fclose(f);
-		FREE(data);
-		return 0;
-	    }
-	    if (fwrite(data, 1, size, f) != size) {
-		printmsg(TXT_CANTSAVEPLAYHOG, fname);
-		fclose(f);
-		FREE(data);
-		return 0;
-	    }
-	    FREE(data);
-	    fclose(hx1file);
-	}
+        if (l->filename) {
+            ws_splitpath(l->filename, dr, pa, fi, ex);
+            ws_mergepath(pg1filename, dr, pa, fi, ".pg1");
+            pg1file = fopen(pg1filename, "rb");
+            if (!pg1file) {
+                ws_mergepath(pg1filename, dr, pa, fi, ".dtx");
+                pg1file = fopen(pg1filename, "rb");
+            }
+            if (!pg1file) {
+                ws_mergepath(pg1filename, dr, pa, "devil", ".pg1");
+                pg1file = fopen(pg1filename, "rb");
+            }
+            if (!pg1file) {
+                ws_mergepath(pg1filename, dr, pa, "devil", ".dtx");
+                pg1file = fopen(pg1filename, "rb");
+            }
+            if (pg1file) {
+                if (fwrite("TMPDEVIL.PG1", 1, 13, f) != 13) {
+                    printmsg(TXT_CANTSAVEPLAYHOG, fname);
+                    fclose(f);
+                    return 0;
+                }
+                fseek(pg1file, 0, SEEK_END);
+                size = ftell(pg1file);
+                rewind(pg1file);
+                if (fwrite(&size, 4, 1, f) != 1) {
+                    printmsg(TXT_CANTSAVEPLAYHOG, fname);
+                    fclose(f);
+                    return 0;
+                }
+                checkmem(data = MALLOC(size));
+                if (fread(data, 1, size, pg1file) != size) {
+                    printmsg(TXT_CANTSAVEPLAYHOG, fname);
+                    fclose(f);
+                    FREE(data);
+                    return 0;
+                }
+                if (fwrite(data, 1, size, f) != size) {
+                    printmsg(TXT_CANTSAVEPLAYHOG, fname);
+                    fclose(f);
+                    FREE(data);
+                    return 0;
+                }
+                FREE(data);
+                fclose(pg1file);
+            }
+            ws_mergepath(hx1filename, dr, pa, fi, ".hx1");
+            hx1file = fopen(hx1filename, "rb");
+            if (!hx1file) {
+                ws_mergepath(hx1filename, dr, pa, "devil", ".hx1");
+                hx1file = fopen(hx1filename, "rb");
+            }
+            if (hx1file) {
+                if (fwrite("TMPDEVIL.HX1", 1, 13, f) != 13) {
+                    printmsg(TXT_CANTSAVEPLAYHOG, fname);
+                    fclose(f);
+                    return 0;
+                }
+                fseek(hx1file, 0, SEEK_END);
+                size = ftell(hx1file);
+                rewind(hx1file);
+                if (fwrite(&size, 4, 1, f) != 1) {
+                    printmsg(TXT_CANTSAVEPLAYHOG, fname);
+                    fclose(f);
+                    return 0;
+                }
+                checkmem(data = MALLOC(size));
+                if (fread(data, 1, size, hx1file) != size) {
+                    printmsg(TXT_CANTSAVEPLAYHOG, fname);
+                    fclose(f);
+                    FREE(data);
+                    return 0;
+                }
+                if (fwrite(data, 1, size, f) != size) {
+                    printmsg(TXT_CANTSAVEPLAYHOG, fname);
+                    fclose(f);
+                    FREE(data);
+                    return 0;
+                }
+                FREE(data);
+                fclose(hx1file);
+            }
+        }
     }
 
     fclose(f);
