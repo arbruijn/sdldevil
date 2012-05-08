@@ -213,6 +213,11 @@ void ws_copybitmap(struct ws_bitmap *dst, int x1, int y1,
 	rect_dst.y = y1;
 	rect_dst.w = 0;
 	rect_dst.h = 0;
+        if (rect_dst.x < 0)
+            rect_dst.x = 0;
+        
+        if (rect_dst.y < 0)
+            rect_dst.y = 0;
 
 	SDL_Surface *srcSurface = src == NULL ? ws_private.screen : (SDL_Surface *)src->bitmap; 
 
@@ -228,7 +233,7 @@ void ws_copybitmap(struct ws_bitmap *dst, int x1, int y1,
 
 	// if destination is main screen, update it
 	if (dst == NULL) {
-		SDL_UpdateRect (ws_private.screen, x1, y1, xsize, ysize);
+		SDL_UpdateRect (ws_private.screen, rect_dst.x, rect_dst.y, xsize, ysize);
 	}
 
 	if (!withbg) {

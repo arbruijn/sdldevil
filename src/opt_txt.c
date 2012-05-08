@@ -1508,7 +1508,7 @@ void fb_refreshwin(struct w_window *w, void *d)
     yn = w_ywininsize(w) / 128 + 2;
     xo = w_xwininsize(w) / 2 + w_xwinincoord(w, 0);
     yo = w_ywininsize(w) / 2 + w_ywinincoord(w, 0);
-    for (y = -yn + 1; y < yn; y++)
+    for (y = -yn + 1; y < yn; y++) // XXXXXX
 	for (x = -xn + 1; x < xn; x++)
 	    ws_copybitmap(NULL, xo + x * 64, yo + y * 64, fb_data.bm_txt,
 			  0, 0, 64, 64, 1);
