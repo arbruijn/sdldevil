@@ -260,7 +260,7 @@ void uio_dirlist_changedir(struct w_button **b, char *oldpath)
     
     FREE(b_dirs->strings);
     
-
+    b_dirs->start_no = 0;
     b_dirs->no_strings = dno;
 
     FREE(b_dirs->sel_arr);
