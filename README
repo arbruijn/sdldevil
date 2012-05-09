@@ -8,7 +8,7 @@ Copyright (C) 2012 by Florian "v66r" Feucht
 
 WARNING
 =======
-This is a pre-alpha version and has not been tested extensively. 
+This is a alpha version and has not been tested extensively. 
 Save your work often and under different filenames!
 
 
@@ -30,20 +30,11 @@ Windows
 Compiling
 =========
 
-UNIX
-----
+UNIX / MinGW Shell (Win32)
+--------------------------
 	$ cd src
 	$ make
 
-Windows (MinGW Shell)
----------------------
-	Edit src/Makefile and change
-	  LIBS=-lSDL
-	into
-	  LIBS=-lSDL -liberty
-
-	$ cd src
-	$ make
 
 
 Running SDLDevil
@@ -51,14 +42,6 @@ Running SDLDevil
 $ ./src/sdldevil
 notice that currently the config subdirectory must reside in the
 current path from where you are running SDLDevil.
-
-Notice: SDLDevil will ask for configuration settings (Descent
-Directories etc) in textmode, so you currently need to run it from
-console. This will change in further versions.
-
-Notice: For the Devil Path you can choose "."
-
-Notice: Selecting a graphics driver is not neccessary
 
 
 Known bugs
@@ -101,5 +84,5 @@ Contact
 Florian "v66r" Feucht
 E-Mail:	sdldevil@kr4d.de
 Web:	http://sdldevil.sf.net 
-
+	http://www.dxx-rebirth.com (Official support forum)
 
