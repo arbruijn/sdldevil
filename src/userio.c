@@ -273,7 +273,6 @@ void uio_dirlist_changedir(struct w_button **b, char *oldpath)
 
 }
 
-
 void uio_string_getfname(struct w_button *b)
 {
     char *s = b->d.str->str, oldpath[300], fp[300], drive[3],
@@ -348,6 +347,69 @@ void uio_string_getfname(struct w_button *b)
     }
     w_drawbutton(b_arr[0]);
 }
+
+void uio_dirlist_string_getfname(struct w_button *b)
+{
+    char *s = b->d.str->str, oldpath[300], fp[300], drive[3],
+	path[300], name[255], ext[5], rawpath[300];
+    struct w_b_strlist *bd;
+    struct w_button **b_arr = b->data;
+    int i, num_sel;
+	
+    strcpy(oldpath, current_path);
+    ws_splitpath(s, drive, path, name, ext);
+	
+    if (path[0] != '/' && path[0] != '\\' && drive[0] == 0) {
+		strcpy(rawpath, current_path);
+		strcat(rawpath, "/");
+    } else {
+		rawpath[0] = 0;
+    }
+	
+	strcat(rawpath, s);
+    if (strlen(rawpath) == 0)
+		return;
+		
+    if (rawpath[strlen(rawpath) - 1] == ':') {
+		rawpath[strlen(rawpath) + 1] = 0;
+		rawpath[strlen(rawpath)] = '/';
+    }
+	
+    ws_makepath(rawpath, fp);
+    ws_splitpath(fp, drive, path, name, ext);
+	
+    if (path[0] == '/') {
+		if (strlen(drive) > 0)
+			strcpy(current_path, drive);
+		else 
+			current_path[0] = 0;
+	}	
+	
+	if (strlen(path) > 0) {
+		strcat(current_path, path);
+		uio_dirlist_changedir(b->data, oldpath);
+	}
+	
+	
+    bd = b_arr[2]->d.sls;
+    for (i = 0; i < bd->no_strings; i++) {
+		strcpy(fp, name);
+		strcat(fp, ext);
+		strcat(fp, "/");
+		if (strcmp(bd->strings[i], fp) == 0)
+			break;
+    }
+    if (i < bd->no_strings) {
+		strcat(current_path, "/");
+		strcat(current_path, fp);
+		uio_dirlist_changedir(b->data, oldpath);
+		b->d.str->str[0] = 0;
+    }
+    w_drawbutton(b_arr[0]);
+}
+
+
+
 
 void uio_sel_fname(struct w_button *b)
 {
@@ -566,7 +628,7 @@ int makedirbuttons(struct w_window *w, int x, int y, int ysize,
     
     b_name->allowed_char = isgraph;
     b_name->l_char_entered = b_name->r_char_entered = NULL;
-    b_name->l_string_entered = b_name->r_string_entered = uio_string_getfname;
+    b_name->l_string_entered = b_name->r_string_entered = uio_dirlist_string_getfname;
     
     checkmem(b_dirs = MALLOC(sizeof(struct w_b_strlist)));
     b_dirs->no_strings = nodirs;

@@ -159,31 +159,92 @@
       </makefileType>
       <item path="../src/convtabl.h" ex="true" tool="3" flavor="0">
       </item>
-      <item path="../src/language/english/askcfg.c" ex="false" tool="3" flavor="0">
-      </item>
-      <item path="../src/language/english/buyman.c" ex="true" tool="0" flavor="0">
-      </item>
-      <item path="../src/language/english/do_stat.c" ex="false" tool="3" flavor="0">
-      </item>
-      <item path="../src/language/german/ASKCFG.C" ex="true" tool="1" flavor="0">
-      </item>
-      <item path="../src/language/german/BUYMAN.C" ex="true" tool="1" flavor="0">
-      </item>
-      <item path="../src/language/german/DO_STAT.C" ex="true" tool="1" flavor="0">
-      </item>
       <item path="../src/language/german/TEXT.H" ex="true" tool="3" flavor="0">
       </item>
-      <item path="../src/plotmath.c" ex="false" tool="3" flavor="0">
-      </item>
-      <item path="../src/wins/w_test.c" ex="true" tool="0" flavor="0">
-      </item>
-      <folder path="src/wins">
+      <item path="../src/wins/SDL_gfxPrimitives.c" ex="false" tool="0" flavor="0">
         <cTool>
           <incDir>
             <pElem>../src</pElem>
           </incDir>
         </cTool>
-      </folder>
+      </item>
+      <item path="../src/wins/SDL_rotozoom.c" ex="false" tool="0" flavor="0">
+        <cTool>
+          <incDir>
+            <pElem>../src</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../src/wins/w_draw.c" ex="false" tool="0" flavor="0">
+        <cTool>
+          <incDir>
+            <pElem>../src</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../src/wins/w_event.c" ex="false" tool="0" flavor="0">
+        <cTool>
+          <incDir>
+            <pElem>../src</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../src/wins/w_init.c" ex="false" tool="0" flavor="0">
+        <cTool>
+          <incDir>
+            <pElem>../src</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../src/wins/w_list.c" ex="false" tool="0" flavor="0">
+        <cTool>
+          <incDir>
+            <pElem>../src</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../src/wins/w_system.c" ex="false" tool="0" flavor="0">
+        <cTool>
+          <incDir>
+            <pElem>../src</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../src/wins/w_tools.c" ex="false" tool="0" flavor="0">
+        <cTool>
+          <incDir>
+            <pElem>../src</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../src/wins/wi_buts.c" ex="false" tool="0" flavor="0">
+        <cTool>
+          <incDir>
+            <pElem>../src</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../src/wins/wi_keys.c" ex="false" tool="0" flavor="0">
+        <cTool>
+          <incDir>
+            <pElem>../src</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../src/wins/wi_menu.c" ex="false" tool="0" flavor="0">
+        <cTool>
+          <incDir>
+            <pElem>../src</pElem>
+          </incDir>
+        </cTool>
+      </item>
+      <item path="../src/wins/wi_winma.c" ex="false" tool="0" flavor="0">
+        <cTool>
+          <incDir>
+            <pElem>../src</pElem>
+          </incDir>
+        </cTool>
+      </item>
     </conf>
   </confs>
 </configurationDescriptor>

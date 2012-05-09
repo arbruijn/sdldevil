@@ -26,7 +26,7 @@ enum sdoortypes { sdtype_none,sdtype_door,sdtype_cube,sdtype_side };
 enum cubetypes { cube_normal=0,cube_fuel=1,cube_reactor=3,cube_producer=4,
  cube_blueflag=5,cube_redflag=6 };
 /* several standard textures etc. */
-enum miscel { std_anim_blowdoor=6,std_switch_t2=414,D1_std_emptytxt=289,
+enum miscel { std_anim_blowdoor=6, std_switch_t2=414,D1_std_emptytxt=289,
  D2_std_emptytxt=302,std_blowdoorhp=0x64<<16 };
 enum thingtype1 { tt1_robot=2,tt1_hostage=3,tt1_dmstart=4,tt1_mine=5,
  tt1_item=7,tt1_reactor=9,tt1_coopstart=14,

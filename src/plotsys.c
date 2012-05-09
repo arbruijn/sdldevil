@@ -24,6 +24,7 @@
 
 #define LIN_PIXELS 16
 #define TRANSPARENT_COLOR 0xfe
+#define TRANSPARENT_COLOR_2 0xff
 
 static uint32_t *drawbuffer = NULL;
 struct ws_bitmap *drawbitmap = NULL;
@@ -298,7 +299,7 @@ void psys_256_plottxt(struct polygon *p, struct render_point *start, uint32_t of
      for(cur_pos=cur_line+ps_x,i=(NUM_PIXELS);i>0;i--)\
       {\
       if((pixel=\
-       *(txt_data+((txt_u>>8)&0x3f)+((txt_v>>8)&(0x3f*TXTSIZE))))!= \
+       *(txt_data+((txt_u>>8)&0x3f)+((txt_v>>8)&(0x3f*TXTSIZE)))) != \
        TRANSPARENT_COLOR) \
        *(cur_pos++)=ws_getNativeColor(*(colors+pixel)); \
       else cur_pos++; \
@@ -324,7 +325,7 @@ void psys_256_plottxt(struct polygon *p, struct render_point *start, uint32_t of
       for(cur_pos=cur_line+e_r_ps_x,i=e_rest;i>0;i--) \
        { \
        if((pixel= \
-        *(txt_data+((txt_u>>8)&0x3f)+((txt_v>>8)&(0x3f*TXTSIZE))))!= \
+        *(txt_data+((txt_u>>8)&0x3f)+((txt_v>>8)&(0x3f*TXTSIZE)))) != \
 	TRANSPARENT_COLOR) \
         *(cur_pos++)=ws_getNativeColor(*(colors+pixel)); \
        else cur_pos++; \
@@ -349,7 +350,7 @@ void psys_256_plottxt(struct polygon *p, struct render_point *start, uint32_t of
      for(cur_pos=cur_line+ps_x,i=(NUM_PIXELS);i>0;i--)\
       {\
       if((pixel= \
-       *(txt_data+((txt_u>>8)&0x3f)+((txt_v>>8)&(0x3f*TXTSIZE))))!= \
+       *(txt_data+((txt_u>>8)&0x3f)+((txt_v>>8)&(0x3f*TXTSIZE)))) != \
        TRANSPARENT_COLOR) \
        *(cur_pos++)=ws_getNativeColor(*(colors+pixel)); \
       else cur_pos++; \
@@ -374,8 +375,8 @@ void psys_256_plottxt(struct polygon *p, struct render_point *start, uint32_t of
       for(cur_pos=cur_line+e_r_ps_x,i=e_rest;i>0;i--) \
        { \
        if((pixel= \
-        *(txt_data+((txt_u>>8)&0x3f)+((txt_v>>8)&(0x3f*TXTSIZE)))) \
-        !=TRANSPARENT_COLOR) \
+        *(txt_data+((txt_u>>8)&0x3f)+((txt_v>>8)&(0x3f*TXTSIZE)))) != \
+        TRANSPARENT_COLOR) \
         *(cur_pos++)=ws_getNativeColor(*(colors+pixel)); \
        else cur_pos++; \
        txt_u+=add_txt_u; txt_v+=add_txt_v; \

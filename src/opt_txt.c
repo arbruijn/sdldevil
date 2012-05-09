@@ -216,15 +216,19 @@ void tl_refreshtxts(struct txt_list_win *tlw)
     char txtquarter[16 * 16];
     if (!tlw->b_texture)
 	return;
-    for (y = 0, i = tlw->offset; y < tl_ynumtxt(tlw); y++)
+    
+    
+    
+    for (y = 0, i = tlw->offset; y < tl_ynumtxt(tlw); y++) {
 	for (x = 0; x < tl_xnumtxt(tlw); x++) {
+            //if (i >= 0) {
 	    switch (tlw->zoom.selected) {
 	    case 0:
 		size = 64;
 		//memset(tlw->txt_buffer[y*tl_xnumtxt(tlw)+x],view.color[BLACK],64*64);
 		    memset(texture, view.color[BLACK], 64 * 64);
 		init_txt_buffer(tlw->txt_buffer[y*tl_xnumtxt(tlw)+x], 64*64, 0, 0, 0);
-		if (i < tlw->maxnum) {
+		if (i < tlw->maxnum && i >= 0) {
 		    readbitmap(texture, NULL, tlw->t[i], 0);
 		    ws_translatepixels(texture, tlw->txt_buffer[y * tl_xnumtxt(tlw) + x], size * size);
 		}
@@ -232,7 +236,7 @@ void tl_refreshtxts(struct txt_list_win *tlw)
 		break;
 	    case 1:
 		size = 32;
-		if (i < tlw->maxnum) {
+		if (i < tlw->maxnum && i >= 0) {
 		    memset(texture, view.color[BLACK], 64 * 64);
 			init_txt_buffer(tlw->txt_buffer[y*tl_xnumtxt(tlw)+x], 32*32, 0, 0, 0);
 		    if (i < tlw->maxnum)
@@ -248,7 +252,7 @@ void tl_refreshtxts(struct txt_list_win *tlw)
 		break;
 	    case 2:
 		size = 16;
-		if (i < tlw->maxnum) {
+		if (i < tlw->maxnum && i >= 0) {
 		    memset(texture, view.color[BLACK], 64 * 64);
 			init_txt_buffer(tlw->txt_buffer[y*tl_xnumtxt(tlw)+x], 16*16, 0, 0, 0);
 		    readbitmap(texture, NULL, tlw->t[i], 0);
@@ -266,7 +270,7 @@ void tl_refreshtxts(struct txt_list_win *tlw)
 		size = 64;
 		my_assert(0);
 	    }
-	    if (i < tlw->maxnum && tlw->t[i] != NULL) {
+	    if (i < tlw->maxnum && i >= 0 && tlw->t[i] != NULL) {
 		for (x2 = 0; x2 < ILLUM_GRIDSIZE * ILLUM_GRIDSIZE; x2++)
 		    if (tlw->t[i]->my_light[x2])
 			break;
@@ -288,8 +292,10 @@ void tl_refreshtxts(struct txt_list_win *tlw)
 	    w_drawbutton(tlw->b_texture[y * tl_xnumtxt(tlw) + x]);
 	    tl_drawmarktxt(tlw->b_texture[y * tl_xnumtxt(tlw) + x],
 			   i < tlw->maxnum && tlw->marked_txts[i]);
+            //}
 	    i = next_txtno(tlw, i, 1);
 	}
+    }
 }
 
 void tl_refresh(struct w_window *w, void *d)
@@ -442,7 +448,7 @@ void tl_close(struct w_window *w, void *d)
     for (y = 0; y < tlw->oldynumtxt; y++)
 	for (x = 0; x < tlw->oldxnumtxt; x++) {
 	    w_deletebutton(tlw->b_texture[y * tlw->oldxnumtxt + x]);
-		// done by SDL
+		// FFE done by SDL
 	    //FREE(tlw->txt_buffer[y * tlw->oldxnumtxt + x]);
 	    ws_freebitmap(tlw->txt_bitmap[y * tlw->oldxnumtxt + x]);
 	}
@@ -1310,6 +1316,7 @@ void init_txt_buffer (uint32_t * buffer, int size, int r, int g, int b)
 void drawdooranim(struct w_button *b, struct ham_txt *t, int anim, int t1,  int t2, int t2_d)
 {
 	char tmptxtdata[64*64];
+        memset(tmptxtdata, 0, 64*64);
 
 	if (t->pig && t->pig->anim_t2) {
 		if (t1 < pig.num_rdltxts && pig.rdl_txts[t1].pig != NULL) {
@@ -1343,6 +1350,7 @@ void b_selectdooranim(struct w_button *b, int withtagged)
     int n, rdlno, txtno;
     struct txt_list_win *tlw = &tl_win[tlw_anim];
     my_assert(getno(i, &animno, NULL));
+   
     if (tlw->t == NULL) {
 	tlw->t = pig.txtlist[txt_all];
 	tlw->maxnum = pig.num_txtlist[txt_all];

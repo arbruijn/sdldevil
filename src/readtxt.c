@@ -544,8 +544,13 @@ int newpigfile(char *pigname, FILE * pogfile)
 	pig.pigfile = pf;
 	*/
 
-	if (pogfile != pig.pogfile)
-	    fclose(pig.pogfile);
+        /* FFE - check also if there is a valid filehandle before trying to 
+         * close it
+         */
+	if (pogfile != pig.pogfile) {
+            if (pig.pogfile != NULL)
+                fclose(pig.pogfile);
+        }
 	readpogfile(pogfile);
 	pig.pogfile = pogfile;
 	checkmem(palfname = MALLOC(strlen(pigname) + 1));
