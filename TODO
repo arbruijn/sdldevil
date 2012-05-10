@@ -10,8 +10,9 @@ crash when flying around with rendering on and lighting
 
 
 major:
-texture set not loaded correctly when loading new level on unix (uppercase)
 fix ALOT of memory leaks (according to valgrind)
+portability-issue: deal with different endianess powerpc
+portability-issue: eliminate all packed structs resulting in unaligned pointers (at least on ARM). read / write struct members for themselves, not the whole struct
 
 
 minor:
@@ -75,3 +76,4 @@ separate configurable descent binary, data and mission dirs
 graphical configuration tool
 keyrepeat
 fix: littlebulbs in texture lists are garbage (opt_txt.c)
+texture set not loaded correctly when loading new level on unix (uppercase)
