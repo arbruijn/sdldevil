@@ -258,7 +258,7 @@ int sdld_write_config(struct sdld_config_data * config_data)  {
      * for data, missions and binary (executable) for each Descent 1 and 
      * Descent 2 
      */
-    fprintf(f, ":DESCENTPATHS 6\n", VERSION);
+    fprintf(f, ":DESCENTPATHS 6\n");
     fprintf(f, "{%s}\n", config_data->d1_data_path);
     fprintf(f, "{%s}\n", config_data->d1_mission_path);
     fprintf(f, "{%s}\n", config_data->d1_binary_path);
@@ -569,13 +569,13 @@ void sdld_configdialog(void) {
 
 
     b_fullscreenresolution.num_options = screenmodes_count;
-    b_fullscreenresolution.options = screenmodes;
+    b_fullscreenresolution.options = (const char **)screenmodes;
     b_fullscreenresolution.selected = current_screenmode;
     b_fullscreenresolution.d_xsize = 64;
     b_fullscreenresolution.select_lroutine = b_fullscreenresolution.select_rroutine = sdld_screenres_change;
 
     b_descentversion.num_options = SDLD_NUM_DESCENTVERSIONS;
-    b_descentversion.options = descentversions;
+    b_descentversion.options = (const char **)descentversions;
     b_descentversion.selected = current_descentversion;
     b_descentversion.d_xsize = 128;
     b_descentversion.select_lroutine = b_descentversion.select_rroutine = sdld_descentversion_change;

@@ -2,7 +2,7 @@ BASE_OBJ=devil.o userio.o tools.o tag.o insert.o calctxt.o initio.o config.o \
  askcfg.o plot.o plottxt.o plotsys.o click.o savetool.o readlvl.o \
  readtxt.o do_event.o do_stat.o do_ins.o do_mod.o do_light.o do_move.o \
  do_tag.o do_side.o grfx.o do_opts.o opt_txt.o options.o macros.o title.o\
- lac_cfg.o sdlconfig.o
+ lac_cfg.o sdlconfig.o ignorecase.o fileio.o
 
 WINS_OBJ=wins/w_init.o wins/w_event.o wins/wi_buts.o wins/wi_keys.o \
  wins/wi_winma.o wins/wi_menu.o wins/w_draw.o wins/w_tools.o wins/w_system.o \

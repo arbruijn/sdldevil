@@ -26,7 +26,9 @@
 #include "userio.h"
 #include "tools.h"
 #include "initio.h"
+#include "fileio.h"
 #include "readtxt.h"
+
 
 extern int init_test;
 extern int txtoffsets[desc_number];
@@ -524,7 +526,11 @@ int newpigfile(char *pigname, FILE * pogfile)
 	strcat(pigfname, pigname);
 	strcpy(&pigfname[strlen(pigfname) - 3], "pig");
 
-	if ((pf = fopen(pigfname, "rb")) == NULL) {
+        /* FFE - ignore case of filename - original data files where uppercase
+         * from ancient DOS days. DXX Rebirth (and others?) dealing with this
+         * the same way. Also in levels the palette name is uppercase.
+         */
+	if ((pf = fileio_open_ignorecase(pigfname, NULL, "rb") /*fopen(pigfname, "rb")*/) == NULL) {
 	    printf("Can't open pigfile in newpigfile: '%s'\n", pigfname);
 	    FREE(pigfname);
 	    return 0;

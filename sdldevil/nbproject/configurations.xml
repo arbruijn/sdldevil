@@ -79,8 +79,12 @@
       <in>do_stat.h</in>
       <in>do_tag.c</in>
       <in>do_tag.h</in>
+      <in>fileio.c</in>
+      <in>fileio.h</in>
       <in>grfx.c</in>
       <in>grfx.h</in>
+      <in>ignorecase.c</in>
+      <in>ignorecase.h</in>
       <in>in_plot.h</in>
       <in>initio.c</in>
       <in>initio.h</in>

@@ -286,7 +286,7 @@ int D1_REG_readlvldata(FILE * lf, struct leveldata *ld, int version)
 	return 0;
     }
     /* texture are translated if init.d_ver>=d2_10_sw */
-    palname = init.d_ver >= d2_10_sw ? "groupa.256" : "descent.256";
+    palname = init.d_ver >= d2_10_sw ? "GROUPA.256" : "DESCENT.256";
     checkmem(ld->pigname = MALLOC(strlen(palname) + 1));
     strcpy(ld->pigname, palname);
     printmsg(TXT_READINGPTS, md.numpts);
@@ -669,7 +669,7 @@ int readasciilevel(char *filename, struct leveldata *ld)
     ld->filename = NULL;
     checkmem(ld->fullname = MALLOC(strlen("ASCII level") + 1));
     strcpy(ld->fullname, "ASCII level");
-    palname = init.d_ver >= d2_10_sw ? "groupa.256" : "descent.256";
+    palname = init.d_ver >= d2_10_sw ? "GROUPA.256" : "DESCENT.256";
     checkmem(ld->pigname = MALLOC(strlen(palname) + 1));
     strcpy(ld->pigname, palname);
     if ((lf = fopen(filename, "r")) == NULL)

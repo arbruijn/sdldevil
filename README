@@ -73,6 +73,9 @@ Andreas Schiffler
 	Portions for primitive drawing taken from SDLgfx
 	http://www.ferzkopp.net/joomla/software-mainmenu-14/4-ferzkopps-linux-software/19-sdlgfx
 
+Ryan C. Gordon.
+	Original ignorecase code for physfs. Modified to sdldevil needs.
+
 
 License
 =======

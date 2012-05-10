@@ -14,4 +14,5 @@ char *askstringlist(const char **strs,const char *defname,int nostrs,
  const char *title);
 char *getfilename(char **path,const char *defname,const char *ext,
  const char *title,int overwrite_warning);
+char *getdirname(char **path, const char *title);
 void hogfilemanager(void);
