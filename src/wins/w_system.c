@@ -740,7 +740,7 @@ char **ws_getallfsentries (const char *path, const char *exts, int *no, int type
 		} else {
 			checkmem(filenames = REALLOC(filenames, sizeof(char *) * (*no)));
 		}
-		checkmem(filenames[*no - 1] = MALLOC((strlen(ep->d_name) + 1) * sizeof(char)));
+		checkmem(filenames[*no - 1] = MALLOC(strlen(ep->d_name) + 1));
 		strcpy(filenames[*no - 1], ep->d_name);
 	}
 

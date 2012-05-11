@@ -821,10 +821,10 @@ int wi_readmenu(FILE * mfile, int no, void (**action) (int), int max_anr,
         checkmem(m->txt =
                 MALLOC(strlen(buffer) +
                 (!mainline && m->actionnr < 0 ? 1 : -1)));
-        checkmem(m->help = MALLOC(strlen(helptxt)));
         *pos = 0;
         strcpy(m->txt, buffer + 1);
         strcat(m->txt, pos + 1);
+        checkmem(m->help = MALLOC(strlen(helptxt + 1) + 1));
         strcpy(m->help, helptxt + 1);
         m->hotkey = level == 0 ? toupper(*(pos + 1)) : *(pos + 1);
         m->hklinex = ws_pixstrlen(buffer + 1);

@@ -288,7 +288,7 @@ int readlvlconfig(FILE * f, struct leveldata *ld)
     if (ld->filename)
 	FREE(ld->filename);
     if (strlen(buffer) > 1) {
-	checkmem(ld->filename = MALLOC(strlen(buffer)));
+	checkmem(ld->filename = MALLOC(strlen(&buffer[1]) + 1));
 	strcpy(ld->filename, &buffer[1]);
     }
     if (fscanf(f, "%d", &ld->levelillum) != 1)
@@ -846,18 +846,18 @@ int readconfig(void)
     if (init.d_ver < d2_10_sw) {
         // descent 1
         init.playmsnpath = MALLOC(strlen(init.descentpaths[1]) + 1);
-        init.missionpath = MALLOC(strlen(init.descentpaths[1]) + 1);
-        init.binarypath = MALLOC(strlen(init.descentpaths[2]) + 1);
         strcpy(init.playmsnpath, init.descentpaths[1]);
+        init.missionpath = MALLOC(strlen(init.descentpaths[1]) + 1);
         strcpy(init.missionpath, init.descentpaths[1]);
+        init.binarypath = MALLOC(strlen(init.descentpaths[2]) + 1);
         strcpy(init.binarypath, init.descentpaths[2]);
     } else {
         // descent 2
         init.playmsnpath = MALLOC(strlen(init.descentpaths[4]) + 1);
-        init.missionpath = MALLOC(strlen(init.descentpaths[4]) + 1);
-        init.binarypath = MALLOC(strlen(init.descentpaths[5]) + 1);
         strcpy(init.playmsnpath, init.descentpaths[4]);
+        init.missionpath = MALLOC(strlen(init.descentpaths[4]) + 1);
         strcpy(init.missionpath, init.descentpaths[4]);
+        init.binarypath = MALLOC(strlen(init.descentpaths[5]) + 1);
         strcpy(init.binarypath, init.descentpaths[5]);        
     }
     /* FFE trashed since we save individual values for
