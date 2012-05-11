@@ -175,8 +175,7 @@ void w_changewintitle(struct w_window *w, char *s) {
     t = (char *) w->title;
     FREE(t); /* the const is needed for init the win,
   then the string is copied */
-    checkmem(t = MALLOC(strlen(s) + 1));
-    strcpy(t, s);
+    t = strdup(s);
     w->title = t;
     for (n = wi->buttonlist.head, b = NULL; n->next != NULL && n->d.w_b->sys_button;
             n = n->next)
@@ -187,13 +186,11 @@ void w_changewintitle(struct w_window *w, char *s) {
     if (b != NULL) {
         if (b->b.inscription.head->next) {
             FREE(b->b.inscription.head->d.w_d->contents.txt);
-            checkmem(b->b.inscription.head->d.w_d->contents.txt = MALLOC(strlen(t) + 1));
-            strcpy(b->b.inscription.head->d.w_d->contents.txt, t);
+            b->b.inscription.head->d.w_d->contents.txt = strdup(t);
         }
         if (b->b.a_inscription.head->next) {
             FREE(b->b.a_inscription.head->d.w_d->contents.txt);
-            checkmem(b->b.a_inscription.head->d.w_d->contents.txt = MALLOC(strlen(t) + 1));
-            strcpy(b->b.a_inscription.head->d.w_d->contents.txt, t);
+            b->b.a_inscription.head->d.w_d->contents.txt = strdup(t);
         }
         w_resizewin(&b->b);
         w_refreshwin(w);

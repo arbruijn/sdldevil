@@ -153,8 +153,7 @@ void sdld_screenres_change(struct w_button * b) {
     char * s;    
     struct w_b_choose * btn = b->d.ls;
     struct sdld_config_data * config_data = b->data;
-    s = MALLOC(strlen(btn->options[btn->selected]) + 1);
-    strcpy(s, btn->options[btn->selected]);
+    s = strdup(btn->options[btn->selected]);
     p = strtok(s, "x");
     config_data->screenres_x = atoi(p);
     p = strtok(NULL, "x");

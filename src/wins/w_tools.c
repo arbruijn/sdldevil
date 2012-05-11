@@ -96,8 +96,7 @@ int w_yscreencoord(struct w_window *w, int y) {
 char *w_copystr(const char *str) {
     char *s;
     if (str == NULL) return NULL;
-    checkmem(s = MALLOC(strlen(str) + 1));
-    strcpy(s, str);
+    s = strdup(str);
     return s;
 }
 

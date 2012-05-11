@@ -780,8 +780,7 @@ int makeoptbuttons(struct w_window *w, int num, struct infoitem *is, int y)
 	    y += i->b->ysize;
 	    sprintf(helptxt, "Offset: %d Length: %d", i->offset,
 		    i->length);
-	    checkmem(i->b->helptxt = MALLOC(strlen(helptxt) + 1));
-	    strcpy((char *) i->b->helptxt, helptxt);
+	    i->b->helptxt = strdup(helptxt);
 	}
 	for (k = 0, cy = 0; k < i->numchildren; k++)
 	    if ((n =

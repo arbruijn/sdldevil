@@ -817,16 +817,14 @@ void dec_setlsfile(int ec) {
         path[old_ls_name - init.lightname] = 0;
         old_ls_name++;
     } else {
-        checkmem(path = MALLOC(strlen(init.cfgpath) + 1));
-        strcpy(path, init.cfgpath);
+        path = strdup(init.cfgpath);
         old_ls_name = init.lightname;
     }
     strcpy(ext, init.d_ver >= d2_10_sw ? "ls2" : "ls1");
     if ((new_ls_name = getfilename(&path, old_ls_name, ext, TXT_SETLSFILE, 0)) == NULL)
         return;
     FREE(init.lightname);
-    checkmem(init.lightname = MALLOC(strlen(new_ls_name) + 1));
-    strcpy(init.lightname, new_ls_name);
+    init.lightname = strdup(new_ls_name);
     printmsg(TXT_LSFILENAME, init.lightname);
 }
 

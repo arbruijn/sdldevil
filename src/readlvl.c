@@ -187,8 +187,7 @@ int D1_REG_readlvldata(fileio_file_t * lf, struct leveldata *ld, int version)
     }
     /* texture are translated if init.d_ver>=d2_10_sw */
     palname = init.d_ver >= d2_10_sw ? "GROUPA.256" : "DESCENT.256";
-    checkmem(ld->pigname = MALLOC(strlen(palname) + 1));
-    strcpy(ld->pigname, palname);
+    ld->pigname = strdup(palname);
     printmsg(TXT_READINGPTS, md.numpts);
     if (init_test & 2)
 	fprintf(errf, "%d points, %d cubes\n", md.numpts, md.numcubes);
@@ -197,8 +196,7 @@ int D1_REG_readlvldata(fileio_file_t * lf, struct leveldata *ld, int version)
 	return 0;
     }
     /* Init fullname: Needed when an error occurs during loading the level */
-    checkmem(ld->fullname = MALLOC(strlen("LEVEL WITH ERROR") + 1));
-    strcpy(ld->fullname, "LEVEL WITH ERROR");
+    ld->fullname = strdup("LEVEL WITH ERROR");
     for (i = 0; i < md.numcubes; i++) {
 	if (init_test & 2)
 	    fprintf(errf, "Reading cube %d/%d\n", i, md.numcubes);
@@ -361,8 +359,7 @@ int D2_REG_readlvldata(FILE * lf, struct leveldata *ld, int version)
     i = 0;
     while (isprint(buffer[i++] = fgetc(lf)) && i < 31);
     buffer[i - 1] = 0;
-    checkmem(ld->pigname = MALLOC(strlen(buffer) + 1));
-    strcpy(ld->pigname, buffer);
+    ld->pigname = strdup(buffer);
     if (fread(&lfh.reactor_time, sizeof(uint32_t), 2, lf) != 2) {
 	fclose(lf);
 	return 0;
@@ -415,8 +412,7 @@ int D2_REG_readlvldata(FILE * lf, struct leveldata *ld, int version)
 	return 0;
     }
     /* Init fullname: Needed when an error occurs during loading the level */
-    checkmem(ld->fullname = MALLOC(strlen("LEVEL WITH ERROR") + 1));
-    strcpy(ld->fullname, "LEVEL WITH ERROR");
+    ld->fullname = strdup("LEVEL WITH ERROR");
     for (i = 0; i < md.numcubes; i++) {
 	if (init_test & 2)
 	    fprintf(errf, "Reading cube %d/%d\n", i, md.numcubes);
@@ -445,8 +441,7 @@ int D2_REG_readlvldata(FILE * lf, struct leveldata *ld, int version)
     while (isprint(buffer[i++] = fgetc(lf)) && i < 31);
     buffer[i - 1] = 0;
     FREE(ld->fullname);
-    checkmem(ld->fullname = MALLOC(strlen(buffer) + 1));
-    strcpy(ld->fullname, buffer);
+    ld->fullname = strdup(buffer);
     fseek(lf, gd.posplayer, SEEK_SET);
     sizeplayer = gd.sizeplayer;
     checkmem(playerdata = REALLOC(playerdata, sizeplayer));
@@ -528,8 +523,7 @@ int readlvldata(char *filename, struct leveldata *ld)
 	return 0;
     if (ld->filename)
 	FREE(ld->filename);
-    checkmem(ld->filename = MALLOC(strlen(filename) + 1));
-    strcpy(ld->filename, filename);
+    ld->filename = strdup(filename);
     if ((lf = fopen(ld->filename, "rb")) == NULL)
 	return 0;
     if (fread(&fhv, sizeof(struct fileheadversion), 1, lf) != 1) {
@@ -571,11 +565,9 @@ int readasciilevel(char *filename, struct leveldata *ld)
     if (ld->filename)
 	FREE(ld->filename);
     ld->filename = NULL;
-    checkmem(ld->fullname = MALLOC(strlen("ASCII level") + 1));
-    strcpy(ld->fullname, "ASCII level");
+    ld->fullname = strdup("ASCII level");
     palname = init.d_ver >= d2_10_sw ? "GROUPA.256" : "DESCENT.256";
-    checkmem(ld->pigname = MALLOC(strlen(palname) + 1));
-    strcpy(ld->pigname, palname);
+    ld->pigname = strdup(palname);
     if ((lf = fopen(filename, "r")) == NULL)
 	return 0;
     if (fscanf(lf, " %255s", buffer) == 0
@@ -803,8 +795,7 @@ struct leveldata *emptylevel(void)
     }
     ld->fullname = ld->filename = NULL;
     if (l) {
-	checkmem(ld->pigname = MALLOC(strlen(l->pigname) + 1));
-	strcpy(ld->pigname, l->pigname);
+	ld->pigname = strdup(l->pigname);
     } else
 	ld->pigname = NULL;
     ld->w = NULL;
@@ -1765,8 +1756,7 @@ int savelevel(char *fname, struct leveldata *ld, int testlevel,
 	ld->levelsaved = 1;
 	if (ld->filename)
 	    FREE(ld->filename);
-	checkmem(ld->filename = MALLOC(strlen(fname) + 1));
-	strcpy(ld->filename, fname);
+	ld->filename = strdup(fname);
     }
     return ret;
 }

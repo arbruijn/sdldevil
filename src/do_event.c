@@ -83,8 +83,7 @@ void dec_savelevel(int ec) {
         fname = getfilename(&init.levelpath, l->filename, init.levelext,
             TXT_SAVELEVEL, 1);
     else {
-        checkmem(fname = MALLOC(strlen(l->filename) + 1));
-        strcpy(fname, l->filename);
+        fname = strdup(l->filename);
     }
     if (fname != NULL) {
         int fulllightinfo = 0;

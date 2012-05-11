@@ -151,8 +151,7 @@ void drawmenubar(void) {
 void set_titlebar_text(char const *txt) {
     if (notes.titlebar_text)
         FREE(notes.titlebar_text);
-    checkmem(notes.titlebar_text = MALLOC(strlen(txt) + 1));
-    strcpy(notes.titlebar_text, txt);
+    notes.titlebar_text = strdup(txt);
     drawmenubar();
 }
 
@@ -403,8 +402,7 @@ struct w_window *w_openwindow(struct w_window *w) {
     if (wi->w.maxysize < wi->w.ysize && wi->w.maxysize > 0)
         wi->w.maxysize = wi->w.ysize;
     if (w->title) {
-        checkmem(wi->w.title = MALLOC(strlen(w->title) + 1));
-        strcpy((char *) wi->w.title, w->title);
+        wi->w.title = strdup(w->title);
     } else
         w->title = NULL;
     wi->bg = wi->in = NULL;
@@ -824,8 +822,7 @@ int wi_readmenu(FILE * mfile, int no, void (**action) (int), int max_anr,
         *pos = 0;
         strcpy(m->txt, buffer + 1);
         strcat(m->txt, pos + 1);
-        checkmem(m->help = MALLOC(strlen(helptxt + 1) + 1));
-        strcpy(m->help, helptxt + 1);
+        m->help = strdup(helptxt + 1);
         m->hotkey = level == 0 ? toupper(*(pos + 1)) : *(pos + 1);
         m->hklinex = ws_pixstrlen(buffer + 1);
         *(pos + 2) = 0;

@@ -288,8 +288,7 @@ int readlvlconfig(FILE * f, struct leveldata *ld)
     if (ld->filename)
 	FREE(ld->filename);
     if (strlen(buffer) > 1) {
-	checkmem(ld->filename = MALLOC(strlen(&buffer[1]) + 1));
-	strcpy(ld->filename, &buffer[1]);
+	ld->filename = strdup(&buffer[1]);
     }
     if (fscanf(f, "%d", &ld->levelillum) != 1)
 	return 0;
@@ -436,33 +435,27 @@ void readstatus(char *lfname)
     if (fscanf(f, "%255s", fname) != 1)
 	ERRORREADCFG(f);
     FREE(init.levelpath);
-    checkmem(init.levelpath = MALLOC(strlen(fname) + 1));
-    strcpy(init.levelpath, fname);
+    init.levelpath = strdup(fname);
     if (fscanf(f, "%255s", fname) != 1)
 	ERRORREADCFG(f);
     FREE(init.pogpath);
-    checkmem(init.pogpath = MALLOC(strlen(fname) + 1));
-    strcpy(init.pogpath, fname);
+    init.pogpath = strdup(fname);
     if (fscanf(f, "%255s", fname) != 1)
 	ERRORREADCFG(f);
     FREE(init.macropath);
-    checkmem(init.macropath = MALLOC(strlen(fname) + 1));
-    strcpy(init.macropath, fname);
+    init.macropath = strdup(fname);
     if (fscanf(f, "%255s", fname) != 1)
 	ERRORREADCFG(f);
     FREE(init.missionpath);
-    checkmem(init.missionpath = MALLOC(strlen(fname) + 1));
-    strcpy(init.missionpath, fname);
+    init.missionpath = strdup(fname);
     if (fscanf(f, "%255s", fname) != 1)
 	ERRORREADCFG(f);
     FREE(init.txtlistpath);
-    checkmem(init.txtlistpath = MALLOC(strlen(fname) + 1));
-    strcpy(init.txtlistpath, fname);
+    init.txtlistpath = strdup(fname);
     if (fscanf(f, "%255s", fname) != 1)
 	ERRORREADCFG(f);
     FREE(init.lightname);
-    checkmem(init.lightname = MALLOC(strlen(fname) + 1));
-    strcpy(init.lightname, fname);
+    init.lightname = strdup(fname);
     if (fscanf(f, "%255s", fname) != 1)
 	ERRORREADCFG(f);
     if (strcmp(fname, "NoPogFile") != 0) {
@@ -800,8 +793,7 @@ int readconfig(void)
     /* FFE this stuff is now initialized below - when we know about the descent 
      * version we use
     iniread(f, "s", &init.playmsnpath);
-    checkmem(init.missionpath = MALLOC(strlen(init.playmsnpath) + 1));
-    strcpy(init.missionpath, init.playmsnpath);
+    init.missionpath = strdup(init.playmsnpath);
      */
     iniread(f, "s", &hamname);
     
@@ -809,11 +801,9 @@ int readconfig(void)
     // FFE copy descent 1 / 2 data paths to the pigpaths
     for (i = 0; i < desc_number; i++) {
         if (i < d2_10_sw) {
-                init.pigpaths[i] = MALLOC(strlen(init.descentpaths[0]) + 1);
-                strcpy(init.pigpaths[i], init.descentpaths[0]);
+                init.pigpaths[i] = strdup(init.descentpaths[0]);
         } else {
-                init.pigpaths[i] = MALLOC(strlen(init.descentpaths[3]) + 1);
-                strcpy(init.pigpaths[i], init.descentpaths[3]);            
+                init.pigpaths[i] = strdup(init.descentpaths[3]);
         }
     }
     
@@ -845,20 +835,14 @@ int readconfig(void)
      */
     if (init.d_ver < d2_10_sw) {
         // descent 1
-        init.playmsnpath = MALLOC(strlen(init.descentpaths[1]) + 1);
-        strcpy(init.playmsnpath, init.descentpaths[1]);
-        init.missionpath = MALLOC(strlen(init.descentpaths[1]) + 1);
-        strcpy(init.missionpath, init.descentpaths[1]);
-        init.binarypath = MALLOC(strlen(init.descentpaths[2]) + 1);
-        strcpy(init.binarypath, init.descentpaths[2]);
+        init.playmsnpath = strdup(init.descentpaths[1]);
+        init.missionpath = strdup(init.descentpaths[1]);
+        init.binarypath = strdup(init.descentpaths[2]);
     } else {
         // descent 2
-        init.playmsnpath = MALLOC(strlen(init.descentpaths[4]) + 1);
-        strcpy(init.playmsnpath, init.descentpaths[4]);
-        init.missionpath = MALLOC(strlen(init.descentpaths[4]) + 1);
-        strcpy(init.missionpath, init.descentpaths[4]);
-        init.binarypath = MALLOC(strlen(init.descentpaths[5]) + 1);
-        strcpy(init.binarypath, init.descentpaths[5]);        
+        init.playmsnpath = strdup(init.descentpaths[4]);
+        init.missionpath = strdup(init.descentpaths[4]);
+        init.binarypath = strdup(init.descentpaths[5]);
     }
     /* FFE trashed since we save individual values for
      *  x and y resolution
@@ -892,8 +876,7 @@ int readconfig(void)
 	    init.d_ver >= d2_10_sw ? '2' : '1';
 	ws_makepath(init.lightname, buffer);
 	FREE(init.lightname);
-	checkmem(init.lightname = MALLOC(strlen(buffer) + 1));
-	strcpy(init.lightname, buffer);
+	init.lightname = strdup(buffer);
     }
     if (init.d_ver >= d2_10_sw) {
 	//printf(TXT_READCONVTABLEFILE, init.convtablename);

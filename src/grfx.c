@@ -187,8 +187,7 @@ void changepogfile(const char *pogfilename)
 	pig.current_pogname = NULL;
     }
     if (pogname) {
-	checkmem(pig.current_pogname = MALLOC(strlen(pogname) + 1));
-	strcpy(pig.current_pogname, pogname);
+	pig.current_pogname = strdup(pogname);
     }
     /* FFE prevent double-free - pogfilename is allocated
     outside this function, so it should get freed there.
@@ -265,8 +264,7 @@ void drawallbuttons(struct w_window *w)
 	pigfile.selected = 0;
 	for (i = 0; i < pigfile.num_options; i++) {
 	    pignames[i][strlen(pignames[i]) - 4] = 0;
-	    checkmem(pigfile.options[i] = MALLOC(strlen(pignames[i]) + 1));
-	    strcpy((char *) pigfile.options[i], pignames[i]);
+	    pigfile.options[i] = strdup(pignames[i]);
 	    for (j = 1; j < strlen(pigfile.options[i]); j++)
 		*((char *) pigfile.options[i] + j) =
 		    tolower(pigfile.options[i][j]);

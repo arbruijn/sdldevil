@@ -141,9 +141,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
     if (tp) {
         do {
             argv = (char **)REALLOC(argv, sizeof(char *) * (argc + 1));
-
-            argv[argc] = (char *)MALLOC(strlen(tp) + 1);
-            strcpy (argv[argc], tp);
+            argv[argc] = strdup(tp);
             argc++;
         } while (tp = strtok(NULL, " "));
     }

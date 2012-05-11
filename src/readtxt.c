@@ -561,8 +561,7 @@ int newpigfile(char *pigname, FILE * pogfile)
         }
 	readpogfile(pogfile);
 	pig.pogfile = pogfile;
-	checkmem(palfname = MALLOC(strlen(pigname) + 1));
-	strcpy(palfname, pigname);
+	palfname = strdup(pigname);
 	palfname[strlen(palfname) - 4] = 0;
 	for(i=0;i<strlen(palfname);i++) 
 		palfname[i]=toupper(palfname[i]); 
@@ -576,8 +575,7 @@ int newpigfile(char *pigname, FILE * pogfile)
 	    waitmsg(TXT_CANTFINDPALETTE, palfname, palettes[i = 1].name);
 	FREE(palfname);
 	FREE(pig.current_pigname);
-	checkmem(pig.current_pigname = MALLOC(strlen(pigname) + 1));
-	strcpy(pig.current_pigname, pigname);
+	pig.current_pigname = strdup(pigname);
 	
 	if (pig.pigfile)
 	    fclose(pig.pigfile);
