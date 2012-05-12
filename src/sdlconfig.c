@@ -338,7 +338,7 @@ void sdld_browse_dir(struct w_button * b) {
 // show sdldevil config dialog
 void sdld_configdialog(void) {
 
-    int i, j, key, kbstat, event, dlg_result;
+    int i, key, kbstat, event, dlg_result;
     struct w_window w, *ow;
     struct w_button *b[26];
 
@@ -623,7 +623,7 @@ void sdld_configdialog(void) {
     checkmem(b[8] = w_addstdbutton(ow, w_b_choose, 0, i+=SDLD_ELEMENT_HEIGHT, w.xsize-2, -1,  "Descent version used     ", &b_descentversion, 1));
     checkmem(b[6] = w_addstdbutton(ow, w_b_switch, 0, i+=SDLD_ELEMENT_HEIGHT, 200, SDLD_ELEMENT_HEIGHT, "Fullscreen", &b_fullscreen, 1));
     checkmem(b[7] = w_addstdbutton(ow, w_b_choose, 200, i, 200, -1, "screen resolution", &b_fullscreenresolution, 1));
-    checkmem(b[9] = w_addstdbutton(ow, w_b_switch, 400, i, 198, -1, "enable keyrepeat", &b_keyrepeat, 1));
+    checkmem(b[9] = w_addstdbutton(ow, w_b_switch, 400, i, 198, SDLD_ELEMENT_HEIGHT, "enable keyrepeat", &b_keyrepeat, 1));
 
     b[6]->data = b[7]->data = b[8]->data = b[9]->data = config_data;
 
