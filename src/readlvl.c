@@ -243,7 +243,7 @@ void convert_textures(struct leveldata *ld)
 		    all_found = 0;
 		    nc->d.c->walls[w]->texture1 = init.def_t1;
 		}
-		if (nc->d.c->walls[w]->texture2 != 0)
+		if (nc->d.c->walls[w]->texture2 != 0) {
 		    if ((new_txt =
 			 findtxt(nc->d.c->walls[w]->texture2)) != -1)
 			nc->d.c->walls[w]->texture2 = new_txt;
@@ -251,6 +251,7 @@ void convert_textures(struct leveldata *ld)
 			all_found = 0;
 			nc->d.c->walls[w]->texture2 = init.def_t2;
 		    }
+                }
 	    }
     if (!all_found)
 	waitmsg(TXT_NOTALLTXTSCONV, pig.rdl_txts[init.def_t1].pig->name,
@@ -674,7 +675,7 @@ int readasciilevel(char *filename, struct leveldata *ld)
     strcpy(ld->pigname, palname);
     if ((lf = fopen(filename, "r")) == NULL)
 	return 0;
-    if (fscanf(lf, " %255s", buffer) == NULL
+    if (fscanf(lf, " %255s", buffer) == 0
 	|| strcmp(buffer, "DMB_BLOCK_FILE") != 0) {
 	waitmsg(TXT_WRONGBLKHEAD, filename, buffer);
 	return 0;
@@ -986,7 +987,7 @@ struct leveldata *readlevel(char *filename)
     if ((init.d_ver == d1_10_sw) || (d1_10_reg) || (d1_14_reg)) {
 	//char d[MAXDRIVE], p[MAXDIR], f[MAXFILE], e[MAXEXT];
 	//char pg1filename[MAXPATH];
-	FILE *pg1file;
+	//FILE *pg1file;
 
 	/*
 	fnsplit(filename, d, p, f, e);
@@ -1117,7 +1118,7 @@ int closelevel(struct leveldata *ld, int warn)
 {
     int i;
     my_assert(view.b_levels != NULL && ld != NULL);
-    if (ld->cur_corr)
+    if (ld->cur_corr) {
 	if (warn) {
 	    printmsg(TXT_CORRINWORK);
 	    w_wintofront(ld->cur_corr->win);
@@ -1126,6 +1127,7 @@ int closelevel(struct leveldata *ld, int warn)
 	    delete_corridor(ld->cur_corr);
 	    close_corr_win(ld->cur_corr);
 	}
+    }
     if (warn && !ld->levelsaved
 	&& !yesnomsg(TXT_DISCARDCHANGES, ld->fullname))
 	return 0;

@@ -749,9 +749,10 @@ int movepnt(struct point *add, union move_params *params) {
         for (n = pnt_list->head; n->next != NULL; n = n->next)
             for (i = 0; i < 3; i++) n->d.p->x[i] += add->x[i];
         /* is this is side/cube movement reinit the moved side */
-        if (nc != NULL)
+        if (nc != NULL) {
             if (wall >= 0) nc->d.c->recalc_polygons[wall] = 1;
             else for (i = 0; i < 6; i++) nc->d.c->recalc_polygons[i] = 1;
+        }
         for (n = side_list->head; n->next != NULL; n = n->next)
             if (n->d.mw->cube->d.c->d[n->no % 6] != NULL)
                 makedoorpnt(n->d.mw->cube->d.c->d[n->no % 6]->d.d);
@@ -830,9 +831,10 @@ int rotatepnt(struct point *turn, float fx, float fy, int with_left,
             for (i = 0; i < 3; i++) n->d.p->x[i] = center_of_rot->x[i] + p.x[i];
         }
         /* is this is side/cube movement reinit the moved side */
-        if (nc != NULL)
+        if (nc != NULL) {
             if (wall >= 0) nc->d.c->recalc_polygons[wall] = 1;
             else for (i = 0; i < 6; i++) nc->d.c->recalc_polygons[i] = 1;
+        }
         for (n = side_list->head; n->next != NULL; n = n->next)
             if (n->d.mw->cube->d.c->d[n->no % 6] != NULL)
                 makedoorpnt(n->d.mw->cube->d.c->d[n->no % 6]->d.d);

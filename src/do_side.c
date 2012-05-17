@@ -254,7 +254,7 @@ int dsc_walltype(struct infoitem *i, void *d, struct node *n, int wallno,
 
 int dsc_dooranim(struct infoitem *i, void *d, struct node *n, int wallno,
         int pntno, int tagged) {
-    char no = *(char *) d;
+    int no = *(int *) d;
     my_assert(n != NULL && n->d.d->w != NULL && n->d.d->d != NULL &&
             n->d.d->d->d.d->w != NULL)
             my_assert(no >= 0 && no < pig.num_anims && pig.anims[no] != NULL &&
@@ -276,7 +276,7 @@ int dsc_dooranim(struct infoitem *i, void *d, struct node *n, int wallno,
         n->d.d->d->d.d->old_txt1 = -1;
         n->d.d->d->d.d->w->texture2 = pig.anims[no]->rdlno;
     }
-    n->d.d->animtxt = n->d.d->d->d.d->animtxt = no;
+    n->d.d->animtxt = n->d.d->d->d.d->animtxt = (unsigned char)no;
     if (!tagged &&
             (n->d.d->w == view.pcurrwall || n->d.d->d->d.d->w == view.pcurrwall))
         drawopt(in_wall);

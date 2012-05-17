@@ -98,37 +98,25 @@ void changedata(struct infoitem *i, int withtagged, void *data)
 	    switch (i->infonr) {
 	    case ds_wall:
 	    case ds_flickeringlight:
-		if (view.pcurrcube != n->d.n || view.currwall != n->no % 6)
+		if (view.pcurrcube != n->d.n || view.currwall != n->no % 6) {
 		    if (i->sidefuncnr >= 0 && i->sidefuncnr < sc_number)
-			no_obj +=
-			    do_sideeffect(i->sidefuncnr, i, data, n->d.n,
-					  (int) (n->no % 6), 0, 1);
+			no_obj += do_sideeffect(i->sidefuncnr, i, data, n->d.n, (int) (n->no % 6), 0, 1);
 		    else
 			no_obj += setno(i, data, n->d.n, n->no % 6);
+                }
 		break;
 	    case ds_corner:
-		if (view.pcurrcube != n->d.n
-		    || view.currwall != (n->no % 24) / 4
-		    || view.curredge != (n->no % 24) % 4)
+		if (view.pcurrcube != n->d.n || view.currwall != (n->no % 24) / 4 || view.curredge != (n->no % 24) % 4) {
 		    if (i->sidefuncnr >= 0 && i->sidefuncnr < sc_number)
-			no_obj +=
-			    do_sideeffect(i->sidefuncnr, i, data, n->d.n,
-					  (n->no % 24) / 4,
-					  (n->no % 24) % 4, 1);
+			no_obj +=  do_sideeffect(i->sidefuncnr, i, data, n->d.n, (n->no % 24) / 4, (n->no % 24) % 4, 1);
 		    else
-			no_obj +=
-			    setno(i, data, n->d.n, (n->no % 24) / 4,
-				  (n->no % 24) % 4);
+			no_obj +=  setno(i, data, n->d.n, (n->no % 24) / 4, (n->no % 24) % 4);
+                }
 		break;
 	    case ds_thing:
-		if (view.pcurrthing
-		    && (n->d.n->d.t->type1 == view.pcurrthing->d.t->type1
-			|| i->sidefuncnr == sc_thingtype)
-		    && view.pcurrthing != n->d.n) {
+		if (view.pcurrthing && (n->d.n->d.t->type1 == view.pcurrthing->d.t->type1 || i->sidefuncnr == sc_thingtype)  && view.pcurrthing != n->d.n) {
 		    if (i->sidefuncnr >= 0 && i->sidefuncnr < sc_number)
-			no_obj +=
-			    do_sideeffect(i->sidefuncnr, i, data, n->d.n,
-					  0, 0, 1);
+			no_obj += do_sideeffect(i->sidefuncnr, i, data, n->d.n, 0, 0, 1);
 		    else
 			no_obj += setno(i, data, n->d.n);
 		}
@@ -159,26 +147,23 @@ void changedata(struct infoitem *i, int withtagged, void *data)
 		    my_assert(0);
 		    exit(2);
 		}
-		if (cn != n->d.n)
+		if (cn != n->d.n) {
 		    if (i->sidefuncnr >= 0 && i->sidefuncnr < sc_number)
-			no_obj +=
-			    do_sideeffect(i->sidefuncnr, i, data, n->d.n,
-					  0, 0, 1);
-		/* the 1 is for dsc_switch and opendoors */
-		    else
-			no_obj += setno(i, data, n->d.n);
+			no_obj += do_sideeffect(i->sidefuncnr, i, data, n->d.n, 0, 0, 1);
+                } else {
+                        /* the 1 is for dsc_switch and opendoors */
+                    no_obj += setno(i, data, n->d.n);
+                }
 	    }
 	}
 	printmsg(TXT_CHANGEDTAGGED, no_obj + 1);
     }
-    if (i->sidefuncnr >= 0 && i->sidefuncnr < sc_number)
-	do_sideeffect(i->sidefuncnr, i, data, getnode(i->infonr),
-		      view.currwall, view.curredge, 0);
-    else {
+    if (i->sidefuncnr >= 0 && i->sidefuncnr < sc_number) {
+	do_sideeffect(i->sidefuncnr, i, data, getnode(i->infonr), view.currwall, view.curredge, 0);
+    } else {
 	setno(i, data, NULL);
 	if (i->sidefuncnr != -1)
-	    waitmsg("Unkown sideeffect function number: %s %d", i->txt,
-		    i->sidefuncnr);
+	    waitmsg("Unkown sideeffect function number: %s %d", i->txt, i->sidefuncnr);
     }
 }
 
@@ -959,7 +944,7 @@ void drawoptbuttons(struct infoitem *i)
 	activate = ((w = (struct wall *) getdata(i->infonr, NULL)) != NULL);
 	if (activate)
 	    no = i->multifuncnr <= 5 ? w->texture1 : w->texture2;
-	if ((i->multifuncnr == 5 || i->multifuncnr == 10) && activate)
+	if ((i->multifuncnr == 5 || i->multifuncnr == 10) && activate) {
 	    if (no >= 0 && no < pig.num_rdltxts
 		&& pig.rdl_txts[no].pig != NULL)
 		sprintf(i->b->d.str->str, "%s (%lu)",
@@ -969,6 +954,7 @@ void drawoptbuttons(struct infoitem *i)
 			no);
 	    else
 		sprintf(i->b->d.str->str, TXT_UNKNOWN, no);
+        }
 	if (i->multifuncnr == 0) {
 		init_txt_buffer ((uint32_t *)pig.txt_buffer, 64*64, 255, 255, 255);
 //		    memset(pig.txt_buffer, 0xff, 64 * 64);

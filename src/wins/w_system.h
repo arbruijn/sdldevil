@@ -67,6 +67,7 @@ void ws_restorebitmap(struct ws_bitmap *bm);
 void ws_freebitmap(struct ws_bitmap *bm);
 void ws_drawline(int x1, int y1, int x2, int y2, int col, int xor);
 void ws_drawcircle(int x, int y, int r, int c, int xor);
+void ws_bmdrawline8(struct ws_bitmap *bm, int x1, int y1, int x2, int y2, int c, int xor);
 void ws_bmdrawline(struct ws_bitmap *bm, int x1, int y1, int x2, int y2,
 		   int col, int xor);
 void ws_drawbox(int x1, int y1, int xsize, int ysize, int col, int xor);
@@ -99,8 +100,9 @@ int ws_testforkey(void);
 void ws_setdriver(const char *name);
 char * ws_getkeyname(int key); 
 char ** ws_getscreenmodes(int * modes_count);
-void ws_translatepixels (unsigned char* src, uint32_t* dst, int length);
+void ws_translatepixels (unsigned char * src, uint32_t * dst, int length);
 uint32_t ws_getRGBAColor(unsigned char i);
+uint32_t ws_getNativeColor(unsigned char i);
 uint32_t ws_getNativeColorRGB(int r, int g, int b);
 void ws_sleep(void);
 #endif

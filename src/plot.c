@@ -182,7 +182,7 @@ int calchit(float *r, float ax, float ay, float ex, float ey,
  far away */
 int getscreencoords(int lr, struct point *sp, struct point *ep,
         struct pixel *spix, struct pixel *epix, int checkdist) {
-    struct point e_d, s_d, d, p;
+    struct point e_d, s_d, p;
     float f1, f2, s_s[3], e_s[3], l2_e, l2_s;
     struct point_2d sp2d, ep2d;
     int i;
@@ -190,7 +190,8 @@ int getscreencoords(int lr, struct point *sp, struct point *ep,
     for (i = 0; i < 3; i++) {
         e_d.x[i] = ep->x[i] - x0.x[i];
         s_d.x[i] = sp->x[i] - x0.x[i];
-        d.x[i] = ep->x[i] - sp->x[i];
+        // FFE unused
+        //d.x[i] = ep->x[i] - sp->x[i];
     }
     f1 = SCALAR(&s_d, &er[2]);
     f2 = SCALAR(&e_d, &er[2]);
@@ -738,7 +739,7 @@ uint32_t cont_plotlevel(struct lightsource **ls) {
             dt = render_level(lr, l, l->rendercube != NULL ? l->rendercube :
                 view.pcurrcube, view.drawwhat, 0);
         else {
-            if ((view.drawwhat & DW_CUBES) != 0 || (!l->inside && view.render > 1))
+            if ((view.drawwhat & DW_CUBES) != 0 || (!l->inside && view.render > 1)) {
                 if ((view.drawwhat & DW_ALLLINES) == 0)
                     for (n = l->lines.head; n->next != NULL; n = n->next) {
                         for (i = 0; i < 3; i++)
@@ -749,6 +750,7 @@ uint32_t cont_plotlevel(struct lightsource **ls) {
                     for (n = l->cubes.head; n->next != NULL; n = n->next)
                         if (n->d.c->tagged == NULL) in_plotcube(lr, n, 0, 0, 0, 0, 1);
                 }
+            }
             if (view.render >= 1)
                 dt = render_level(lr, l, view.pcurrcube, 0, view.render == 1 ? 1 : 0);
             if ((view.drawwhat & DW_THINGS) != 0)
@@ -980,15 +982,21 @@ void move_render(struct point *wanted_e0, struct point *cur_e0) {
                     if (det > 0.0) {
                         det = 1.0 / det;
                         r = SCALAR(&o, &c) * det;
-                        if (r < 0.0 || r > 1.0) continue;
+                        if (r < 0.0 || r > 1.0) 
+                            continue;
                         s = -SCALAR(&o, &b) * det;
-                        if (s < 0.0 || r + s > 1.0) continue;
+                        if (s < 0.0 || r + s > 1.0) 
+                            continue;
                         t = SCALAR(&n, &d) * det;
                         /* if this a wall, we should be a bit larger than zero radius */
-                        if (t < 0.0) continue;
-                        if (l->rendercube->d.c->nc[w] == NULL && view.render == 3)
-                            if (fabs(t) < LENGTH(&n) * det * SAFE_DIST) t = -LENGTH(&n) * det * SAFE_DIST;
-                            else t -= LENGTH(&n) * det*SAFE_DIST;
+                        if (t < 0.0) 
+                            continue;
+                        if (l->rendercube->d.c->nc[w] == NULL && view.render == 3) {
+                            if (fabs(t) < LENGTH(&n) * det * SAFE_DIST) 
+                                t = -LENGTH(&n) * det * SAFE_DIST;
+                            else 
+                                t -= LENGTH(&n) * det*SAFE_DIST;
+                        }
                         if (t > min_t) continue;
                         /* this is the next collision */
                         min_t = t;

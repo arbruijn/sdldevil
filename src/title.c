@@ -412,5 +412,6 @@ int titlescreen(void)
  free(gifmem);
  return 1;
 #endif
+ return 0;
  }
 

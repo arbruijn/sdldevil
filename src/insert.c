@@ -270,10 +270,12 @@ void cleansdoor(struct sdoor *sd) {
                 break;
             default: tl = NULL;
         }
-        if (tl)
+        if (tl) {
             if ((n = findnode(tl, sd->d->no)) == NULL)
                 waitmsg(TXT_CLEANNODOORFORSWITCH, sd->d->no);
-            else freenode(tl, n, NULL);
+            else 
+                freenode(tl, n, NULL);
+        }
         sd->target[k] = NULL;
     }
     sd->num = 0;
@@ -748,17 +750,20 @@ int testcube(struct node *nc, int withmsg) {
     float ll1;
     struct node *nt;
     /* test if two points are equal */
-    for (l1n = 0; l1n < 6; l1n++)
+    for (l1n = 0; l1n < 6; l1n++) {
         for (l2n = 0; l2n < 4; l2n++) {
             for (l3n = 0; l3n < 3; l3n++)
-                l1.x[l3n] = nc->d.c->p[wallpts[l1n][l2n]]->d.p->x[l3n] -
-                    nc->d.c->p[wallpts[l1n][(l2n + 1)&3]]->d.p->x[l3n];
+                l1.x[l3n] = nc->d.c->p[wallpts[l1n][l2n]]->d.p->x[l3n] - nc->d.c->p[wallpts[l1n][(l2n + 1)&3]]->d.p->x[l3n];
+            
             ll1 = LENGTH(&l1);
-            /*
-            if(ll1<=640.0 || ll1>32700*640.0)
-             { if(withmsg) printmsg(TXT_TPLINETOOLONG,l2n,(l2n+1)&3,l1n,nc->no);
-               return 0; } */
+            
+            if(ll1<=640.0 || ll1>32700*640.0) { 
+                if(withmsg) 
+                    printmsg(TXT_TPLINETOOLONG,l2n,(l2n+1)&3,l1n,nc->no);
+                return 0; 
+            } 
         }
+    }
     for (nt = nc->d.c->things.head; nt->next != NULL; nt = nt->next)
         setthingcube(nt->d.t);
     if (!view.warn_convex) return 1;

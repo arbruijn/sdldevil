@@ -85,8 +85,7 @@
 
 #define MAX_OBJSTR_LENGTH 15
 
-enum tagtypes { tt_cube, tt_wall, tt_edge, tt_pnt, tt_thing, tt_door,
-	tt_number };
+enum tagtypes { tt_cube, tt_wall, tt_edge, tt_pnt, tt_thing, tt_door, tt_number };
 enum movetypes { mt_you, mt_obj, mt_current, mt_texture, mt_number };
 enum infos { in_cube, in_wall, in_edge, in_pnt, in_thing, in_door, in_internal, in_number };
 
@@ -689,7 +688,7 @@ struct ham_txt {
 #define BULBSIZE 8
 struct pigdata {
     char *current_pigname, *default_pigname, *current_pogname;
-    char *txt_buffer, *door_buffer, *thing_buffer;
+    uint32_t *txt_buffer, *door_buffer, *thing_buffer;
     struct ws_bitmap *txt_bm, *door_bm, *thing_bm;
     FILE *pigfile, *pogfile;
     int32_t num_pigtxts;

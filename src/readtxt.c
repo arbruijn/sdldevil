@@ -20,7 +20,9 @@
     along with this program (file COPYING); if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 #include <stdint.h>
+#include <string.h>
 
+#include "wins/w_system.h"
 #include "structs.h"
 #include "grfx.h"
 #include "userio.h"
@@ -599,11 +601,11 @@ int newpigfile(char *pigname, FILE * pogfile)
    dir=1 -> 90\F8   (origin right upper corner x- y+). 
    dir=2 -> 180\F8   (origin right lower corner x- y-).
    dir=3 -> 270\F8    (origin left lower corner x+ y-). */
-void readbitmap(char *dest, struct pig_txt *pig_sd,
+void readbitmap(unsigned char *dest, struct pig_txt *pig_sd,
 		struct ham_txt *ham_sd, int dir)
 {
     struct pig_txt *sd = ham_sd ? ham_sd->pig : pig_sd;
-    char *sbitmap, bitmap[64 * 64], *buffer, *fill, *nobytesinrow;
+    unsigned char *sbitmap, bitmap[64 * 64], *buffer, *fill, *nobytesinrow;
     uint32_t size;
     unsigned int i;
     int startx, starty, endx, endy, addx, addy, mx, my, x, y;
@@ -746,7 +748,9 @@ void readbitmap(char *dest, struct pig_txt *pig_sd,
 	    mx = ham_sd->xspeed;
 	    my = ham_sd->yspeed;
 	}
-	checkmem(bm = ws_createbitmap8from(64, 64, dest));
+        
+	bm = ws_createbitmap8from(64, 64, dest);
+        
 	l = sqrt((float) mx * mx + my * my);
 	startx = 31 + 24 * mx / l;
 	starty = 31 + 24 * my / l;

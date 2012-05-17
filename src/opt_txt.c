@@ -211,9 +211,9 @@ void tl_drawmarktxt(struct w_button *b, int on)
 void tl_refreshtxts(struct txt_list_win *tlw)
 {
     int x, y, x2, y2, i, size;
-    char texture[TXT_REALSIZE * TXT_REALSIZE];
-    char txthalf[32 * 32];
-    char txtquarter[16 * 16];
+    unsigned char texture[TXT_REALSIZE * TXT_REALSIZE];
+    unsigned char txthalf[32 * 32];
+    unsigned char txtquarter[16 * 16];
     if (!tlw->b_texture)
 	return;
     
@@ -1315,7 +1315,7 @@ void init_txt_buffer (uint32_t * buffer, int size, int r, int g, int b)
 
 void drawdooranim(struct w_button *b, struct ham_txt *t, int anim, int t1,  int t2, int t2_d)
 {
-	char tmptxtdata[64*64];
+	unsigned char tmptxtdata[64*64];
         memset(tmptxtdata, 0, 64*64);
 
 	if (t->pig && t->pig->anim_t2) {
@@ -1618,9 +1618,9 @@ void fb_clickwin(struct w_window *w, void *d, struct w_event *we)
 	}
 	/* no pnt hit, so check for a double click */
 	else if (ws_getevent(&ws, -view.doubleclick)) {
-	    if ((ws.buttons & ws_bt_left) == 0)
+	    if ((ws.buttons & ws_bt_left) == 0) {
 		if (ws_getevent(&ws, -view.doubleclick))
-		    if ((ws.buttons & ws_bt_left) == 1)
+		    if ((ws.buttons & ws_bt_left) == 1) {
 			if (ws.kbstat & ws_ks_shift) {
 			    if (yesnomsg(TXT_FB_RECALCUV)) {
 				wall = *view.pcurrwall;
@@ -1646,6 +1646,8 @@ void fb_clickwin(struct w_window *w, void *d, struct w_event *we)
 				fb_data.changed = 0;
 			    }
 			}
+                   }
+            }
 	}
 	fb_movetxtpic();
     }

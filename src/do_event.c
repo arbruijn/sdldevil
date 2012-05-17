@@ -230,8 +230,9 @@ int cur_help_pos, num_codes, num_columns;
 void help_refresh(struct w_window *w) {
     char buffer[100];
     char *keyname;
-    int i, j, o_y, x, y;
-    o_y = (int) w->data;
+    int i, j, x, y;
+    long o_y;
+    o_y = (long) w->data;
     ws_drawfilledbox(w_xwinincoord(w, 0), w_ywinincoord(w, o_y),
             w_xwininsize(w), w_ywininsize(w) - o_y, view.color[BLACK], 0);
     for (i = cur_help_pos, x = 0, y = 0; i < (view.num_keycodes > num_codes + cur_help_pos ?
@@ -327,9 +328,8 @@ void dec_help(int ec) {
     ok.l_pressed_routine = ok.r_routine = ok.l_routine = NULL;
     checkmem(b_up = w_addstdbutton(w, w_b_press, 0, 0, 50, -1, TXT_UP, &up, 1));
     checkmem(b_down = w_addstdbutton(w, w_b_press, 50, 0, 50, -1, TXT_DOWN, &down, 1));
-    checkmem(b_ok = w_addstdbutton(w, w_b_press, 100, 0, w_xwininsize(w) - 100, -1,
-            TXT_OK, &ok, 1));
-    w->data = (void *) (b_ok->ysize + 2);
+    checkmem(b_ok = w_addstdbutton(w, w_b_press, 100, 0, w_xwininsize(w) - 100, -1, TXT_OK, &ok, 1));
+    w->data = (void *) ((long)(b_ok->ysize + 2));
     cur_help_pos = 0;
     num_codes = (w_ymaxwinsize() - b_ok->ysize - 2) / w_titlebarheight() * num_columns;
     help_refresh(w);

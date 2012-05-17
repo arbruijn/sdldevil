@@ -354,7 +354,7 @@ void uio_dirlist_string_getfname(struct w_button *b)
 	path[300], name[255], ext[5], rawpath[300];
     struct w_b_strlist *bd;
     struct w_button **b_arr = b->data;
-    int i, num_sel;
+    int i;
 	
     strcpy(oldpath, current_path);
     ws_splitpath(s, drive, path, name, ext);

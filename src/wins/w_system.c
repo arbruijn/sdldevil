@@ -21,8 +21,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
-//#include <fnmatch.h>
+#include <fnmatch.h>
 #include <dirent.h>
+#include <sys/types.h> 
 #include <sys/stat.h>
 #include "wins_int.h"
 #include "w_tools.h"
@@ -30,6 +31,7 @@
 #include <SDL/SDL.h>
 #include "SDL_gfxPrimitives.h"
 #include "devilfont.h"
+
 
 
 struct ws_internals {
@@ -75,7 +77,7 @@ int ws_initgrfx(int xres, int yres, int color_depth, int fullscreen, int keyrepe
 
 	gfxPrimitivesSetFont(gfxDevilFontdata, 6, 14);
 
-        uint32_t sdlflags = SDL_HWSURFACE;
+        uint32_t sdlflags = SDL_SWSURFACE;
         if (fullscreen) {
             sdlflags |= SDL_FULLSCREEN;
             ws_private.fullscreen = 1;
@@ -124,7 +126,6 @@ struct ws_bitmap *ws_createbitmap8from(int xsize, int ysize, uint8_t *bm)
 //	printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
     SDL_Surface *gc;
     struct ws_bitmap *bmap;
-    int x, y;
 
     if ((bmap = MALLOC(sizeof(struct ws_bitmap))) == NULL)
     	return NULL;
@@ -154,7 +155,6 @@ struct ws_bitmap *ws_createbitmap(int xsize, int ysize, uint32_t **bm)
 //	printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
 	SDL_Surface *gc;
 	struct ws_bitmap *bmap;
-	int x, y;
 
 	if ((bmap = MALLOC(sizeof(struct ws_bitmap))) == NULL)
 		return NULL;
@@ -261,16 +261,17 @@ struct ws_bitmap *ws_savebitmap(struct ws_bitmap *bm, int x1, int y1, int xsize,
     rect_src.y = y1;
     rect_src.w = xsize;
     rect_src.h = ysize;
-
+    /*
     SDL_Rect rect_dst;
     rect_dst.x = 0;
     rect_dst.y = 0;
     rect_dst.w = xsize;
     rect_dst.h = ysize;
-
-	if (SDL_BlitSurface(bm == NULL ? ws_private.screen : bm->bitmap, &rect_src, gc, NULL)) {
-		printf("save blit FAILED\n");
-	}
+     */
+    
+    if (SDL_BlitSurface(bm == NULL ? ws_private.screen : bm->bitmap, &rect_src, gc, NULL)) {
+            printf("save blit FAILED\n");
+    }
 
     bmap->bitmap = (void *) gc;
     bmap->xpos = x1;
@@ -380,21 +381,15 @@ void ws_drawcircle(int x, int y, int r, int c, int xor)
 }
 
 /* Draw a line with color c to bitmap bm. */
-void ws_bmdrawline8(struct ws_bitmap *bm, int x1, int y1, int x2, int y2,
-		   int c, int xor)
+void ws_bmdrawline8(struct ws_bitmap *bm, int x1, int y1, int x2, int y2, int c, int xor)
 {
-
 	lineColor ((SDL_Surface *)bm->bitmap, x1, y1, x2, y2, c, xor);
-
 }
 
 
-void ws_bmdrawline(struct ws_bitmap *bm, int x1, int y1, int x2, int y2,
-		   int c, int xor)
+void ws_bmdrawline(struct ws_bitmap *bm, int x1, int y1, int x2, int y2,  int c, int xor)
 {
-
 	lineColor ((SDL_Surface *)bm->bitmap, x1, y1, x2, y2, ws_palette[c], xor);
-
 }
 
 /* Draw a (not-filled) box with color c. */
@@ -502,7 +497,7 @@ void ws_bmdrawtext(struct ws_bitmap *bm, int x, int y, int w,
 		   const char *txt, int fg, int bg)
 {
 
-	int clen = ws_charstrlen(w);
+	//int clen = ws_charstrlen(w);
 	stringColor((SDL_Surface *)bm->bitmap, x, y, txt, ws_palette[fg]);
 }
 
@@ -636,7 +631,7 @@ int ws_getevent(struct ws_event *se, int wait)
 		
 	} 
 
-	Uint8 ms = SDL_GetMouseState(&se->x, &se->y);
+	SDL_GetMouseState(&se->x, &se->y);
 	if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(1)) 
 		se->buttons |= ws_bt_left;
 
@@ -700,7 +695,7 @@ char **ws_getallfsentries (const char *path, const char *exts, int *no, int type
 
 	*no = 0;
 
-	while (ep = readdir(dp)) {
+	while ((ep = readdir(dp))) {
 		strcpy(pathbuffer, path);
 		strcat(pathbuffer, "/");
 		strcat(pathbuffer, ep->d_name);
@@ -757,7 +752,7 @@ char **ws_getallfsentries (const char *path, const char *exts, int *no, int type
 
 char **ws_getallfilenames(const char *path, const char *ext, int *no)
 {
-	return ws_getallfsentries(path, ext, no, S_IFREG);
+	return ws_getallfsentries(path, ext, no, __S_IFREG);
 }
 
 /* gives all directories at 'path' with extension(s) 'ext' (the extensions
@@ -768,12 +763,12 @@ char **ws_getallfilenames(const char *path, const char *ext, int *no)
 // FLOSDL TODO
 char **ws_getalldirs(const char *path, const char *ext, int *no)
 {
-	return ws_getallfsentries(path, ext, no, S_IFDIR);
+	return ws_getallfsentries(path, ext, no, __S_IFDIR);
 }
 
 
 // FFE quick n dirty replacement for djgpp's _fixpath
-void ws_fixpath(char * in, char * out)
+void ws_fixpath(const char * in, char * out)
 {
 
 	char * part;
@@ -872,7 +867,7 @@ void ws_splitpath(char *fullpath, char *drive, char *path, char *name,
 		stat (fullpath, &fileinfo);
 		if (!S_ISDIR(fileinfo.st_mode)) {
 			strncpy(buffer2, fullpath, 1023);
-			if (pos = strrchr(buffer2, '/')) {
+			if ((pos = strrchr(buffer2, '/'))) {
 				*pos = '\0';
 				strncpy(buffer, pos + 1, 255);
 				if (path)
@@ -883,7 +878,7 @@ void ws_splitpath(char *fullpath, char *drive, char *path, char *name,
 					path[0] = '\0';
 			}
 			if (ext) {
-				if (pos = strrchr(buffer, '.')) {
+				if ((pos = strrchr(buffer, '.'))) {
 					strcpy(ext, pos);
 					*pos = '\0';
 				}
@@ -975,7 +970,7 @@ void ws_disablectrlc(void)
 void ws_drawpatternedbox(int x1, int y1, int xsize, int ysize, int c)
 {
 
-	int x, y, m;
+	int x, y;
 	for (y = y1; y < y1 + ysize; y++)
 		for (x = x1 + (y & 1); x < x1 + xsize; x += 2)
 			fastPixelColor(ws_private.screen, x, y, gfxWriteModeXOR | c);
@@ -1018,6 +1013,7 @@ int ws_waitforkey(void)
 {
 	printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
 	//getchar();
+        return 0;
 }
 
 // FLOSDL TODO
@@ -1025,6 +1021,7 @@ int ws_testforkey(void)
 {
 	printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
 	//return getchar();
+        return 0;
 }
 
 // FLOSDL unneeded 
@@ -1037,11 +1034,12 @@ void ws_setdriver(const char *name)
 /* init cursor structure (which is whatever you want). w=width, h=height,
  xo,yo=hot spot, colortable maps colors in data to colors on screen. */
 // FLOSDL TODO
-ws_cursor *ws_initcursor(char *data, int w, int h, int xo, int yo,
+ws_cursor * ws_initcursor(char *data, int w, int h, int xo, int yo,
 			 long *colortable)
 {
 //	printf ("IMPLEMENT ME: %s\n", __FUNCTION__);
 //    return (ws_cursor *) GrBuildCursor(data, w, w, h, xo, yo, colortable);
+    return NULL;
 }
 
 /* set cursor (cursor==NULL is allowed) */
@@ -1101,7 +1099,7 @@ char ** ws_getscreenmodes(int * modes_count) {
 
 
 // translate pixels from palette to native format
-void ws_translatepixels (unsigned char* src, uint32_t* dst, int length)
+void ws_translatepixels (unsigned char * src, uint32_t* dst, int length)
 {
 	int i, r, g, b;
 	for (i=0; i<length; i++) {

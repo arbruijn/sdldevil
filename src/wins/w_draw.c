@@ -180,7 +180,7 @@ void w_changewintitle(struct w_window *w, char *s) {
     w->title = t;
     for (n = wi->buttonlist.head, b = NULL; n->next != NULL && n->d.w_b->sys_button;
             n = n->next)
-        if ((int) n->d.w_b->b.data == 1) {
+        if ((long) n->d.w_b->b.data == 1) {
             b = n->d.w_b;
             break;
         }

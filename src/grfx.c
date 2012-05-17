@@ -440,7 +440,7 @@ void initpalette(void)
 
 void newpalette(unsigned char *palette)
 {
-    int i, j, nc;
+    int i;
     //long colortable[4];
     FILE *f;
     if (init_test & 2) {
@@ -509,8 +509,8 @@ void initgrph(int showtitle)
     int i;
     FILE *f;
     char *pigname;
-    struct ws_event ws;
-    struct ws_bitmap *cursor;
+    //struct ws_event ws;
+    //struct ws_bitmap *cursor;
     inittimer();
 #if defined(GNU_C) && defined(GO32)
 /*
@@ -541,16 +541,15 @@ void initgrph(int showtitle)
     checkmem(control_cursor =
 	     CALLOC(cntrlcursor_xsize, cntrlcursor_ysize));
     checkmem(alt_cursor = CALLOC(altcursor_xsize, altcursor_ysize));
-    cursor =
-	ws_createbitmap(cntrlcursor_xsize, cntrlcursor_ysize,
-			control_cursor);
-    ws_bmdrawtext(cursor, 1, 0, cntrlcursor_xsize, TXT_TAG, 1, 0);
+    // FFE no cursor currently
+    //cursor = ws_createbitmap(cntrlcursor_xsize, cntrlcursor_ysize, control_cursor);
+    //ws_bmdrawtext(cursor, 1, 0, cntrlcursor_xsize, TXT_TAG, 1, 0);
     control_cursor[0] = 1;
-    ws_freebitmap(cursor);
-    cursor = ws_createbitmap(altcursor_xsize, altcursor_ysize, alt_cursor);
-    ws_bmdrawtext(cursor, 1, 0, altcursor_xsize, TXT_INFO, 1, 0);
+    //ws_freebitmap(cursor);
+    //cursor = ws_createbitmap(altcursor_xsize, altcursor_ysize, alt_cursor);
+    //ws_bmdrawtext(cursor, 1, 0, altcursor_xsize, TXT_INFO, 1, 0);
     alt_cursor[0] = 1;
-    ws_freebitmap(cursor);
+    //ws_freebitmap(cursor);
     cursor_initialized = 1;
     //checkmem(pig.txt_buffer = MALLOC(64 * 64));
     //memset(pig.txt_buffer, 0, 64 * 64);

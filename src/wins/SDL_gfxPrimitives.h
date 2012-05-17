@@ -75,6 +75,7 @@ extern "C" {
 
 	/* Pixel */
 	SDL_GFXPRIMITIVES_SCOPE int fastPixelColorNolock(SDL_Surface * dst, Sint16 x, Sint16 y, Uint32 color, gfxWriteMode mode);
+        SDL_GFXPRIMITIVES_SCOPE int fastPixelColor(SDL_Surface * dst, Sint16 x, Sint16 y, Uint32 color);
 
 	SDL_GFXPRIMITIVES_SCOPE int pixelColor(SDL_Surface * dst, Sint16 x, Sint16 y, Uint32 color, gfxWriteMode mode);
 	SDL_GFXPRIMITIVES_SCOPE int pixelRGBA(SDL_Surface * dst, Sint16 x, Sint16 y, Uint8 r, Uint8 g, Uint8 b, Uint8 a);

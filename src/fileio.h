@@ -21,7 +21,9 @@
 #ifndef FILEIO_H
 #define	FILEIO_H
 
-FILE * fileio_open_ignorecase(char * path, char * fixed_path, char * mode);
+typedef FILE fileio_file_t;
+
+FILE * fileio_open_ignorecase(const char * path, char * fixed_path, const char * mode);
 
 #endif	/* FILEIO_H */
 

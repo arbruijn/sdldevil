@@ -40,7 +40,7 @@ void lac_read_cfg(void)
         {
             fgets(s, sizeof(s), cfgfile);
             s[79] = 0;
-            tolower(s);
+//            tolower(s);
             if((p = strstr(s, "alwayssmooth")))
             {
                 if((p = lac_find_value(p)))

@@ -22,9 +22,10 @@
 #include <stdint.h>
 #include <string.h>
 #include "ignorecase.h"
+#include "fileio.h"
 
 
-FILE * fileio_open_ignorecase(char * path, char * fixed_path, char * mode) {
+fileio_file_t * fileio_open_ignorecase(const char * path, char * fixed_path, const char * mode) {
     
     char local_fixed_path[1025];
     char * newpath = fixed_path == NULL ? local_fixed_path : fixed_path;
@@ -36,6 +37,15 @@ FILE * fileio_open_ignorecase(char * path, char * fixed_path, char * mode) {
         return NULL;
     }
 }
+
+fileio_file_t * fileio_open(const char * path, const char * mode) {
+    return fopen(path, mode);
+}
+
+int fileio_fclose(fileio_file_t * f) {
+    return fclose(f);
+}
+
 
 size_t fileio_read_uint16(uint16_t * dest, FILE * f) {
     return fread (dest, sizeof(uint16_t), 1, f);

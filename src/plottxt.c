@@ -485,7 +485,7 @@ unsigned char *gettexture(int rdlno,char txt1or2)
   {
   checkmem(pig.rdl_txts[rdlno].pig->data=MALLOC(64*64));
   memset(pig.rdl_txts[rdlno].pig->data,txt1or2 == 1 ? 0xfe : 0xff,64*64);
-  readbitmap((char *)pig.rdl_txts[rdlno].pig->data,NULL,
+  readbitmap((unsigned char *)pig.rdl_txts[rdlno].pig->data,NULL,
    &pig.rdl_txts[rdlno],0);
   }
  return pig.rdl_txts[rdlno].pig->data;

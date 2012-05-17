@@ -361,10 +361,11 @@ int insertmacro(struct leveldata *m,int connectnow,float scaling)
   checkmem(addheadnode(&l->things,n->no,t));
   }
  /* inserting the doors, sdoors and producers and flickering lights */
- checkmem(copylist(&l->doors,&m->doors,sizeof(struct door)));
- for(n=m->doors.head;n->next!=NULL;n=n->next) n->d.d->tagged=NULL;
- checkmem(copylist(&l->sdoors,&m->sdoors,sizeof(struct sdoor)));
- checkmem(copylist(&l->producers,&m->producers,sizeof(struct producer)));
+ copylist(&l->doors,&m->doors,sizeof(struct door));
+ for(n=m->doors.head;n->next!=NULL;n=n->next) 
+     n->d.d->tagged=NULL;
+ copylist(&l->sdoors,&m->sdoors,sizeof(struct sdoor));
+ copylist(&l->producers,&m->producers,sizeof(struct producer));
  /* now insert all cubes */
  for(n=m->cubes.tail;n->prev!=NULL;n=n->prev)
   {
