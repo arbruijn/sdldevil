@@ -64,11 +64,13 @@ void w_skipline(FILE * f) {
    init the grfx & all variables you need. 
    xres,yres and colors are the parameters of the grfx-mode.
    palette are the colors.
-   If fontname==NULL, a default font is used.
+   If fontname==NULL, a default font is used. FFE no more font init
    Returns zero if not successful.
    If it's not succesful you must remain in Textmode. 
-   If successful return a 1 */
-int w_initwins(int xres, int yres, int colors, int fullscreen, const char *fontname) {
+   If successful return a 1 
+ FFE: changed fontname to int keyrepeat, thanks to Kp
+ */
+int w_initwins(int xres, int yres, int colors, int fullscreen, int keyrepeat) {
     initlist(&notes.windows);
     initlist(&notes.menu);
     notes.print_msg = 1;
@@ -83,7 +85,7 @@ int w_initwins(int xres, int yres, int colors, int fullscreen, const char *fontn
     notes.titlebar_text = NULL;
     if ((errf = fopen("devil.err", "w")) == NULL)
         errf = stdout;
-    if (!ws_initgrfx(xres, yres, colors, fullscreen, fontname))
+    if (!ws_initgrfx(xres, yres, colors, fullscreen, keyrepeat))
         return 0;
     ws_setcolor(0, 0, 0, 0);
     notes.colindex[cv_bg] = w_makecolor(0, 0, 0);
@@ -967,7 +969,7 @@ void w_resizeinwin(struct w_window *w, int x, int y) {
     w->shrunk = 0;
     w_winoutsize(w, x, y);
     for (n = wi->buttonlist.head, b = NULL; n->next != NULL && n->d.w_b->sys_button; n = n->next)
-        if ((int) n->d.w_b->b.data == 1) {
+        if ((long) n->d.w_b->b.data == 1) {
             b = &n->d.w_b->b;
             break;
         }
@@ -1066,7 +1068,7 @@ void w_readcfg(FILE * f) {
             n->d.w_w->oysize = oys;
             for (n2 = n->d.w_w->buttonlist.head, b = NULL;
                     n2->next != NULL && n2->d.w_b->sys_button; n2 = n2->next)
-                if ((int) n2->d.w_b->b.data == 1) {
+                if ((long) n2->d.w_b->b.data == 1) {
                     b = n2->d.w_b;
                     break;
                 }

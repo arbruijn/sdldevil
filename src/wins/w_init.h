@@ -3,7 +3,7 @@
     Copyright (C) 1995  Achim Stremplat (ubdb@rz.uni-karlsruhe.de) 
     Further info see .c-files. */
 
-int w_initwins(int xres,int yres,int colors, int fullscreen, const char *fontname);
+int w_initwins(int xres,int yres,int colors, int fullscreen, int keyrepeat);
 void w_newpalette(unsigned char *palette);
 int w_initmenu(FILE *mfile,void (**action)(int),int max_anr);
 void w_setcolors(int *palette);
