@@ -49,7 +49,7 @@ enum switchtypes { switch_opendoor=0,switch_closedoor=1,switch_producer=2,
  switch_exit=3,switch_secretexit=4,switch_illusion_on=5,
  switch_illusion_off=6,switch_unlockdoor=7,switch_lockdoor=8,
  switch_openwall=9,switch_closewall=10,switch_wall_to_ill=11,
- switch_turnofflight=12,switch_turnonlight=13,
+ switch_turnofflight=12,switch_turnonlight=13,switch_drainshield=14, switch_drainenergy=15,
  /* for me: */switch_nothing=0xff };
 enum switchflags { switchflag_nomsg=1,switchflag_once=2 };
 

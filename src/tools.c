@@ -563,7 +563,7 @@ enum sdoortypes getsdoortype(struct sdoor *sd) {
     switch (sd->type) {
         case switch_producer: return sdtype_cube;
         case switch_turnofflight: case switch_turnonlight: return sdtype_side;
-        case switch_exit: case switch_secretexit: case switch_nothing:
+        case switch_exit: case switch_secretexit: case switch_nothing: case switch_drainenergy: case switch_drainshield:
             return sdtype_none;
         case switch_opendoor: case switch_closedoor:
         case switch_illusion_on: case switch_illusion_off:

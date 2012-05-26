@@ -120,11 +120,22 @@ void *D1_REG_readsdoor(FILE *lf) {
         sd->cubes[i] = D1_sd.cubes[i];
         sd->walls[i] = D1_sd.walls[i];
     }
-    switch (D1_sd.flags & 0x149) {
+    switch (D1_sd.flags & 0x3cf) {
         case 0x00: sd->type = switch_nothing;
             break;
         case 0x01: sd->type = switch_opendoor;
             break;
+            
+        // FFE added:
+        case 0x02: sd->type = switch_drainshield;
+            break;
+        case 0x04: sd->type = switch_drainenergy;
+            break;
+        case 0x80: sd->type = switch_illusion_off;
+            break;
+        case 0x200: sd->type = switch_illusion_on;
+            break;
+            
         case 0x40: sd->type = switch_producer;
             break;
         case 0x08: sd->type = switch_exit;
@@ -132,7 +143,7 @@ void *D1_REG_readsdoor(FILE *lf) {
         case 0x100: sd->type = switch_secretexit;
             break;
         default: fprintf(errf, "Unknown sdoor %lx: %x\n", ftell(lf), D1_sd.flags);
-            my_assert(0);
+            //my_assert(0);
     }
     if (init_test & 2) {
         fprintf(errf, "read sdoor: type: %hx flags: %hx num: %hd v: %lx l: %lx\n",
@@ -786,7 +797,19 @@ int D1_REG_savesdoor(FILE *f, struct node *d, va_list args) {
             break;
         case switch_secretexit: D1_sd.flags = 0x100;
             break;
+            
+        // FFE added:
+        case switch_drainshield: D1_sd.flags = 0x02;
+            break;
+        case switch_drainenergy: D1_sd.flags = 0x04;
+            break;
+        case switch_illusion_off: D1_sd.flags = 0x80;
+            break;
+        case switch_illusion_on: D1_sd.flags = 0x200;
+            break;
+            
     }
+    D1_sd.flags |= 0x20;
     return (fwrite(&D1_sd, sizeof (struct D1_sdoor), 1, f) == 1);
 }
 

@@ -1,3 +1,7 @@
+v0.6
+ * added undocumented trigger types (illusion on/off, drain shield, drain
+   energy)
+ 
 V0.5
  * fixed errors in POG loading (double-free)
  * fixed crash in /4 texture view
