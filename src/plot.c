@@ -277,27 +277,27 @@ int getscreencoords(int lr, struct point *sp, struct point *ep,
 }
 
 void in_plot3dline(int lr, struct point *sp, struct point *ep, int color,
-        int xor, int checkdist) {
+        int xorval, int checkdist) {
     struct pixel spix, epix;
     if (getscreencoords(lr, sp, ep, &spix, &epix, checkdist))
-        plotline(spix.x, spix.y, epix.x, epix.y, color, xor);
+        plotline(spix.x, spix.y, epix.x, epix.y, color, xorval);
 }
 
-/* draw a line from sp to ep with color. if xor==1 xored. if checkdist==1
+/* draw a line from sp to ep with color. if xorval==1 xorvaled. if checkdist==1
  draw the line only if it's within maxvisibility */
-void plot3dline(struct point *sp, struct point *ep, int color, int xor,
+void plot3dline(struct point *sp, struct point *ep, int color, int xorval,
         int checkdist) {
     makeview(0);
-    in_plot3dline(0, sp, ep, color, xor, checkdist);
+    in_plot3dline(0, sp, ep, color, xorval, checkdist);
     if (view.whichdisplay) {
         makeview(1);
-        in_plot3dline(1, sp, ep, color, xor, checkdist);
+        in_plot3dline(1, sp, ep, color, xorval, checkdist);
     }
 }
 
 /* highlight==0: normal wallcolor 
    highlight>0: view.color[HILIGHTCOLORS+highlight-1]
-   highlight<0: same as highlight>0 with xor.
+   highlight<0: same as highlight>0 with xorval.
    highlight==256: black
    highlight==257: normal wallcolor or black if too far away*/
 void in_plotmarker(int w, struct point *p, int hilight) {
@@ -331,7 +331,7 @@ void plotmarker(struct point *p, int hilight) {
    drawswitched==1: draw objects switched with this door
    drawswitched==-1: undraw objects switched with this door
    drawswitched==0: only draw the door */
-void in_plotdoor(int w, struct node *n, int hilight, int drawswitched, int xor) {
+void in_plotdoor(int w, struct node *n, int hilight, int drawswitched, int xorval) {
     struct door *d = n->d.d;
     struct pixel spix, epix;
     struct node *sdn;
@@ -339,7 +339,7 @@ void in_plotdoor(int w, struct node *n, int hilight, int drawswitched, int xor) 
     for (j = 0; j < 4; j++)
         if (getscreencoords(w, &d->p, d->w->p[j]->d.p, &spix, &epix, hilight == 0))
             plotline(spix.x, spix.y, epix.x, epix.y,
-                PCOLORNUM((epix.d + spix.d) / 2.0, d, hilight), xor);
+                PCOLORNUM((epix.d + spix.d) / 2.0, d, hilight), xorval);
     if (d->sd != NULL && drawswitched) {
         switch (getsdoortype(d->sd->d.sd)) {
             case sdtype_door:
@@ -363,12 +363,12 @@ void in_plotdoor(int w, struct node *n, int hilight, int drawswitched, int xor) 
             in_plotdoor(w, sdn->d.n, drawswitched > 0 ? 4 : -1, 0, 0);
 }
 
-void plotdoor(struct node *n, int hilight, int xor) {
+void plotdoor(struct node *n, int hilight, int xorval) {
     makeview(0);
-    in_plotdoor(0, n, hilight, 0, xor);
+    in_plotdoor(0, n, hilight, 0, xorval);
     if (view.whichdisplay) {
         makeview(1);
-        in_plotdoor(1, n, hilight, 0, xor);
+        in_plotdoor(1, n, hilight, 0, xorval);
     }
 }
 
@@ -380,7 +380,7 @@ void plotdoor(struct node *n, int hilight, int xor) {
    withdoors==1: draw doors that switch this cube
    withdoors==-1: undraw doors ....
    withdoors==0: only draw cube */
-void in_plotcube(int w, struct node *n, int hilight, int withdoors, int xor,
+void in_plotcube(int w, struct node *n, int hilight, int withdoors, int xorval,
         int withalllines, int withlockedsides) {
     struct pixel spix, epix;
     int j, next, testdist;
@@ -431,37 +431,37 @@ void in_plotcube(int w, struct node *n, int hilight, int withdoors, int xor,
                 getscreencoords(w, c->p[j]->d.p, c->p[j == 3 ? 0 : j + 1]->d.p, &spix, &epix,
                 testdist))
             plotline(spix.x, spix.y, epix.x, epix.y,
-                WCOLORNUM((spix.d + epix.d) / 2, hilight), xor);
+                WCOLORNUM((spix.d + epix.d) / 2, hilight), xorval);
         if ((next & (0x10 << j)) != 0 &&
                 getscreencoords(w, c->p[j + 4]->d.p, c->p[j == 3 ? 4 : j + 5]->d.p, &spix, &epix,
                 testdist))
             plotline(spix.x, spix.y, epix.x, epix.y,
-                WCOLORNUM((spix.d + epix.d) / 2, hilight), xor);
+                WCOLORNUM((spix.d + epix.d) / 2, hilight), xorval);
         if ((next & (0x100 << j)) != 0 &&
                 getscreencoords(w, c->p[j]->d.p, c->p[j + 4]->d.p, &spix, &epix, testdist))
             plotline(spix.x, spix.y, epix.x, epix.y,
-                WCOLORNUM((spix.d + epix.d) / 2, hilight), xor);
+                WCOLORNUM((spix.d + epix.d) / 2, hilight), xorval);
     }
     if (withlockedsides)
         for (j = 0; j < 6; j++)
             if (n->d.c->walls[j] != NULL && n->d.c->walls[j]->locked)
-                in_plottagwall(w, n->d.c, j, n->d.c->tagged_walls[j] != NULL ? 4 : 2, xor);
+                in_plottagwall(w, n->d.c, j, n->d.c->tagged_walls[j] != NULL ? 4 : 2, xorval);
 }
 
-void plotcube(struct node *n, int hilight, int xor, int withalllines,
+void plotcube(struct node *n, int hilight, int xorval, int withalllines,
         int withlockedsides) {
     makeview(0);
-    in_plotcube(0, n, hilight, 0, xor, withalllines, withlockedsides);
+    in_plotcube(0, n, hilight, 0, xorval, withalllines, withlockedsides);
     if (view.whichdisplay) {
         makeview(1);
-        in_plotcube(1, n, hilight, 0, xor, withalllines,
+        in_plotcube(1, n, hilight, 0, xorval, withalllines,
                 withlockedsides);
     }
 }
 
 /* highlight==0: normal thingcolor 
    highlight>0: view.color[HILIGHTCOLORS+highlight-1]
-   highlight<0: same as highlight>0 with xor.
+   highlight<0: same as highlight>0 with xorval.
    highlight==256: black
    highlight==257: normal thingcolor or black if too far away */
 void in_plotthing(int w, struct thing *t, int hilight) {
@@ -493,7 +493,7 @@ void plotthing(struct thing *t, int hilight) {
    hilight==2: current side
    hilight==-1: undraw (same as normal but draw unconditional)
    hilight==256: black */
-void in_plotwall(int w, struct cube *c, int wno, int hilight, int xor) {
+void in_plotwall(int w, struct cube *c, int wno, int hilight, int xorval) {
     struct pixel spix, epix;
     int j;
     for (j = 0; j < 4; j++)
@@ -501,19 +501,19 @@ void in_plotwall(int w, struct cube *c, int wno, int hilight, int xor) {
                 c->p[wallpts[wno][(j + 1)&3]]->d.p, &spix, &epix, hilight == 0))
             plotline(spix.x, spix.y, epix.x, epix.y,
                 WCOLORNUM((spix.d + epix.d) / 2.0,
-                ((j == 0 || j == 3) && hilight == 2) ? (j == 0 ? 4 : 5) : hilight), xor);
+                ((j == 0 || j == 3) && hilight == 2) ? (j == 0 ? 4 : 5) : hilight), xorval);
 }
 
-void plotwall(struct cube *c, int wno, int hilight, int xor) {
+void plotwall(struct cube *c, int wno, int hilight, int xorval) {
     makeview(0);
-    in_plotwall(0, c, wno, hilight, xor);
+    in_plotwall(0, c, wno, hilight, xorval);
     if (view.whichdisplay) {
         makeview(1);
-        in_plotwall(1, c, wno, hilight, xor);
+        in_plotwall(1, c, wno, hilight, xorval);
     }
 }
 
-void in_plottagwall(int w, struct cube *c, int wallno, int hilight, int xor) {
+void in_plottagwall(int w, struct cube *c, int wallno, int hilight, int xorval) {
     struct point p1, p2, p3, p4, p5, p6, d1, d2, d3;
     int i, j;
     for (i = 0; i < 3; i++) {
@@ -543,17 +543,17 @@ void in_plottagwall(int w, struct cube *c, int wallno, int hilight, int xor) {
         p5.x[i] = p1.x[i] - d3.x[i] * view.tsize;
         p6.x[i] = p1.x[i] + d1.x[i] * view.tsize;
     }
-    in_plot3dline(w, &p1, &p6, WCOLORNUM(0.0, hilight), xor, 0);
-    in_plot3dline(w, &p2, &p3, WCOLORNUM(0.0, hilight), xor, 0);
-    in_plot3dline(w, &p4, &p5, WCOLORNUM(0.0, hilight), xor, 0);
+    in_plot3dline(w, &p1, &p6, WCOLORNUM(0.0, hilight), xorval, 0);
+    in_plot3dline(w, &p2, &p3, WCOLORNUM(0.0, hilight), xorval, 0);
+    in_plot3dline(w, &p4, &p5, WCOLORNUM(0.0, hilight), xorval, 0);
 }
 
-void plottagwall(struct cube *c, int wno, int hilight, int xor) {
+void plottagwall(struct cube *c, int wno, int hilight, int xorval) {
     makeview(0);
-    in_plottagwall(0, c, wno, hilight, xor);
+    in_plottagwall(0, c, wno, hilight, xorval);
     if (view.whichdisplay) {
         makeview(1);
-        in_plottagwall(1, c, wno, hilight, xor);
+        in_plottagwall(1, c, wno, hilight, xorval);
     }
 }
 
@@ -678,7 +678,7 @@ void in_plotcoordaxis(int lr) {
 
 /* highlight==0: normal wallcolor 
    highlight>0: view.color[HILIGHTCOLORS+highlight-1]
-   highlight<0: same as highlight>0 with xor.
+   highlight<0: same as highlight>0 with xorval.
    highlight==256: black
    highlight==257: normal wallcolor or black if too far away*/
 void in_plotpnt(int w, struct node *c, int wn, int pn, int hilight) {

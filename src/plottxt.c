@@ -47,10 +47,10 @@ void plottxt(int lr,struct polygon *p,struct render_point *start,
    w_xwinincoord(l->w,lr ? w_xwininsize(l->w)/2+1 : 0),txt); 
  } 
 
-void plotline(int o_x1,int o_y1,int o_x2,int o_y2,int color,int xor)
+void plotline(int o_x1,int o_y1,int o_x2,int o_y2,int color,int xorval)
  {
  psys_plotline(w_xwinincoord(l->w,o_x1),w_ywinincoord(l->w,o_y1),
-  w_xwinincoord(l->w,o_x2),w_ywinincoord(l->w,o_y2),color,xor);
+  w_xwinincoord(l->w,o_x2),w_ywinincoord(l->w,o_y2),color,xorval);
  }
 
 void pol_init_rscoords(struct polygon *p)

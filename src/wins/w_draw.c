@@ -33,21 +33,21 @@ void w_clearwindow(struct w_window *w) {
 }
 
 void w_drawline(struct w_window *w, int x1, int y1, int x2, int y2, int col,
-        int xor) {
+        int xorval) {
     my_assert(w);
     if (((struct wi_window *) w)->win_contents)
         ws_drawline(w_xwinincoord(w, x1), w_ywinincoord(w, y1), w_xwinincoord(w, x2),
-            w_ywinincoord(w, y2), col, xor);
+            w_ywinincoord(w, y2), col, xorval);
 }
 
 void w_drawclipline(struct w_window *w, int x1, int y1, int x2, int y2, int col,
-        int xor) {
+        int xorval) {
     my_assert(w);
     ws_setclipping(w_xwinincoord(w, 0), w_ywinincoord(w, 0),
             w_xwinincoord(w, w_xwininsize(w) - 1), w_ywinincoord(w, w_ywininsize(w) - 1));
     if (((struct wi_window *) w)->win_contents)
         ws_drawline(w_xwinincoord(w, x1), w_ywinincoord(w, y1), w_xwinincoord(w, x2),
-            w_ywinincoord(w, y2), col, xor);
+            w_ywinincoord(w, y2), col, xorval);
     ws_setclipping(-1, -1, -1, -1);
 }
 

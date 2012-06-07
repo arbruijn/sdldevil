@@ -529,7 +529,7 @@ void psys_initdrawbuffer(void) {
   { \
   if(l_dy>dx) \
    { \
-   if(xor) \
+   if(xorval) \
     for(x=0,y=0;x!=l_end;run l_add,x+=dx) \
      { *run^=color; if(x>y) { run+=xsize; y+=l_dy; } } \
    else \
@@ -538,7 +538,7 @@ void psys_initdrawbuffer(void) {
    } \
   else \
    { \
-   if(xor) \
+   if(xorval) \
     for(x=0,y=0;y!=l_end;run+=xsize,y+=l_dy) \
      { *run^=color; if(x<y) { run l_add; x+=dx; } } \
    else \
@@ -548,7 +548,7 @@ void psys_initdrawbuffer(void) {
   } 
 
 void psys_plotline(int o_x1, int o_y1, int o_x2,
-        int o_y2, int colorIndex, int xor) {
+        int o_y2, int colorIndex, int xorval) {
 
     // FFE sometimes the corridor wizard wants to render bizarre lines
     if (o_x1 < 0 || o_y1 < 0 || o_x2 < 0 || o_y2 < 0)
@@ -583,7 +583,7 @@ void psys_plotline(int o_x1, int o_y1, int o_x2,
     end = dy*dx;
     x = y = 0;
     if (dx == 0) {
-        if (xor) for (x = x1; x <= x2; x++) {
+        if (xorval) for (x = x1; x <= x2; x++) {
                 *run ^= color;
                 run++;
             }
@@ -592,7 +592,7 @@ void psys_plotline(int o_x1, int o_y1, int o_x2,
                 run++;
             }
     } else if (dy == 0) {
-        if (xor) for (y = y1; y < y2; y++) {
+        if (xorval) for (y = y1; y < y2; y++) {
                 *run ^= color;
                 run += xsize;
             } else for (y = y1; y < y2; y++) {

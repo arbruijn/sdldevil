@@ -10,7 +10,7 @@ void psys_256_plottxt(struct polygon *p,struct render_point *start,
 void psys_256_transparent_plottxt(struct polygon *p,struct render_point *start,
  uint32_t offset,unsigned char *txt_data);
 void psys_plotline(int o_x1,int o_y1,int o_x2,
- int o_y2,int color,int xor);
+ int o_y2,int color,int xorval);
 void psys_cleararea(int x,int y,int xsize,int ysize);
 void psys_copytoscreen(int x,int y,int xpos,int ypos,int xsize,int ysize);
 void psys_initdrawbuffer(void);

@@ -225,30 +225,30 @@ void run_cubeloop(struct clickhit **hits, int clickradius, int x, int y) {
 #define MINI_CLICKRADIUS (clickradius/4)
 static int xoffset, yoffset, xsize, ysize, lr, clickradius;
 
-void plotclickmarker(int lr, struct clickhit *ch, int color, int xor) {
+void plotclickmarker(int lr, struct clickhit *ch, int color, int xorval) {
     int i;
     struct pixel spix, epix;
-    ws_drawcircle(ch->x, ch->y, MINI_CLICKRADIUS, view.color[color], xor);
+    ws_drawcircle(ch->x, ch->y, MINI_CLICKRADIUS, view.color[color], xorval);
     if (ch->wall == 6) /* cube */ {
         for (i = 0; i < 8; i++)
             if (getscreencoords(lr, &ch->p, ch->data->d.c->p[i]->d.p, &spix, &epix, 0))
                 ws_drawline(w_xwinincoord(l->w, spix.x), w_ywinincoord(l->w, spix.y),
                     w_xwinincoord(l->w, epix.x), w_ywinincoord(l->w, epix.y),
-                    view.color[color], xor);
+                    view.color[color], xorval);
     } else if (ch->wall >= 0 && ch->wall < 6) /* wall */ {
         for (i = 0; i < 4; i++)
             if (getscreencoords(lr, &ch->p, ch->data->d.c->p[wallpts[ch->wall][i]]->d.p,
                     &spix, &epix, 0))
                 ws_drawline(w_xwinincoord(l->w, spix.x), w_ywinincoord(l->w, spix.y),
                     w_xwinincoord(l->w, epix.x), w_ywinincoord(l->w, epix.y),
-                    view.color[color], xor);
+                    view.color[color], xorval);
     } else if (ch->wall >= 100) /* edge */
         for (i = 0; i < 4; i++) if (i != (((ch->wall - 100) % 4 + 2)&3))
                 if (getscreencoords(lr, &ch->p,
                         ch->data->d.c->p[wallpts[(ch->wall - 100) / 4][i]]->d.p, &spix, &epix, 0))
                     ws_drawline(w_xwinincoord(l->w, spix.x), w_ywinincoord(l->w, spix.y),
                         w_xwinincoord(l->w, epix.x), w_ywinincoord(l->w, epix.y),
-                        view.color[color], xor);
+                        view.color[color], xorval);
 }
 
 void (*run_loop[tt_number])(struct clickhit **hits, int cr, int x,

@@ -323,14 +323,14 @@ void ws_restorebitmap(struct ws_bitmap *bm)
 }
 
 /* Draw a line with color c. */
-void ws_drawline(int x1, int y1, int x2, int y2, int c, int xor)
+void ws_drawline(int x1, int y1, int x2, int y2, int c, int xorval)
 {
 	int updx;
 	int updy;
 	int updw;
 	int updh;
 
-	lineColor (ws_private.screen, x1, y1, x2, y2, ws_palette[c], xor);
+	lineColor (ws_private.screen, x1, y1, x2, y2, ws_palette[c], xorval);
 
 
 	if (x1 < 0) x1 = 0;
@@ -361,10 +361,10 @@ void ws_drawline(int x1, int y1, int x2, int y2, int c, int xor)
 }
 
 /* Draw a circle with color c. */
-void ws_drawcircle(int x, int y, int r, int c, int xor)
+void ws_drawcircle(int x, int y, int r, int c, int xorval)
 {
 	int rx, ry, rw, rh;
-	circleColor(ws_private.screen, x, y, r, ws_palette[c], xor);
+	circleColor(ws_private.screen, x, y, r, ws_palette[c], xorval);
 	
 	rx = x-r;
 	ry = y-r;
@@ -381,19 +381,19 @@ void ws_drawcircle(int x, int y, int r, int c, int xor)
 }
 
 /* Draw a line with color c to bitmap bm. */
-void ws_bmdrawline8(struct ws_bitmap *bm, int x1, int y1, int x2, int y2, int c, int xor)
+void ws_bmdrawline8(struct ws_bitmap *bm, int x1, int y1, int x2, int y2, int c, int xorval)
 {
-	lineColor ((SDL_Surface *)bm->bitmap, x1, y1, x2, y2, c, xor);
+	lineColor ((SDL_Surface *)bm->bitmap, x1, y1, x2, y2, c, xorval);
 }
 
 
-void ws_bmdrawline(struct ws_bitmap *bm, int x1, int y1, int x2, int y2,  int c, int xor)
+void ws_bmdrawline(struct ws_bitmap *bm, int x1, int y1, int x2, int y2,  int c, int xorval)
 {
-	lineColor ((SDL_Surface *)bm->bitmap, x1, y1, x2, y2, ws_palette[c], xor);
+	lineColor ((SDL_Surface *)bm->bitmap, x1, y1, x2, y2, ws_palette[c], xorval);
 }
 
 /* Draw a (not-filled) box with color c. */
-void ws_drawbox(int x1, int y1, int xsize, int ysize, int c, int xor)
+void ws_drawbox(int x1, int y1, int xsize, int ysize, int c, int xorval)
 {
 	if (xsize < 0) {
 		x1 += xsize;
@@ -405,15 +405,15 @@ void ws_drawbox(int x1, int y1, int xsize, int ysize, int c, int xor)
 	}
 
 	if (xsize >0 && ysize >0) {
-		rectangleColor(ws_private.screen, x1, y1, (x1+xsize)-1, (y1+ysize)-1, ws_palette[c], xor);
+		rectangleColor(ws_private.screen, x1, y1, (x1+xsize)-1, (y1+ysize)-1, ws_palette[c], xorval);
 		ws_flip(x1, y1, xsize, ysize);
 	}
 }
 
 /* Draw a (filled) box with color c. */
-void ws_drawfilledbox(int x1, int y1, int xsize, int ysize, int c, int xor)
+void ws_drawfilledbox(int x1, int y1, int xsize, int ysize, int c, int xorval)
 {
-	boxColor(ws_private.screen, x1, y1, (x1+xsize)-1, (y1+ysize)-1, ws_palette[c], xor);
+	boxColor(ws_private.screen, x1, y1, (x1+xsize)-1, (y1+ysize)-1, ws_palette[c], xorval);
 	ws_flip(x1, y1, xsize, ysize);
 }
 

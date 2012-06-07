@@ -65,14 +65,14 @@ struct ws_bitmap *ws_savebitmap(struct ws_bitmap *bm, int xpos, int ypos,
 void ws_clearbitmap(struct ws_bitmap *b, int c);
 void ws_restorebitmap(struct ws_bitmap *bm);
 void ws_freebitmap(struct ws_bitmap *bm);
-void ws_drawline(int x1, int y1, int x2, int y2, int col, int xor);
-void ws_drawcircle(int x, int y, int r, int c, int xor);
-void ws_bmdrawline8(struct ws_bitmap *bm, int x1, int y1, int x2, int y2, int c, int xor);
+void ws_drawline(int x1, int y1, int x2, int y2, int col, int xorval);
+void ws_drawcircle(int x, int y, int r, int c, int xorval);
+void ws_bmdrawline8(struct ws_bitmap *bm, int x1, int y1, int x2, int y2, int c, int xorval);
 void ws_bmdrawline(struct ws_bitmap *bm, int x1, int y1, int x2, int y2,
-		   int col, int xor);
-void ws_drawbox(int x1, int y1, int xsize, int ysize, int col, int xor);
+		   int col, int xorval);
+void ws_drawbox(int x1, int y1, int xsize, int ysize, int col, int xorval);
 void ws_drawfilledbox(int x1, int y1, int xsize, int ysize, int col,
-		      int xor);
+		      int xorval);
 void ws_drawframedbox(int x, int y, int xs, int ys, int w, int ltc,
 		      int rbc, int inc);
 void ws_drawpatternedbox(int x1, int y1, int xsize, int ysize, int c);

@@ -4,7 +4,7 @@
 /*  DEVIL - Descent Editor for Vertices, Items and Levels at all
     Copyright (C) 1995  Achim Stremplat (ubdb@rz.uni-karlsruhe.de) 
     Further info see .c-files. */
-void plotline(int o_x1,int o_y1,int o_x2,int o_y2,int color,int xor);
+void plotline(int o_x1,int o_y1,int o_x2,int o_y2,int color,int xorval);
 void clearlevelwin(void);
 void init_txtgrfx(void);
 uint32_t render_level(int lr,struct leveldata *ld,struct node *start_cube,

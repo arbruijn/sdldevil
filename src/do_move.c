@@ -591,17 +591,17 @@ void dec_resetsideedge(int ec) {
     resetsideedge();
 }
 
-void plotpntcubelist(struct list *lp, int hilight, int xor, int start) {
+void plotpntcubelist(struct list *lp, int hilight, int xorval, int start) {
     struct node *n;
     int w;
     for (n = lp->head; n->next != NULL; n = n->next) {
-        if (view.drawwhat & DW_CUBES) plotcube(n->d.n, hilight, xor, 0, start);
+        if (view.drawwhat & DW_CUBES) plotcube(n->d.n, hilight, xorval, 0, start);
         for (w = 0; w < 6; w++) {
             if (n->d.n->d.c->tagged_walls[w] && start)
                 plottagwall(n->d.n->d.c, w, 256, 0);
             if (n->d.n->d.c->d[w]) {
                 makedoorpnt(n->d.n->d.c->d[w]->d.d);
-                if (view.drawwhat & DW_DOORS) plotdoor(n->d.n->d.c->d[w], hilight, xor);
+                if (view.drawwhat & DW_DOORS) plotdoor(n->d.n->d.c->d[w], hilight, xorval);
             }
         }
         copytoscreen();
@@ -1276,7 +1276,7 @@ void moveobj_mouse(int withtagged, int wx, int wy, struct node *nc, int wall) {
             break;
         case tt_thing:
             plotcurrent();
-            /* kill the not-xored object and draw a xored instead */
+            /* kill the not-xorvaled object and draw a xorvaled instead */
             plotthing(nc->d.t, 256);
             plotthing(nc->d.t, -1);
             if (withtagged & 1)
