@@ -21,9 +21,26 @@
 #ifndef FILEIO_H
 #define	FILEIO_H
 
+#include "structs.h"
+
 typedef FILE fileio_file_t;
 
-FILE * fileio_open_ignorecase(const char * path, char * fixed_path, const char * mode);
+fileio_file_t * fileio_fopen_ignorecase(const char * path, char * fixed_path, const char * mode);
+fileio_file_t * fileio_fopen(const char * path, const char * mode);
+
+int fileio_fclose(fileio_file_t * f);
+int fileio_fseek(fileio_file_t * f, long int offset, int whence);
+
+size_t fileio_fread_char(char * dest, size_t length, fileio_file_t * f);
+size_t fileio_fwrite_char(char * dest, size_t length, fileio_file_t * f);
+
+size_t fileio_fread_int16(int16_t * dest, size_t length, fileio_file_t * f);
+size_t fileio_fwrite_int16(int16_t * dest, size_t length, fileio_file_t * f);
+
+size_t fileio_fread_int32(int32_t * dest, size_t length, fileio_file_t * f);
+size_t fileio_fwrite_int32(int32_t * dest, size_t length, fileio_file_t * f);
+
+
 
 #endif	/* FILEIO_H */
 

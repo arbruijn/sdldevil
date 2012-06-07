@@ -40,133 +40,32 @@
 #include "do_light.h"
 #include "readtxt.h"
 #include "readlvl.h"
+#include "fileio.h"
 
 #include "lac_cfg.h"
 
 enum descent loading_level_version;
 
-/* this structure should be Descent version independent */
-struct fileheadversion {
-    char lvlp[4];
-    uint32_t version;
-} PACKED_ATTR;
-#define LEVVER_D2_12_REG 8
-#define LEVVER_D2_11_REG 7
-#define LEVVER_D2_10_REG 6
-#define LEVVER_D2_10_SW 5
-#define LEVVER_D1_REG 1
-struct D1_REG_levelfilehead {
-    struct fileheadversion fh;
-    uint32_t minedata_offset;
-    uint32_t gamedata_offset;
-    uint32_t hostagetxt_offset;
-} PACKED_ATTR D1_REG_stdlevelfilehead = { { {
+// FFE moved structs to structs.h
+struct D1_REG_levelfilehead D1_REG_stdlevelfilehead = { { {
 'L', 'V', 'L', 'P'}, LEVVER_D1_REG}, 0x14, 0, 0};
 
-struct D2_SW_levelfilehead {
-    struct fileheadversion fh;
-    uint32_t minedata_offset;	/* 0x23 */
-    uint32_t gamedata_offset;
-    char group[11];	/* GROUPA.256 and a linefeed */
-    uint32_t stuff[2];	/* 0x1e and 0xffffffff */
-} PACKED_ATTR D2_SW_stdlevelfilehead = { { {
+struct D2_SW_levelfilehead  D2_SW_stdlevelfilehead = { { {
 'L', 'V', 'L', 'P'}, LEVVER_D2_10_SW}, 0x23, 0, {
 'G', 'R', 'O', 'U', 'P', 'A', '.', '2', '5', '6', '\x0A'}, {
 0x1e, 0xffffffff}};
 
-struct D2_REG_levelfilehead {
-    struct fileheadversion fh;
-    uint32_t minedata_offset;
-    uint32_t gamedata_offset;
-    char *palname;		/* terminated by a linefeed */
-    uint32_t reactor_time, reactor_strength;
-    /* 0x1e and 0xffffffff */
-    uint32_t flickering_lights;
-    uint32_t secret_cubenum;
-    uint32_t secret_orient[9];
-} PACKED_ATTR D2_REG_stdlevelfilehead = { { {
+struct D2_REG_levelfilehead  D2_REG_stdlevelfilehead = { { {
 'L', 'V', 'L', 'P'}, LEVVER_D2_11_REG}, 0, 0, NULL, 0x1e, 0xffffffff, 0, 0, {
 0x10000, 0, 0, 0, 0, 0x10000, 0, 0x10000, 0}};
 
-struct D1_minedata {
-    unsigned char version;	/* always 0 */
-    uint16_t numpts, numcubes;
-} PACKED_ATTR;
-
-struct D2_minedata {
-    unsigned char version;	/* always 0 */
-    uint16_t numpts, numcubes;
-} PACKED_ATTR;
-
-struct D1_gamedata {
-    /* header for things etc. */
-    uint16_t signature;	/* 0x6705 */
-    uint16_t version;	/* reg. version=0x19 */
-    int32_t sizedir;	/* 0x77 */
-    char mine_filename[15];	/* never used by anyone */
-    int32_t level;	/* always zero in not saved games I suppose */
-    uint32_t posplayer, sizeplayer;
-    uint32_t posthings, numthings, sizethings;
-    /* size=0x108 */
-    uint32_t posdoors, numdoors, sizedoors;
-    /* size=0x18 */
-    uint32_t posopendoors, numopendoors, sizeopendoors;
-    /* num=0, size=0x10 */
-    /* switches */
-    uint32_t possdoors, numsdoors, sizesdoors;
-    /* size=0x36 */
-    uint32_t stuff2[3];	/* always zero */
-    /* doors opening after blown the reactor */
-    uint32_t posedoors,	numedoors, sizeedoors;
-    /* size=0x2a */
-    /* robot producers */
-    uint32_t posproducer, numproducer, sizeproducer;
-    /* size=0x10 */
-} PACKED_ATTR D1_stdgamedata = {
+struct D1_gamedata  D1_stdgamedata = {
     0x6705, 0x19, 0x77, {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0,
 	0, 0x8e, 0, 0, 0x108, 0, 0, 0x18, 0, 0, 0x10, 0, 0, 0x36, {
 0, 0, 0}, 0, 0, 0x2a, 0, 0, 0x10};
 
-struct D2_gamedata {
-    /* header for things etc. */
-    uint16_t signature;	/* 0x6705 */
-    uint16_t version;	/* reg. version=0x20 */
-    int32_t sizedir;	/* 0x8f */
-    char mine_filename[15];	/* never used by anyone */
-    int32_t level;	/* always zero in not saved games I suppose */
-    uint32_t posplayer, sizeplayer;
-    uint32_t posthings,
-	numthings, sizethings;
-    /* size=0x108 */
-    uint32_t posdoors,
-	numdoors, sizedoors;
-    /* size=0x18 */
-    uint32_t posopendoors,
-	numopendoors, sizeopendoors;
-    /* num=0, size=0x10 */
-    /* switches */
-    uint32_t possdoors,
-	numsdoors, sizesdoors;
-    /* size=0x34 */
-    uint32_t stuff2[3];	/* always zero */
-    /* doors opening after blown the reactor */
-    uint32_t posedoors,
-	numedoors, sizeedoors;
-    /* size=0x2a */
-    /* robot producers */
-    uint32_t posproducer,
-	numproducer, sizeproducer;
-    /* size=0x14 */
-    /* this are all lamps that can be shot in the level */
-    uint32_t posturnoff,
-	numturnoff, sizeturnoff;
-    /* size=0x06 */
-    /* this are all lights that are changed by turnoff lamps */
-    uint32_t poschangedlight,
-	numchangedlight, sizechangedlight;
-    /* size=0x08 */
-} PACKED_ATTR D2_stdgamedata = {
+struct D2_gamedata  D2_stdgamedata = {
     0x6705, 0x20, 0x8f, {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0,
 	0, 0x8e, 0, 0, 0x108, 0, 0, 0x18, 0, 0, 0x10, 0, 0, 0x34, {
@@ -262,7 +161,7 @@ void convert_textures(struct leveldata *ld)
 	    nc->d.d->animtxt = new_anim;
 }
 
-int D1_REG_readlvldata(FILE * lf, struct leveldata *ld, int version)
+int D1_REG_readlvldata(fileio_file_t * lf, struct leveldata *ld, int version)
 {
     int i, j;
     struct node *n;
@@ -274,16 +173,16 @@ int D1_REG_readlvldata(FILE * lf, struct leveldata *ld, int version)
     const char *palname;
     if (version != LEVVER_D1_REG)
 	return 0;
-    if (fread(&lfh.minedata_offset, sizeof(uint32_t), 2, lf) != 2) {
-	fclose(lf);
+    if (fileio_fread_uint32(&lfh.minedata_offset, 2, lf) != 2) {
+	fileio_fclose(lf);
 	return 0;
     }
-    if (fseek(lf, lfh.minedata_offset, SEEK_SET)) {
-	fclose(lf);
+    if (fileio_fseek(lf, lfh.minedata_offset, SEEK_SET)) {
+	fileio_fclose(lf);
 	return 0;
     }
-    if (fread(&md, sizeof(struct D1_minedata), 1, lf) != 1) {
-	fclose(lf);
+    if (!fileio_fread_d1minedata(&md, lf)) {
+	fileio_fclose(lf);
 	return 0;
     }
     /* texture are translated if init.d_ver>=d2_10_sw */
@@ -294,7 +193,7 @@ int D1_REG_readlvldata(FILE * lf, struct leveldata *ld, int version)
     if (init_test & 2)
 	fprintf(errf, "%d points, %d cubes\n", md.numpts, md.numcubes);
     if (!readlist(lf, &ld->pts, readpnt, md.numpts)) {
-	fclose(lf);
+	fileio_fclose(lf);
 	return 0;
     }
     /* Init fullname: Needed when an error occurs during loading the level */
@@ -313,19 +212,23 @@ int D1_REG_readlvldata(FILE * lf, struct leveldata *ld, int version)
 		n->d.c->nextcubes[j] = 0xffff;
 	    }
     }
-    fseek(lf, lfh.gamedata_offset, SEEK_SET);
-    if (fread(&gd, sizeof(struct D1_gamedata), 1, lf) != 1) {
+    fileio_fseek(lf, lfh.gamedata_offset, SEEK_SET);
+    if (!fileio_fread_d1gamedata(&gd, lf)) {
+    //if (!fread(&gd, sizeof(struct D1_gamedata), 1, lf)) {
 	waitmsg(TXT_CANTREADLVL);
 	killalldoors(ld);
 	return 1;
     }
     i = 0;
-    while (isprint(buffer[i++] = fgetc(lf)) && i < 31);
+    while (isprint(buffer[i++] = fileio_fgetc(lf)) && i < 31);
     buffer[i - 1] = 0;
+    
+    
     FREE(ld->fullname);
     checkmem(ld->fullname = MALLOC(strlen(buffer) + 1));
     strcpy(ld->fullname, buffer);
-    fseek(lf, gd.posplayer, SEEK_SET);
+    
+    fileio_fseek(lf, gd.posplayer, SEEK_SET);
     sizeplayer = gd.sizeplayer;
     checkmem(playerdata = REALLOC(playerdata, sizeplayer));
     if (fread(playerdata, sizeplayer, 1, lf) != 1) {

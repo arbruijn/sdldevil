@@ -19,6 +19,9 @@
     along with this program (file COPYING); if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
+#ifndef STRUCTS_H
+#define STRUCTS_H
+
 #include <ctype.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -730,6 +733,129 @@ struct initdata {
     char * descentpaths[6];
 };
 
+
+
+
+
+// FFE moved here from readlvl.c======
+
+/* this structure should be Descent version independent */
+struct fileheadversion {
+    char lvlp[4];
+    uint32_t version;
+} PACKED_ATTR;
+#define LEVVER_D2_12_REG 8
+#define LEVVER_D2_11_REG 7
+#define LEVVER_D2_10_REG 6
+#define LEVVER_D2_10_SW 5
+#define LEVVER_D1_REG 1
+struct D1_REG_levelfilehead {
+    struct fileheadversion fh;
+    uint32_t minedata_offset;
+    uint32_t gamedata_offset;
+    uint32_t hostagetxt_offset;
+} PACKED_ATTR;
+
+struct D2_SW_levelfilehead {
+    struct fileheadversion fh;
+    uint32_t minedata_offset;	/* 0x23 */
+    uint32_t gamedata_offset;
+    char group[11];	/* GROUPA.256 and a linefeed */
+    uint32_t stuff[2];	/* 0x1e and 0xffffffff */
+} PACKED_ATTR;
+
+struct D2_REG_levelfilehead {
+    struct fileheadversion fh;
+    uint32_t minedata_offset;
+    uint32_t gamedata_offset;
+    char *palname;		/* terminated by a linefeed */
+    uint32_t reactor_time, reactor_strength;
+    /* 0x1e and 0xffffffff */
+    uint32_t flickering_lights;
+    uint32_t secret_cubenum;
+    uint32_t secret_orient[9];
+} PACKED_ATTR;
+
+struct D1_minedata {
+    unsigned char version;	/* always 0 */
+    uint16_t numpts, numcubes;
+} PACKED_ATTR;
+
+struct D2_minedata {
+    unsigned char version;	/* always 0 */
+    uint16_t numpts, numcubes;
+} PACKED_ATTR;
+
+struct D1_gamedata {
+    /* header for things etc. */
+    uint16_t signature;	/* 0x6705 */
+    uint16_t version;	/* reg. version=0x19 */
+    int32_t sizedir;	/* 0x77 */
+    char mine_filename[15];	/* never used by anyone */
+    int32_t level;	/* always zero in not saved games I suppose */
+    uint32_t posplayer, sizeplayer;
+    uint32_t posthings, numthings, sizethings;
+    /* size=0x108 */
+    uint32_t posdoors, numdoors, sizedoors;
+    /* size=0x18 */
+    uint32_t posopendoors, numopendoors, sizeopendoors;
+    /* num=0, size=0x10 */
+    /* switches */
+    uint32_t possdoors, numsdoors, sizesdoors;
+    /* size=0x36 */
+    uint32_t stuff2[3];	/* always zero */
+    /* doors opening after blown the reactor */
+    uint32_t posedoors,	numedoors, sizeedoors;
+    /* size=0x2a */
+    /* robot producers */
+    uint32_t posproducer, numproducer, sizeproducer;
+    /* size=0x10 */
+} PACKED_ATTR;
+
+struct D2_gamedata {
+    /* header for things etc. */
+    uint16_t signature;	/* 0x6705 */
+    uint16_t version;	/* reg. version=0x20 */
+    int32_t sizedir;	/* 0x8f */
+    char mine_filename[15];	/* never used by anyone */
+    int32_t level;	/* always zero in not saved games I suppose */
+    uint32_t posplayer, sizeplayer;
+    uint32_t posthings,	numthings, sizethings;
+    /* size=0x108 */
+    uint32_t posdoors, numdoors, sizedoors;
+    /* size=0x18 */
+    uint32_t posopendoors, numopendoors, sizeopendoors;
+    /* num=0, size=0x10 */
+    /* switches */
+    uint32_t possdoors,	numsdoors, sizesdoors;
+    /* size=0x34 */
+    uint32_t stuff2[3];	/* always zero */
+    /* doors opening after blown the reactor */
+    uint32_t posedoors,	numedoors, sizeedoors;
+    /* size=0x2a */
+    /* robot producers */
+    uint32_t posproducer, numproducer, sizeproducer;
+    /* size=0x14 */
+    /* this are all lamps that can be shot in the level */
+    uint32_t posturnoff, numturnoff, sizeturnoff;
+    /* size=0x06 */
+    /* this are all lights that are changed by turnoff lamps */
+    uint32_t poschangedlight, numchangedlight, sizechangedlight;
+    /* size=0x08 */
+} PACKED_ATTR;
+
+
+
+
+
+// ====================================
+
+
+
+
+
+
+
 /* if m is a coordsystem in MATRIXMULT the vectors are in the columns */
 #define MATRIXMULT(e,m,v) { int mm_i;\
  for(mm_i=0;mm_i<3;mm_i++) \
@@ -769,3 +895,5 @@ extern struct mine stdmine;
 extern struct start stdstart, stdcoopstart, stdsecretstart;
 extern struct reactor stdreactor;
 extern uint32_t robotsize[NUM_ROBOTS], reactorsize[NUM_REACTORS], reactorpolyobj[NUM_REACTORS];
+
+#endif
