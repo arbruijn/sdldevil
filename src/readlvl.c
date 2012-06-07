@@ -223,8 +223,7 @@ int D1_REG_readlvldata(fileio_file_t * lf, struct leveldata *ld, int version)
     
     
     FREE(ld->fullname);
-    checkmem(ld->fullname = MALLOC(strlen(buffer) + 1));
-    strcpy(ld->fullname, buffer);
+    ld->fullname = strdup(buffer);
     
     fileio_fseek(lf, gd.posplayer, SEEK_SET);
     sizeplayer = gd.sizeplayer;
