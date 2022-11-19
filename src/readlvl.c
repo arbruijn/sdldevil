@@ -1035,7 +1035,7 @@ int closelevel(struct leveldata *ld, int warn)
     }
     if (ld->fullname != NULL && ld->w != NULL) {
 	for (i = 1; i < view.b_levels->num_options; i++)
-	    if (!strcmp(view.b_levels->options[i], ld->fullname))
+	    if (view.b_levels->options[i] == ld->fullname)
 		break;
 	if (view.b_macros->selected == i)
 	    view.b_macros->selected = 0;
