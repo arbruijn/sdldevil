@@ -864,8 +864,7 @@ void ws_splitpath(char *fullpath, char *drive, char *path, char *name,
             return;
 	
 	//if (fullpath[strlen(fullpath)-1] != '/') {
-		stat (fullpath, &fileinfo);
-		if (!S_ISDIR(fileinfo.st_mode)) {
+		if (stat (fullpath, &fileinfo) != 0 || !S_ISDIR(fileinfo.st_mode)) {
 			strncpy(buffer2, fullpath, 1023);
 			if ((pos = strrchr(buffer2, '/'))) {
 				*pos = '\0';
