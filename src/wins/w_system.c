@@ -562,6 +562,7 @@ int ws_getevent(struct ws_event *se, int wait)
 	se->buttons = ws_bt_none;
 	se->flags = ws_f_none;
 	se->key = 0;
+	se->unicode = 0;
 
 	if (got_event) {
 		switch(me.type) {
