@@ -9,7 +9,8 @@ WINS_OBJ=wins/w_init.o wins/w_event.o wins/wi_buts.o wins/wi_keys.o \
  wins/w_list.o wins/SDL_gfxPrimitives.o wins/SDL_rotozoom.o
 
 BASE_LIBS=-lSDL -lm
-CFLAGS=-Wall -g -pedantic -std=c99 -ffast-math -Wwrite-strings -I wins -I language
+CFLAGS=-Wall -g -pedantic -std=gnu99 -ffast-math -Wwrite-strings -I wins -I language
+CFLAGS+=-Wno-address-of-packed-member -Werror-implicit-function-declaration
 
 WINDOWS_OBJ=res/sdldevil_icon.res
 

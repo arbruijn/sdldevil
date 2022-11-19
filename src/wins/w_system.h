@@ -56,6 +56,7 @@ void ws_killcursor(ws_cursor * cursor);
 void ws_setcolor(int i, int r, int g, int b);
 void ws_getcolor(int i, int *r, int *g, int *b);
 struct ws_bitmap *ws_createbitmap(int xsize, int ysize, uint32_t **bm);
+struct ws_bitmap *ws_createbitmap8from(int xsize, int ysize, uint8_t *bm);
 uint32_t *ws_getbitmapdata(struct ws_bitmap *b);
 void ws_copybitmap(struct ws_bitmap *dst, int x1, int y1,
 		   struct ws_bitmap *src, int xpos, int ypos, int xsize,

@@ -40,7 +40,12 @@ size_t fileio_fwrite_int16(int16_t * dest, size_t length, fileio_file_t * f);
 size_t fileio_fread_int32(int32_t * dest, size_t length, fileio_file_t * f);
 size_t fileio_fwrite_int32(int32_t * dest, size_t length, fileio_file_t * f);
 
+size_t fileio_fread_uint32(uint32_t * dest, size_t length, fileio_file_t * f);
 
+int fileio_fgetc(fileio_file_t * f);
+
+int fileio_fread_d1minedata(struct D1_minedata * dest, fileio_file_t * f);
+int fileio_fread_d1gamedata(struct D1_gamedata * dest, fileio_file_t *f);
 
 #endif	/* FILEIO_H */
 

@@ -20,6 +20,7 @@
 #include <signal.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <fnmatch.h>
 #include <dirent.h>

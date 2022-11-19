@@ -532,7 +532,7 @@ int newpigfile(char *pigname, FILE * pogfile)
          * from ancient DOS days. DXX Rebirth (and others?) dealing with this
          * the same way. Also in levels the palette name is uppercase.
          */
-	if ((pf = fileio_open_ignorecase(pigfname, NULL, "rb") /*fopen(pigfname, "rb")*/) == NULL) {
+	if ((pf = fileio_fopen_ignorecase(pigfname, NULL, "rb") /*fopen(pigfname, "rb")*/) == NULL) {
 	    printf("Can't open pigfile in newpigfile: '%s'\n", pigfname);
 	    FREE(pigfname);
 	    return 0;

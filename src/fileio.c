@@ -27,7 +27,7 @@
 
 
 
-fileio_file_t * fileio_open_ignorecase(const char * path, char * fixed_path, const char * mode) {
+fileio_file_t * fileio_fopen_ignorecase(const char * path, char * fixed_path, const char * mode) {
     
     char local_fixed_path[1025];
     char * newpath = fixed_path == NULL ? local_fixed_path : fixed_path;
